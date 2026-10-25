@@ -1,15 +1,18 @@
 # ===== 站点基本信息 =====
-title: 彭德馨
+title: 灰度
 description: >-
-  内容风控与 AI 应用：判定机制设计、政策与知识系统、评测与标注质量。
+  AI 内容治理、人机协同、模型评测与系统工程的实践笔记：不写新闻，只写做过、验证过、能复用的东西。
+author: 灰度
 url: "https://dmithrandir.github.io"
 baseurl: ""
 lang: zh-CN
 timezone: Asia/Shanghai
 
+# 站点副标题（页眉品牌区使用，可按喜好改）
+tagline: "Grey Area · AI 治理与系统笔记"
+
 # ===== 主题 =====
-# 本站不使用任何主题 gem：布局在 _layouts/，组件在 _includes/，样式在 assets/css/。
-# 之前用的 jekyll-theme-minimal / minima 都已移除，改版时不再受主题约束。
+# 不使用任何主题 gem：布局在 _layouts/，组件在 _includes/，样式在 assets/css/。
 
 # ===== Markdown =====
 markdown: kramdown

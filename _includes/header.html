@@ -1,16 +1,16 @@
 <header class="site-header">
   <div class="wrap header-inner">
     <a class="brand" href="{{ '/' | relative_url }}" aria-label="回到首页">
-      <span class="brand-seal" aria-hidden="true">判</span>
+      <span class="brand-seal" aria-hidden="true">灰</span>
       <span class="brand-text">
-        <span class="brand-name">彭德馨</span>
-        <span class="brand-sub">Dexin Peng · 内容风控与 AI</span>
+        <span class="brand-name">{{ site.title }}</span>
+        <span class="brand-sub">{{ site.tagline | default: 'Grey Area · AI 治理与系统笔记' }}</span>
       </span>
     </a>
     <nav class="nav" aria-label="主导航">
       <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} class="is-active" aria-current="page"{% endif %}>首页</a>
-      <a href="{{ '/projects/' | relative_url }}"{% if page.url contains '/projects' %} class="is-active" aria-current="page"{% endif %}>作品</a>
       <a href="{{ '/blog/' | relative_url }}"{% if page.url contains '/blog' or page.layout == 'post' %} class="is-active" aria-current="page"{% endif %}>文章</a>
+      <a href="{{ '/projects/' | relative_url }}"{% if page.url contains '/projects' %} class="is-active" aria-current="page"{% endif %}>项目</a>
       <a href="{{ '/about/' | relative_url }}"{% if page.url contains '/about' %} class="is-active" aria-current="page"{% endif %}>关于</a>
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深浅色模式" title="切换深浅色模式">
         <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4.1"/><path d="M12 2.6v2.5M12 18.9v2.5M4.4 12H1.9M22.1 12h-2.5M6.4 6.4 4.6 4.6M19.4 19.4l-1.8-1.8M17.6 6.4l1.8-1.8M4.6 19.4l1.8-1.8"/></svg>

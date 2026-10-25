@@ -9,7 +9,7 @@ description: "把「判不了的案例」从感觉变成统计：三段决策流
 excerpt: "一套把「判不了的案例」从感觉变成统计的人机协同判定机制：双层判定 → 三段决策流程 → 9 类归因编码 → 四条常识判断原则 → 结构化推理输出，最后由两个模型 + 一位人工三票多数决定案。"
 ---
 
-> **作品集版 · Portfolio Edition**
+> **公开版 · Public Edition**
 > 一份把「判不了的案例」从**感觉**变成**统计**的人机协同决策机制设计。
 > A human–LLM decision mechanism that turns "we can't judge this" from a *feeling* into a *statistic*.
 
@@ -303,4 +303,4 @@ Un-judgeable cases gained an explicit exit and attribution for the first time; g
 
 ---
 
-*— 作品集版结束 · End of portfolio edition —*
+*— 全文完 · End —*

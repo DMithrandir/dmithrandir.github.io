@@ -8,12 +8,12 @@ layout: default
       <h1 class="hero-title">{{ page.hero_title | default: site.title }}</h1>
       {%- if page.hero_lead %}<p class="hero-lead">{{ page.hero_lead }}</p>{% endif -%}
       <p class="hero-cta">
-        <a class="btn" href="{{ '/projects/' | relative_url }}">看作品</a>
-        <a class="btn btn-ghost" href="{{ '/blog/' | relative_url }}">读文章</a>
+        <a class="btn" href="{{ '/blog/' | relative_url }}">读文章</a>
+        <a class="btn btn-ghost" href="{{ '/projects/' | relative_url }}">看项目</a>
       </p>
     </div>
     {%- if page.hero_meta -%}
-    <aside class="hero-side" aria-label="基本信息">
+    <aside class="hero-side" aria-label="站点信息">
       <ul class="meta-list">
         {%- for item in page.hero_meta %}
         <li>
@@ -30,10 +30,21 @@ layout: default
 <div class="wrap home-body">
   {{ content }}
 
+  {%- if site.posts.size > 0 %}
+  <section class="block">
+    {% include section-head.html title="最新文章" sub="LATEST" link="/blog/" link_label="全部文章" %}
+    <ol class="post-index">
+      {%- for post in site.posts limit: 5 %}
+        {% include post-row.html post=post index=forloop.index excerpt=true %}
+      {%- endfor %}
+    </ol>
+  </section>
+  {%- endif %}
+
   {%- assign featured = site.data.projects | where_exp: "p", "p.featured" -%}
   {%- if featured.size > 0 %}
   <section class="block">
-    {% include section-head.html title="精选作品" sub="SELECTED WORK" link="/projects/" link_label="全部作品" %}
+    {% include section-head.html title="项目" sub="PROJECTS" link="/projects/" link_label="全部项目" %}
     <div class="cards">
       {%- for project in featured limit: 3 %}
         {% include project-card.html project=project index=forloop.index %}
@@ -42,40 +53,29 @@ layout: default
   </section>
   {%- endif %}
 
-  {%- if site.posts.size > 0 %}
-  <section class="block">
-    {% include section-head.html title="最新文章" sub="WRITING" link="/blog/" link_label="全部文章" %}
-    <ol class="post-index">
-      {%- for post in site.posts limit: 3 %}
-        {% include post-row.html post=post index=forloop.index excerpt=true %}
-      {%- endfor %}
-    </ol>
-  </section>
-  {%- endif %}
-
   <section class="block block-about">
     <div class="about-grid">
       <div class="about-main">
         <p class="eyebrow">ABOUT</p>
-        <h2 class="block-title">在找 AI 内容治理 / 风险策略 / 评测 的机会</h2>
-        <p class="about-text">{{ page.about_band | default: "四年头部短视频与直播平台的内容安全与治理，做过政策下发、模糊地带判据与审核知识系统；现在把这些机制写下来。" }}</p>
-        <p><a class="btn btn-ghost" href="{{ '/about/' | relative_url }}">关于我</a></p>
+        <h2 class="block-title">关于这个博客</h2>
+        <p class="about-text">{{ page.about_band | default: site.description }}</p>
+        <p><a class="btn btn-ghost" href="{{ '/about/' | relative_url }}">关于本站</a></p>
       </div>
       <aside class="about-side">
         <ul class="fact-list">
-          <li><span class="fact-label">现在</span><span class="fact-value">找工作中</span></li>
-          <li><span class="fact-label">方向</span><span class="fact-value">AI 内容治理 / 风险策略 / 评测</span></li>
-          <li><span class="fact-label">语言</span><span class="fact-value">中文 · English</span></li>
+          <li><span class="fact-label">主题</span><span class="fact-value">AI 治理 · 评测 · 工程</span></li>
+          <li><span class="fact-label">节奏</span><span class="fact-value">长文为主，不定期</span></li>
+          <li><span class="fact-label">订阅</span><span class="fact-value"><a href="{{ '/feed.xml' | relative_url }}">RSS</a></span></li>
         </ul>
       </aside>
     </div>
   </section>
 
-  <section class="cta" aria-label="联系">
+  <section class="cta" aria-label="订阅与联系">
     <p class="cta-title">如果你们也在处理「规则覆盖不到」的那一类问题，聊聊？</p>
     <p class="cta-links">
-      <a class="btn" href="https://github.com/DMithrandir" rel="me noopener">GitHub</a>
-      <a class="btn btn-ghost" href="{{ '/feed.xml' | relative_url }}">订阅 RSS</a>
+      <a class="btn" href="{{ '/feed.xml' | relative_url }}">订阅 RSS</a>
+      <a class="btn btn-ghost" href="https://github.com/DMithrandir" rel="me noopener">GitHub</a>
     </p>
   </section>
 </div>

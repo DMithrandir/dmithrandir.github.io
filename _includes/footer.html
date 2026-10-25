@@ -1,10 +1,11 @@
 <footer class="site-footer">
   <div class="wrap footer-inner">
-    <p class="footer-note">© {{ site.time | date: '%Y' }} 彭德馨 · 个人观点，与雇主无关</p>
+    <p class="footer-note">© {{ site.time | date: '%Y' }} {{ site.title }} · 内容基于个人实践，与任职机构无关</p>
     <p class="footer-links">
       <a href="https://github.com/DMithrandir" rel="me noopener">GitHub</a>
       <a href="{{ '/feed.xml' | relative_url }}">RSS</a>
       <a href="{{ '/archive/' | relative_url }}">归档</a>
+      <a href="{{ '/about/' | relative_url }}">关于</a>
     </p>
   </div>
 </footer>
