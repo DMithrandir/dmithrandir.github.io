@@ -1,1 +1,48 @@
-theme: jekyll-theme-minimal
+# ===== 站点基本信息 =====
+# title 会出现在浏览器标签、站点页眉、RSS 与搜索结果里
+title: 彭德馨
+# 一句话定位（SEO 描述，也会进搜索结果摘要）
+description: >-
+  内容风控与 AI 应用：把模糊地带变成可复制的判定机制——内容治理、人机协同决策、评测与标注质量。
+url: "https://dmithrandir.github.io"
+baseurl: ""
+
+# ===== 主题 =====
+# minima 是 GitHub Pages 官方内置主题里唯一自带「文章列表 / 文章页 / 导航」的博客主题
+theme: minima
+lang: zh-CN
+timezone: Asia/Shanghai
+
+# 日期显示成 2026-10-25，而不是 Oct 25, 2026
+minima:
+  date_format: "%Y-%m-%d"
+
+# ===== Markdown 渲染 =====
+markdown: kramdown
+kramdown:
+  input: GFM          # GitHub 风格：表格、任务列表、删除线
+  hard_wrap: false    # 中文单行内换行不强制断行，避免排版破碎
+
+# ===== 插件（都在 GitHub Pages 白名单内，不需要 Actions）=====
+# jekyll-feed  → 生成 /feed.xml（RSS）
+# jekyll-seo-tag → 自动生成标题/描述/Open Graph 分享卡片
+# jekyll-sitemap → 生成 /sitemap.xml（搜索引擎收录）
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# ===== 首页与导航 =====
+show_excerpts: true     # 首页文章列表显示摘要
+header_pages:           # 页眉导航（只列你要露出的页面）
+  - about.md
+
+# ===== 不参与构建的文件 =====
+# 仓库里放说明文档是好事，但别让它们变成站点上的杂页
+exclude:
+  - README.md
+  - LICENSE
+  - Gemfile
+  - Gemfile.lock
+  - .gitignore
+  - vendor
