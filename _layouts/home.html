@@ -1,32 +1,54 @@
 ---
-layout: default
+layout: home
 ---
-<div class="home">
-  {%- if page.title -%}
-    <h1 class="page-heading">{{ page.title }}</h1>
-  {%- endif -%}
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-main">
+      {%- if page.eyebrow %}<p class="eyebrow">{{ page.eyebrow }}</p>{% endif -%}
+      <h1 class="hero-title">{{ page.hero_title | default: site.title }}</h1>
+      {%- if page.hero_lead %}<p class="hero-lead">{{ page.hero_lead }}</p>{% endif -%}
+      <p class="hero-cta">
+        <a class="btn" href="#index">看文章</a>
+        <a class="btn btn-ghost" href="{{ '/about/' | relative_url }}">关于我</a>
+      </p>
+    </div>
+    {%- if page.hero_meta -%}
+    <aside class="hero-side" aria-label="基本信息">
+      <ul class="meta-list">
+        {%- for item in page.hero_meta %}
+        <li>
+          <span class="meta-label">{{ item.label }}</span>
+          <span class="meta-value">{{ item.value }}</span>
+        </li>
+        {%- endfor %}
+      </ul>
+    </aside>
+    {%- endif -%}
+  </div>
+</section>
 
+<div class="wrap home-content">
   {{ content }}
 
-  {%- if site.posts.size > 0 -%}
-    <h2 class="post-list-heading">{{ page.list_title | default: "文章" }}</h2>
-    <ul class="post-list">
-      {%- for post in site.posts -%}
-      <li>
-        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-        <span class="post-meta">{{ post.date | date: date_format }}</span>
-        <h3>
-          <a class="post-link" href="{{ post.url | relative_url }}">
-            {{ post.title | escape }}
-          </a>
-        </h3>
-        {%- if site.show_excerpts -%}
-          {{ post.excerpt }}
-        {%- endif -%}
+  <section class="index" id="index" aria-labelledby="index-title">
+    <div class="section-head">
+      <h2 id="index-title" class="section-title">索引<span class="section-sub">INDEX</span></h2>
+      <span class="section-count">{{ site.posts.size }} 篇</span>
+    </div>
+    <ol class="post-index">
+      {%- for post in site.posts %}
+      <li class="post-row" style="--i: {{ forloop.index0 }}">
+        <a class="post-row-link" href="{{ post.url | relative_url }}">
+          <span class="row-num">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+          <span class="row-date">{{ post.date | date: '%Y.%m.%d' }}</span>
+          <span class="row-title">{{ post.title }}</span>
+          <span class="row-arrow" aria-hidden="true">→</span>
+        </a>
+        {%- if post.excerpt %}
+        <p class="row-excerpt">{{ post.excerpt | strip_html | strip_newlines | truncate: 120 }}</p>
+        {%- endif %}
       </li>
-      {%- endfor -%}
-    </ul>
-
-    <p class="rss-subscribe">订阅 <a href="{{ "/feed.xml" | relative_url }}">RSS</a></p>
-  {%- endif -%}
+      {%- endfor %}
+    </ol>
+  </section>
 </div>

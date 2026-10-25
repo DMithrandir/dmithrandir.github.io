@@ -1,0 +1,53 @@
+---
+layout: default
+---
+{%- assign chars = content | strip_html | strip_newlines | size -%}
+{%- assign minutes = chars | divided_by: 400 | plus: 1 -%}
+<article class="post">
+  <header class="wrap post-head">
+    <p class="eyebrow">
+      {%- for category in page.categories -%}{{ category }}<span class="sep">/</span>{%- endfor -%}
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%Y.%m.%d' }}</time>
+      <span class="sep">/</span>约 {{ minutes }} 分钟
+    </p>
+    <h1 class="post-title">{{ page.title }}</h1>
+    {%- if page.description %}<p class="post-lead">{{ page.description }}</p>{% endif -%}
+    {%- if page.tags.size > 0 %}
+    <ul class="tag-list" aria-label="标签">
+      {%- for tag in page.tags %}<li>{{ tag }}</li>{% endfor -%}
+    </ul>
+    {%- endif %}
+  </header>
+
+  <div class="wrap post-grid">
+    <div class="post-content" id="post-content">
+      {{ content }}
+    </div>
+    <aside class="toc" aria-label="本文目录">
+      <div class="toc-inner">
+        <p class="toc-title">目录</p>
+        <nav class="toc-nav" id="toc-nav"></nav>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="wrap post-foot">
+    {%- if page.previous or page.next %}
+    <nav class="post-nav" aria-label="上下篇">
+      {%- if page.previous %}
+      <a class="post-nav-link" href="{{ page.previous.url | relative_url }}">
+        <span class="pn-label">← 上一篇</span>
+        <span class="pn-title">{{ page.previous.title }}</span>
+      </a>
+      {%- endif %}
+      {%- if page.next %}
+      <a class="post-nav-link is-right" href="{{ page.next.url | relative_url }}">
+        <span class="pn-label">下一篇 →</span>
+        <span class="pn-title">{{ page.next.title }}</span>
+      </a>
+      {%- endif %}
+    </nav>
+    {%- endif %}
+    <a class="back-link" href="{{ '/' | relative_url }}"><span aria-hidden="true">←</span> 回到索引</a>
+  </footer>
+</article>

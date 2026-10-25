@@ -1,0 +1,26 @@
+---
+layout: page
+title: 归档
+permalink: /archive/
+eyebrow: "ARCHIVE"
+description: "全部文章，按年份排列。"
+wide: true
+---
+{%- assign posts_by_year = site.posts | group_by_exp: "post", "post.date | date: '%Y'" -%}
+<ul class="archive-list">
+  {%- for year in posts_by_year %}
+  <li class="archive-year">
+    <h2 class="archive-year-title">{{ year.name }}<span class="archive-count">{{ year.items.size }}</span></h2>
+    <ul class="archive-posts">
+      {%- for post in year.items %}
+      <li>
+        <a href="{{ post.url | relative_url }}">
+          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%m.%d' }}</time>
+          <span class="archive-title">{{ post.title }}</span>
+        </a>
+      </li>
+      {%- endfor %}
+    </ul>
+  </li>
+  {%- endfor %}
+</ul>

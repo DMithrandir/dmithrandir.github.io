@@ -1,0 +1,20 @@
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="{{ '/' | relative_url }}" aria-label="回到首页">
+      <span class="brand-seal" aria-hidden="true">判</span>
+      <span class="brand-text">
+        <span class="brand-name">彭德馨</span>
+        <span class="brand-sub">Dexin Peng · 内容风控与 AI</span>
+      </span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} class="is-active" aria-current="page"{% endif %}>文章</a>
+      <a href="{{ '/archive/' | relative_url }}"{% if page.url contains '/archive' %} class="is-active" aria-current="page"{% endif %}>归档</a>
+      <a href="{{ '/about/' | relative_url }}"{% if page.url contains '/about' %} class="is-active" aria-current="page"{% endif %}>关于</a>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深浅色模式" title="切换深浅色模式">
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4.1"/><path d="M12 2.6v2.5M12 18.9v2.5M4.4 12H1.9M22.1 12h-2.5M6.4 6.4 4.6 4.6M19.4 19.4l-1.8-1.8M17.6 6.4l1.8-1.8M4.6 19.4l1.8-1.8"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 14.8A8.3 8.3 0 0 1 9.2 3.8a8.6 8.6 0 1 0 11 11Z"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>

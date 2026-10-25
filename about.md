@@ -2,6 +2,8 @@
 title: 关于
 permalink: /about/
 layout: page
+eyebrow: "ABOUT"
+description: "四年头部短视频与直播平台的内容安全与治理。重点是把判不了的那一类，做成可运营的流程。"
 ---
 
 ## 我在做什么
