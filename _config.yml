@@ -1,7 +1,7 @@
 # ===== 站点基本信息 =====
 title: 灰度
 description: >-
-  AI 内容治理、人机协同、模型评测与系统工程的实践笔记：不写新闻，只写做过、验证过、能复用的东西。
+  AI 内容治理、模型评测与系统工程的笔记。
 author: 灰度
 url: "https://dmithrandir.github.io"
 baseurl: ""

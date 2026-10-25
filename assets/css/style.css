@@ -438,6 +438,19 @@ p {
   margin: 0 0 8px;
 }
 
+.pillar h3 a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule-strong);
+  padding-bottom: 1px;
+  transition: color 0.16s ease, border-color 0.16s ease;
+}
+
+.pillar h3 a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
 .pillar p {
   font-size: 0.9rem;
   line-height: 1.8;
