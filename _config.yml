@@ -32,6 +32,7 @@ plugins:
 # ===== 不参与构建的文件 =====
 exclude:
   - README.md
+  - EDITING.md
   - LICENSE
   - Gemfile
   - Gemfile.lock

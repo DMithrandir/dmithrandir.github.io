@@ -8,8 +8,8 @@ layout: default
       <h1 class="hero-title">{{ page.hero_title | default: site.title }}</h1>
       {%- if page.hero_lead %}<p class="hero-lead">{{ page.hero_lead }}</p>{% endif -%}
       <p class="hero-cta">
-        <a class="btn" href="{{ '/blog/' | relative_url }}">读文章</a>
-        <a class="btn btn-ghost" href="{{ '/projects/' | relative_url }}">看项目</a>
+        <a class="btn" href="{{ '/blog/' | relative_url }}">{{ page.cta_primary | default: "读文章" }}</a>
+        <a class="btn btn-ghost" href="{{ '/projects/' | relative_url }}">{{ page.cta_secondary | default: "看项目" }}</a>
       </p>
     </div>
     {%- if page.hero_meta -%}
@@ -32,7 +32,7 @@ layout: default
 
   {%- if site.posts.size > 0 %}
   <section class="block">
-    {% include section-head.html title="最新文章" sub="LATEST" link="/blog/" link_label="全部文章" %}
+    {% include section-head.html title=page.posts_title sub=page.posts_sub link="/blog/" link_label=page.posts_more %}
     <ol class="post-index">
       {%- for post in site.posts limit: 5 %}
         {% include post-row.html post=post index=forloop.index excerpt=true %}
@@ -44,7 +44,7 @@ layout: default
   {%- assign featured = site.data.projects | where_exp: "p", "p.featured" -%}
   {%- if featured.size > 0 %}
   <section class="block">
-    {% include section-head.html title="项目" sub="PROJECTS" link="/projects/" link_label="全部项目" %}
+    {% include section-head.html title=page.projects_title sub=page.projects_sub link="/projects/" link_label=page.projects_more %}
     <div class="cards">
       {%- for project in featured limit: 3 %}
         {% include project-card.html project=project index=forloop.index %}
@@ -56,25 +56,27 @@ layout: default
   <section class="block block-about">
     <div class="about-grid">
       <div class="about-main">
-        <p class="eyebrow">ABOUT</p>
-        <h2 class="block-title">关于这个博客</h2>
+        <p class="eyebrow">{{ page.about_eyebrow | default: "ABOUT" }}</p>
+        <h2 class="block-title">{{ page.about_title | default: "关于这个博客" }}</h2>
         <p class="about-text">{{ page.about_band | default: site.description }}</p>
-        <p><a class="btn btn-ghost" href="{{ '/about/' | relative_url }}">关于本站</a></p>
+        <p><a class="btn btn-ghost" href="{{ '/about/' | relative_url }}">{{ page.about_button | default: "关于本站" }}</a></p>
       </div>
+      {%- if page.facts %}
       <aside class="about-side">
         <ul class="fact-list">
-          <li><span class="fact-label">主题</span><span class="fact-value">AI 治理 · 评测 · 工程</span></li>
-          <li><span class="fact-label">节奏</span><span class="fact-value">长文为主，不定期</span></li>
-          <li><span class="fact-label">订阅</span><span class="fact-value"><a href="{{ '/feed.xml' | relative_url }}">RSS</a></span></li>
+          {%- for fact in page.facts %}
+          <li><span class="fact-label">{{ fact.label }}</span><span class="fact-value">{{ fact.value }}</span></li>
+          {%- endfor %}
         </ul>
       </aside>
+      {%- endif %}
     </div>
   </section>
 
   <section class="cta" aria-label="订阅与联系">
-    <p class="cta-title">如果你们也在处理「规则覆盖不到」的那一类问题，聊聊？</p>
+    <p class="cta-title">{{ page.cta_title }}</p>
     <p class="cta-links">
-      <a class="btn" href="{{ '/feed.xml' | relative_url }}">订阅 RSS</a>
+      <a class="btn" href="{{ '/feed.xml' | relative_url }}">{{ page.cta_subscribe | default: "订阅 RSS" }}</a>
       <a class="btn btn-ghost" href="https://github.com/DMithrandir" rel="me noopener">GitHub</a>
     </p>
   </section>
