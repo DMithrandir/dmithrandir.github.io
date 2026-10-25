@@ -839,6 +839,49 @@ p {
   border-color: var(--accent);
 }
 
+/* ---------- 插图 / 图表 ---------- */
+.post-figure {
+  margin: 2.4em 0 2.6em;
+}
+
+.post-figure-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.post-figure a {
+  display: block;
+  text-decoration: none;
+  border-bottom: 0;
+}
+
+.post-figure a:hover {
+  background: transparent;
+}
+
+.post-figure img {
+  display: block;
+  width: 100%;
+  min-width: 620px;
+  height: auto;
+  margin: 0;
+  border-radius: 3px;
+}
+
+.post-figure figcaption {
+  margin-top: 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+}
+
+.post-figure figcaption strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
 /* ---------- 目录 ---------- */
 .toc {
   position: sticky;
@@ -1279,6 +1322,10 @@ p {
 
   .post-content table {
     font-size: 0.8rem;
+  }
+
+  .post-figure img {
+    min-width: 560px;
   }
 
   .post-nav {

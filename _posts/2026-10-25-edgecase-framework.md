@@ -85,28 +85,14 @@ This mechanism builds on an existing governance program: the team drew live clip
 
 ## 4. 三段决策流程｜Three-step decision process
 
-```mermaid
-flowchart TD
-  A["Step 1 · 片段审查<br/>Strict policy-based clip review"] -->|"信号清晰 Clear"| B["Step 2 · 语境校准<br/>Room playback（人审 / human only）"]
-  A -->|"疑似 / 隐晦 Implicit"| E["Step 3 · 灰度判断<br/>Room signals + common sense<br/>（人审 + LLM）"]
-  A -->|"完全无信号 No signal"| P1["Task: Pass · Final: Pass<br/>Code: Quality Issue"]
-
-  B --> B1["互动信号全场高频<br/>Frequent throughout"] --> L1["Final: Label"]
-  B --> B2["互动信号偶发<br/>Occasional"] --> L2["Final: Pass<br/>Code: Clip lacks context"]
-  B --> B3["连麦 / 嘉宾违规<br/>Co-host violation"] --> L3["Final: Label<br/>Code: Co-host violation"]
-  B --> B4["主播其他政策违规<br/>Host violation"] --> L4["Final: Label<br/>Code: Quality Issue"]
-
-  E --> E1["房间内能找到违规或负向意图"]
-  E1 --> E1a["Textual / Verbal"] --> F1["Final: Label<br/>Edge · clip lacks signal · room violation"]
-  E1 --> E1b["Behavior / Visual"] --> F2["Final: Label<br/>Edge · clip lacks signal · room violation"]
-
-  E --> E2["房间内找不到违规或负向意图"]
-  E2 --> E2a["Textual / Verbal"] --> F3["Final: Pass<br/>Edge · clip lacks signal · room normal"]
-  E2 --> E2b["Behavior / Visual · 常识判断"]
-  E2b --> C1["Problematic"] --> F4["Final: Label<br/>Edge · borderline · room violation"]
-  E2b --> C2["Not problematic"] --> F5["Final: Pass<br/>Edge · borderline · room normal"]
-  E2b --> C3["Cannot judge"] --> F6["Final: Edge<br/>Edge · borderline · room edge"]
-```
+<figure class="post-figure">
+  <div class="post-figure-scroll">
+    <a href="{{ '/assets/img/edgecase-flow.svg' | relative_url }}" target="_blank" rel="noopener">
+      <img src="{{ '/assets/img/edgecase-flow.svg' | relative_url }}" alt="三段决策流程图：Step 1 片段审查按片段信号强弱分成三路——清晰违规进入 Step 2 语境校准（仅人审），疑似或隐晦进入 Step 3 灰度判断（人审加 LLM），完全无信号直接判 Pass 并记 Quality Issue；最终输出 Label / Pass / Edge 三态。" width="800" height="838" loading="lazy">
+    </a>
+  </div>
+  <figcaption><strong>图 1 · 三段决策流程</strong>：Step 1 只决定「去哪」；Step 2 校准语境（只有人能看整个房间）；Step 3 处理没有硬信号的灰度案例，其中「行为 / 视觉 + 常识判断」这一支才送模型三票。点图可看原尺寸。</figcaption>
+</figure>
 
 ### Step 1 — 严格按政策原文审片段｜Clip review against the policy text
 
@@ -226,6 +212,15 @@ The Q4-2025 v1 was deliberately simple: no model orchestration, no confidence th
 | 僵局 / Deadlock | 两个模型意见相反时，人工票决胜 / When the two models split, the human vote decides |
 | 触发范围 / Scope | 仅「需要常识判断」的 `Edge` 分支 / Only the `Edge` branch requiring common-sense judgment |
 | 输出要求 / Output | 按 CoT 四要素结构化的判定 / Verdict structured per the four-element CoT |
+
+<figure class="post-figure">
+  <div class="post-figure-scroll">
+    <a href="{{ '/assets/img/edgecase-voting.svg' | relative_url }}" target="_blank" rel="noopener">
+      <img src="{{ '/assets/img/edgecase-voting.svg' | relative_url }}" alt="人机三票示意图：需要常识判断的案例同时交给两个不同的大模型和一位人工，三方独立判定、互不可见，多数决；两个模型意见相反时由人工票决胜，最终输出 Label / Pass / Edge。" width="800" height="470" loading="lazy">
+    </a>
+  </div>
+  <figcaption><strong>图 2 · 人机三票</strong>：三个投票者同时判定、互不可见；两个模型意见相反时人票决胜。这条「互不可见」是整套设计里最容易被省略、也最关键的一条。</figcaption>
+</figure>
 
 **为什么是「三个投票者 + 人票决胜」而不是让模型直接终审**：两个模型提供不同视角、覆盖单模型盲区；人工保留终审权，确保机制在政策立场上不失锚；而「互不可见 + 同时判定」是这套设计里最关键的一条——先看模型结论再自己判，人就已经被锚定了。
 **Why three voters with a human tie-breaker instead of letting a model decide**: two models bring different perspectives and cover each other's blind spots, while the human retains final authority so the mechanism stays anchored to policy. "Mutually blind and simultaneous" is the most important rule — once a reviewer sees the model's verdict first, anchoring has already happened.
