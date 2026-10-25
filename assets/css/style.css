@@ -1989,3 +1989,41 @@ mjx-container[display="true"] {
     margin-left: 0;
   }
 }
+
+/* ---------- 系列入口条（/blog/ 顶部） ---------- */
+.series-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 14px;
+  margin: 0 0 26px;
+  padding: 14px 18px;
+  border: 1px solid var(--rule);
+  background: var(--paper-2);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.series-strip-kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+
+.series-strip a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule-strong);
+  transition: color 0.18s ease, border-color 0.18s ease;
+}
+
+.series-strip a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.series-strip-note {
+  color: var(--muted);
+  font-size: 0.85rem;
+}

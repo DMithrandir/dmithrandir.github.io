@@ -66,7 +66,7 @@ $$
 | [03](/mcmc/03-blind-noise-is-variance-tuning/) | 我证的第一个结果：盲注噪声 ≡ 方差调参 |
 | [04](/mcmc/04-from-selection-to-step-size/) | 约束噪声到底做了什么：从"选择"到"步长" |
 | [05](/mcmc/05-four-groups-and-a-sweep/) | 把实验完整跑一遍：四组对照与噪声扫描 |
-| [06](/mcmc/06-what-i-got-wrong/) | 六年后复盘：四处错误、一个用错的词，以及这条线去了哪里 |
+| [06](/mcmc/06-what-i-got-wrong/) | 六年后复盘：三处错误、一个用错的词，以及这条线去了哪里 |
 
 核心结论先放在这里，省得你读到第四篇才发现：
 
