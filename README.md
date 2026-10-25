@@ -16,6 +16,7 @@
 | `/archive/` | `archive.html` | 按年份归档 |
 | `/projects/` | `projects.html` | 项目（读 `_data/projects.yml`） |
 | `/about/` | `about.md` | 关于本站 / 作者 / 经历 |
+| `/mcmc/` | `mcmc/index.md` | 系列落地页（目录由 `_data/series.yml` + 文章 front matter 自动生成） |
 | `/xxx/` | `_posts/…` | 文章页（右侧目录、阅读进度、上下篇） |
 
 ## 目录结构
@@ -73,6 +74,45 @@
 3. `git add -A && git commit -m "新增：xxx" && git push`
 
 约 45–75 秒后生效。文章会自动进 `/blog/`、`/archive/`、RSS 与 sitemap。
+
+## 发一个系列（Series）
+
+系列文章不需要手动维护目录：在 front matter 里加四个字段，站点会自动生成顶部横幅（第 N / M 篇）与文末的系列目录。
+
+```yaml
+series: noise-mcmc        # 系列 key，对应 _data/series.yml 里的键
+series_part: 3            # 第几篇（整数，决定顺序）
+nav_title: "盲注噪声就是方差调参"   # 系列目录里显示的短标题
+math: true                # 需要数学公式时打开
+```
+
+- 系列的标题、副题、落地页地址写在 `_data/series.yml`；
+- 落地页放在 `mcmc/index.md`（`permalink: /mcmc/`），用 `site.posts | where: "series", ...` 自动列目录；
+- 顶部/底部导航由 `_includes/series-banner.html` 与 `_includes/series-nav.html` 渲染，`_layouts/post.html` 在 `page.series` 为真时自动引入。
+
+## 数学公式
+
+只在 `math: true` 的文章里加载 MathJax（CDN），其他页面不受影响。
+
+- 行内公式：`\( ... \)`
+- 独立公式：单独一行 `$$ ... $$`
+- **不要用 `$...$`**：kramdown 不解析它，而且公式里的下划线会被当成强调。`_config.yml` 里已设 `math_engine: mathjax`，公式会在 Markdown 之前被保护起来。
+
+## 插图：深浅色两套
+
+图表用 `img.fig-light` / `img.fig-dark` 各一张，CSS 按 `[data-theme]` 自动切换（样式见 `style.css` 的「插图」段）：
+
+```html
+<figure class="post-figure">
+  <div class="post-figure-scroll">
+    <a href="{{ '/assets/img/x/fig.png' | relative_url }}" target="_blank" rel="noopener">
+      <img class="fig-light" src="{{ '/assets/img/x/fig.png' | relative_url }}" alt="描述" width="1440" height="860" loading="lazy">
+      <img class="fig-dark" src="{{ '/assets/img/x/fig-dark.png' | relative_url }}" alt="描述" width="1440" height="860" loading="lazy">
+    </a>
+  </div>
+  <figcaption><strong>图 1 · 标题</strong>：说明。</figcaption>
+</figure>
+```
 
 ## 加一个页面
 

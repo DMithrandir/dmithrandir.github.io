@@ -1727,3 +1727,265 @@ p {
     page-break-inside: avoid;
   }
 }
+
+/* ==========================================================================
+   系列（Series）：顶部横幅、文末目录、落地页列表
+   ========================================================================== */
+.series-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 16px;
+  padding-top: 46px;
+  padding-bottom: 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.series-banner + .post-head {
+  padding-top: 20px;
+}
+
+.series-kicker {
+  color: var(--accent);
+  text-transform: none;
+}
+
+.series-progress {
+  color: var(--muted);
+}
+
+.series-all {
+  margin-left: auto;
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 1px;
+  transition: color 0.18s ease, border-color 0.18s ease;
+}
+
+.series-all:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* 文末：系列目录 */
+.series-nav {
+  margin-top: 8px;
+  padding-top: 26px;
+  border-top: 1px solid var(--rule);
+}
+
+.series-nav-title {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  color: var(--ink);
+  margin: 0 0 14px;
+}
+
+.series-nav-title span {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-left: 10px;
+}
+
+.series-nav-list {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+}
+
+.series-nav-list li {
+  border-bottom: 1px solid var(--rule);
+}
+
+.series-nav-list a {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 8px 10px;
+  text-decoration: none;
+  color: var(--ink-soft);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.series-nav-list a:hover {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+.series-nav-list .is-current a {
+  color: var(--ink);
+  background: var(--accent-soft);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+.sn-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  min-width: 2em;
+}
+
+.series-nav-list .is-current .sn-num {
+  color: var(--accent);
+}
+
+.sn-title {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.series-pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.series-pager a {
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 2px;
+  transition: color 0.18s ease, border-color 0.18s ease;
+}
+
+.series-pager a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.series-pager .is-right {
+  margin-left: auto;
+  text-align: right;
+}
+
+/* 落地页：系列文章列表 */
+.series-index {
+  list-style: none;
+  margin: 2em 0 0;
+  padding: 0;
+  counter-reset: si;
+}
+
+.series-index-item {
+  border-top: 1px solid var(--rule);
+  padding: 18px 0 16px;
+}
+
+.series-index-item:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.series-index-item > a {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  text-decoration: none;
+}
+
+.si-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  min-width: 2.2em;
+}
+
+.si-title {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  line-height: 1.35;
+  color: var(--ink);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.18s ease;
+}
+
+.series-index-item > a:hover .si-title {
+  border-color: var(--accent);
+}
+
+.si-arrow {
+  margin-left: auto;
+  color: var(--muted);
+  transition: transform 0.2s ease, color 0.18s ease;
+}
+
+.series-index-item > a:hover .si-arrow {
+  transform: translateX(4px);
+  color: var(--accent);
+}
+
+.si-desc {
+  margin: 8px 0 0 3.4em;
+  max-width: 58ch;
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+/* ==========================================================================
+   插图：深浅色两套（img.fig-light / img.fig-dark）
+   ========================================================================== */
+.post-figure img.fig-dark {
+  display: none;
+}
+
+[data-theme="dark"] .post-figure img.fig-light {
+  display: none;
+}
+
+[data-theme="dark"] .post-figure img.fig-dark {
+  display: block;
+}
+
+/* ==========================================================================
+   数学公式：MathJax 2（CHTML）与 3（mjx-container）都兼容
+   ========================================================================== */
+.post-content .MathJax_CHTML,
+.post-content .MathJax_SVG {
+  color: inherit;
+}
+
+.post-content div.MathJax_CHTML {
+  margin: 1.5em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+mjx-container {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  color: inherit;
+}
+
+mjx-container[display="true"] {
+  margin: 1.5em 0;
+}
+
+@media (max-width: 760px) {
+  .series-banner {
+    padding-top: 28px;
+  }
+
+  .series-index-item > a {
+    gap: 10px;
+  }
+
+  .si-title {
+    font-size: 1.15rem;
+  }
+
+  .si-desc {
+    margin-left: 0;
+  }
+}

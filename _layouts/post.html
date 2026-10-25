@@ -4,6 +4,7 @@ layout: default
 {%- assign chars = content | strip_html | strip_newlines | size -%}
 {%- assign minutes = chars | divided_by: 400 | plus: 1 -%}
 <article class="post">
+  {%- if page.series %}{% include series-banner.html %}{% endif -%}
   <header class="wrap post-head">
     <p class="eyebrow">
       {%- for category in page.categories -%}{{ category }}<span class="sep">/</span>{%- endfor -%}
@@ -30,6 +31,8 @@ layout: default
       </div>
     </aside>
   </div>
+
+  {%- if page.series %}{% include series-nav.html %}{% endif -%}
 
   <footer class="wrap post-foot">
     {%- if page.previous or page.next %}

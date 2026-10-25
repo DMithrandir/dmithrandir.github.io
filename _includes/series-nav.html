@@ -1,0 +1,35 @@
+{%- assign parts = site.posts | where: "series", page.series | sort: "series_part" -%}
+{%- assign meta = site.data.series[page.series] -%}
+{%- assign cur = 0 -%}
+{%- for p in parts -%}
+  {%- if p.url == page.url -%}{%- assign cur = forloop.index -%}{%- endif -%}
+{%- endfor -%}
+{%- assign prev_idx = cur | minus: 1 -%}
+{%- assign next_idx = cur | plus: 1 -%}
+{%- assign prev_part = nil -%}
+{%- assign next_part = nil -%}
+{%- for p in parts -%}
+  {%- if forloop.index == prev_idx -%}{%- assign prev_part = p -%}{%- endif -%}
+  {%- if forloop.index == next_idx -%}{%- assign next_part = p -%}{%- endif -%}
+{%- endfor -%}
+<nav class="wrap series-nav" aria-label="系列目录">
+  <p class="series-nav-title">{{ meta.title }}<span>· 全 {{ parts.size }} 篇</span></p>
+  <ol class="series-nav-list">
+    {%- for p in parts %}
+    <li{% if p.url == page.url %} class="is-current" aria-current="page"{% endif %}>
+      <a href="{{ p.url | relative_url }}">
+        <span class="sn-num">{{ p.series_part | prepend: "0" | slice: -2, 2 }}</span>
+        <span class="sn-title">{{ p.nav_title | default: p.title }}</span>
+      </a>
+    </li>
+    {%- endfor %}
+  </ol>
+  <p class="series-pager">
+    {%- if prev_part %}
+    <a href="{{ prev_part.url | relative_url }}"><span aria-hidden="true">←</span> {{ prev_part.nav_title | default: prev_part.title }}</a>
+    {%- endif %}
+    {%- if next_part %}
+    <a class="is-right" href="{{ next_part.url | relative_url }}">{{ next_part.nav_title | default: next_part.title }} <span aria-hidden="true">→</span></a>
+    {%- endif %}
+  </p>
+</nav>

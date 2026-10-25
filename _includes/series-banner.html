@@ -1,0 +1,12 @@
+{%- assign series_parts = site.posts | where: "series", page.series | sort: "series_part" -%}
+{%- assign series_meta = site.data.series[page.series] -%}
+{%- assign series_total = series_parts.size -%}
+{%- assign series_index = 0 -%}
+{%- for p in series_parts -%}
+  {%- if p.url == page.url -%}{%- assign series_index = forloop.index -%}{%- endif -%}
+{%- endfor -%}
+<aside class="wrap series-banner" aria-label="所属系列">
+  <span class="series-kicker">系列 · {{ series_meta.title }}</span>
+  <span class="series-progress">第 {{ series_index }} / {{ series_total }} 篇</span>
+  <a class="series-all" href="{{ series_meta.url | relative_url }}">全部目录 <span aria-hidden="true">→</span></a>
+</aside>

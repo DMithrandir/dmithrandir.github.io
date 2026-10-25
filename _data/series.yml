@@ -1,0 +1,11 @@
+# 系列元数据。文章通过 front matter 里的 series: <key> + series_part: <n> 关联，
+# 目录由 site.posts 动态生成，这里只放系列层面的文案。
+
+noise-mcmc:
+  title: "噪声、不等式与采样器"
+  subtitle: "一条 MCMC 加速研究线的六年复核"
+  url: "/mcmc/"
+  years: "2011 → 2026"
+  blurb: >-
+    从 Franzke–Kosko 的噪声不等式，到我重跑自己 2020 年毕业论文时发现的四处错误：
+    一个关于"噪声为什么能加速采样"的完整复盘。

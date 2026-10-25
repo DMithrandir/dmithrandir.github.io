@@ -19,6 +19,9 @@ markdown: kramdown
 kramdown:
   input: GFM
   hard_wrap: false
+  # 数学公式：把 $$...$$（行间）与 \(...\)（行内）转成 MathJax 可读的 script 标签，
+  # 同时保护公式里的下划线、星号不被 Markdown 当成强调。只在 page.math 为真时加载 MathJax。
+  math_engine: mathjax
 
 # ===== 插件（均在 GitHub Pages 白名单内）=====
 plugins:

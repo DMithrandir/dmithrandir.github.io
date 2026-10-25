@@ -14,5 +14,30 @@
   {%- seo -%}
   <link rel="preload" href="{{ '/assets/fonts/instrument-serif-latin-400.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  {%- if page.math %}
+  <script>
+    window.MathJax = {
+      tex2jax: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {
+        extensions: ['AMSmath.js', 'AMSsymbols.js'],
+        Macros: {
+          E: '\\mathbb{E}',
+          R: '\\mathbb{R}',
+          dd: '\\mathrm{d}',
+          KL: 'D_{\\mathrm{KL}}',
+          ind: '\\;\\;\\;\\;'
+        }
+      },
+      showMathMenu: false,
+      messageStyle: 'none'
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_CHTML"></script>
+  {%- endif %}
   {%- feed_meta -%}
 </head>
