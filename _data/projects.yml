@@ -1,0 +1,35 @@
+# 作品集数据：首页与 /projects/ 都读这里
+# 新增一个项目 = 在列表里加一块，然后在首页 featured: true 决定是否露出
+# link 留空时，卡片不可点（适合还没写成文章的项目）
+
+- title: 灰度案例判定框架
+  role: 机制设计者
+  period: "2025"
+  summary: 把「判不了的案例」从感觉变成统计：双层判定、三段决策流程、9 类归因编码，以及两个模型加一位人工的三票多数决。
+  tags: [治理机制, 人机协同, 评测]
+  link: /edgecase-framework/
+  featured: true
+
+- title: 政策级联与培训自动化
+  role: 流程设计
+  period: "2022 – 2025"
+  summary: 让多市场政策下发与培训走同一条流水线：政策拆成可执行判据 → 判据进知识库 → 知识库驱动培训与抽检。
+  tags: [政策系统, 流程自动化, 知识库]
+  link: ""
+  featured: true
+
+- title: 审核知识系统（单一事实来源）
+  role: 系统设计
+  period: "2023 – 2025"
+  summary: 把散落在文档、群聊与口头约定里的判定口径收敛成唯一可检索的事实来源，让「以谁为准」不再靠问人。
+  tags: [知识工程, SSOT, 审核标准]
+  link: ""
+  featured: true
+
+- title: 端侧 AI 语音应用
+  role: 独立开发
+  period: "2026"
+  summary: gap 期从协议到端侧全链路自研，验证「一个人也能闭环」：协议、端侧推理、交互与上架。
+  tags: [端侧 AI, 全栈, 独立产品]
+  link: ""
+  featured: false

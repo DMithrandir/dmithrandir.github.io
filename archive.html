@@ -1,10 +1,9 @@
 ---
-layout: page
+layout: list
 title: 归档
 permalink: /archive/
 eyebrow: "ARCHIVE"
 description: "全部文章，按年份排列。"
-wide: true
 ---
 {%- assign posts_by_year = site.posts | group_by_exp: "post", "post.date | date: '%Y'" -%}
 <ul class="archive-list">

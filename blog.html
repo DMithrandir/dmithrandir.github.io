@@ -1,0 +1,14 @@
+---
+layout: list
+title: 文章
+permalink: /blog/
+eyebrow: "WRITING"
+description: "治理机制、人机协同、评测与标注。写下来的，都是做过的。"
+---
+<ol class="post-index">
+  {%- for post in site.posts %}
+    {% include post-row.html post=post index=forloop.index excerpt=true %}
+  {%- endfor %}
+</ol>
+
+<p class="block-foot">按年份看 → <a href="{{ '/archive/' | relative_url }}">归档</a>　·　订阅 → <a href="{{ '/feed.xml' | relative_url }}">RSS</a></p>

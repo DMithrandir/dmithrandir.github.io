@@ -1,0 +1,13 @@
+{%- assign post = include.post -%}
+{%- assign n = include.index | plus: 0 -%}
+<li class="post-row" style="--i: {{ n | minus: 1 }}">
+  <a class="post-row-link" href="{{ post.url | relative_url }}">
+    <span class="row-num">{% if n < 10 %}0{% endif %}{{ n }}</span>
+    <span class="row-date">{{ post.date | date: '%Y.%m.%d' }}</span>
+    <span class="row-title">{{ post.title }}</span>
+    <span class="row-arrow" aria-hidden="true">→</span>
+  </a>
+  {%- if include.excerpt and post.excerpt %}
+  <p class="row-excerpt">{{ post.excerpt | strip_html | strip_newlines | truncate: 110 }}</p>
+  {%- endif %}
+</li>

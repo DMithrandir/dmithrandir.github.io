@@ -1,6 +1,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f4ea">
   <script>
     (function () {
       try {
@@ -12,6 +13,6 @@
   </script>
   {%- seo -%}
   <link rel="preload" href="{{ '/assets/fonts/instrument-serif-latin-400.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">
   {%- feed_meta -%}
 </head>

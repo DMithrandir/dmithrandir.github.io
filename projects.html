@@ -1,0 +1,14 @@
+---
+layout: list
+title: 作品集
+permalink: /projects/
+eyebrow: "WORK"
+description: "四个项目：治理机制、政策系统、知识底座，以及一个端侧 AI 应用。都是做过的，不是想过的。"
+---
+<div class="cards">
+  {%- for project in site.data.projects %}
+    {% include project-card.html project=project index=forloop.index %}
+  {%- endfor %}
+</div>
+
+<p class="block-foot">还没写成文章的项目，可以直接聊 —— <a href="https://github.com/DMithrandir" rel="me noopener">GitHub</a> 或 <a href="{{ '/about/' | relative_url }}">关于我</a>。</p>

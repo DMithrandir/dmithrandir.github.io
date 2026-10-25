@@ -11,6 +11,7 @@ hero_meta:
     value: "AI 内容治理 / 风险策略 / 评测"
   - label: "语言"
     value: "中文 · English"
+about_band: "四年头部短视频与直播平台的内容安全与治理：做过政策下发、模糊地带判据与审核知识系统，也把一个「判不了怎么办」的灰度判定做成过可运营的流程。"
 ---
 
 <section class="pillars" aria-label="三条能力线">
@@ -30,5 +31,3 @@ hero_meta:
     <p>一致性抽检、golden set、badcase 回流——把「判得准」变成可测量的东西。</p>
   </div>
 </section>
-
-<p class="about-strip">目前在找 <strong>AI 内容治理 / 风险策略 / 评测与标注质量</strong> 方向的机会 · <a href="{{ '/about/' | relative_url }}">关于我 →</a></p>

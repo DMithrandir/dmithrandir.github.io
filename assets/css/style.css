@@ -1011,6 +1011,10 @@ p {
   max-width: 62ch;
 }
 
+.page-body {
+  width: 100%;
+}
+
 .page-wide .post-content {
   max-width: none;
 }
@@ -1121,6 +1125,286 @@ p {
   color: var(--accent);
 }
 
+/* ---------- 首页分节 / 卡片 / 时间线 ---------- */
+.block {
+  margin-top: 80px;
+}
+
+.block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--rule-strong);
+  margin-bottom: 30px;
+}
+
+.block-title {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+
+.block-sub {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-left: 12px;
+  vertical-align: 0.35em;
+}
+
+.block-link {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.block-link:hover {
+  color: var(--accent);
+}
+
+.block-foot {
+  margin-top: 28px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.block-foot a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 1px;
+}
+
+.block-foot a:hover {
+  color: var(--accent);
+}
+
+/* 卡片 */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 26px 28px 24px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: transparent;
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.card:hover {
+  background: var(--paper-2);
+  border-color: var(--rule-strong);
+}
+
+.card-static:hover {
+  background: transparent;
+  border-color: var(--rule);
+}
+
+.card-index {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+}
+
+.card-title {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  line-height: 1.35;
+  color: var(--ink);
+  margin: 0;
+}
+
+.card-desc {
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.card-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.card-meta .dot {
+  color: var(--rule-strong);
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+}
+
+.card-tags li {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  padding: 3px 7px;
+  border-radius: 2px;
+}
+
+.card-arrow {
+  position: absolute;
+  top: 24px;
+  right: 26px;
+  color: var(--muted);
+  font-size: 14px;
+  transition: transform 0.2s ease, color 0.18s ease;
+}
+
+.card:hover .card-arrow {
+  transform: translateX(4px);
+  color: var(--accent);
+}
+
+/* 关于条 */
+.about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 56px;
+  align-items: start;
+}
+
+.about-text {
+  font-size: 0.98rem;
+  line-height: 1.9;
+  color: var(--ink-soft);
+  max-width: 46em;
+  margin: 14px 0 22px;
+}
+
+.fact-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.fact-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.fact-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.fact-value {
+  font-size: 0.85rem;
+  color: var(--ink);
+  text-align: right;
+}
+
+/* 页脚前的联系带 */
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 80px;
+  padding: 44px 0 56px;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.cta-title {
+  font-family: var(--display);
+  font-size: 1.45rem;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 0;
+  max-width: 30em;
+}
+
+.cta-links {
+  display: flex;
+  gap: 10px;
+  margin: 0;
+}
+
+/* 时间线（关于页） */
+.timeline {
+  list-style: none;
+  margin: 1.6em 0;
+  padding: 0;
+}
+
+.timeline li {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 24px;
+  padding: 20px 0;
+  border-top: 1px solid var(--rule);
+}
+
+.timeline li:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.timeline-year {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  padding-top: 3px;
+}
+
+.timeline-body h3 {
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 650;
+  color: var(--ink);
+  margin: 0 0 6px;
+}
+
+.timeline-body p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+
 /* ---------- 动效 ---------- */
 @keyframes rise {
   from {
@@ -1213,6 +1497,15 @@ p {
 
   .pillar:last-child {
     border-bottom: 0;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
   }
 }
 
@@ -1349,6 +1642,37 @@ p {
   .footer-links a {
     margin-left: 0;
     margin-right: 18px;
+  }
+
+  .block {
+    margin-top: 56px;
+  }
+
+  .block-title {
+    font-size: 1.3rem;
+  }
+
+  .cta {
+    margin-top: 56px;
+    padding: 32px 0 44px;
+  }
+
+  .cta-title {
+    font-size: 1.2rem;
+  }
+
+  .timeline li {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .card {
+    padding: 22px 20px 20px;
+  }
+
+  .card-arrow {
+    top: 20px;
+    right: 20px;
   }
 }
 

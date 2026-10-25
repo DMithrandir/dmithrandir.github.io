@@ -1,0 +1,29 @@
+{%- assign p = include.project -%}
+{%- assign n = include.index | plus: 0 -%}
+{%- assign has_link = false -%}
+{%- if p.link and p.link != "" -%}{%- assign has_link = true -%}{%- endif -%}
+{%- if has_link %}
+<a class="card" href="{{ p.link | relative_url }}">
+{%- else %}
+<div class="card card-static">
+{%- endif %}
+  <span class="card-index">{% if n < 10 %}0{% endif %}{{ n }}</span>
+  <h3 class="card-title">{{ p.title }}</h3>
+  <p class="card-desc">{{ p.summary }}</p>
+  <p class="card-meta">
+    <span>{{ p.role }}</span>
+    {%- if p.period %}<span class="dot">·</span><span>{{ p.period }}</span>{% endif %}
+  </p>
+  {%- if p.tags %}
+  <ul class="card-tags">
+    {%- for tag in p.tags %}<li>{{ tag }}</li>{% endfor %}
+  </ul>
+  {%- endif %}
+  {%- if has_link %}
+  <span class="card-arrow" aria-hidden="true">→</span>
+  {%- endif %}
+{%- if has_link %}
+</a>
+{%- else %}
+</div>
+{%- endif %}

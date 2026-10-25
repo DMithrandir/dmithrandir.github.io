@@ -1,0 +1,6 @@
+<div class="block-head">
+  <h2 class="block-title">{{ include.title }}{% if include.sub %}<span class="block-sub">{{ include.sub }}</span>{% endif %}</h2>
+  {%- if include.link %}
+  <a class="block-link" href="{{ include.link | relative_url }}">{{ include.link_label }} <span aria-hidden="true">→</span></a>
+  {%- endif %}
+</div>
