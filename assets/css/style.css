@@ -575,8 +575,8 @@ p {
 
 /* ---------- 文章页 ---------- */
 .post-head {
-  padding: 96px 0 40px;
-  max-width: 100%;
+  padding-top: 96px;
+  padding-bottom: 40px;
   border-bottom: 1px solid var(--rule);
 }
 
@@ -622,7 +622,7 @@ p {
   grid-template-columns: minmax(0, 680px) 200px;
   justify-content: space-between;
   gap: 64px;
-  padding: 56px 0 0;
+  padding-top: 56px;
   align-items: start;
 }
 
@@ -895,7 +895,8 @@ p {
 /* ---------- 文章页脚 ---------- */
 .post-foot {
   margin-top: 72px;
-  padding: 32px 0 96px;
+  padding-top: 32px;
+  padding-bottom: 96px;
   border-top: 1px solid var(--rule);
 }
 
@@ -953,11 +954,11 @@ p {
 
 /* ---------- 普通页面（关于 / 404 / 归档） ---------- */
 .page {
-  padding: 96px 0 110px;
+  padding-top: 96px;
+  padding-bottom: 110px;
 }
 
 .page-head {
-  max-width: 46em;
   margin-bottom: 40px;
   padding-bottom: 28px;
   border-bottom: 1px solid var(--rule);
@@ -1263,7 +1264,8 @@ p {
   }
 
   .post-head {
-    padding: 56px 0 32px;
+    padding-top: 56px;
+    padding-bottom: 32px;
   }
 
   .post-grid {
@@ -1288,7 +1290,8 @@ p {
   }
 
   .page {
-    padding: 64px 0 80px;
+    padding-top: 64px;
+    padding-bottom: 80px;
   }
 
   .footer-inner {
