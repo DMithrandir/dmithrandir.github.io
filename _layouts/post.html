@@ -8,8 +8,7 @@ layout: default
   <header class="wrap post-head">
     <p class="eyebrow">
       {%- for category in page.categories -%}{{ category }}<span class="sep">/</span>{%- endfor -%}
-      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%Y.%m.%d' }}</time>
-      <span class="sep">/</span>约 {{ minutes }} 分钟
+      约 {{ minutes }} 分钟
     </p>
     <h1 class="post-title">{{ page.title }}</h1>
     {%- if page.description %}<p class="post-lead">{{ page.description }}</p>{% endif -%}

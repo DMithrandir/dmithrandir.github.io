@@ -114,3 +114,19 @@ git push
 | 一个页面 | 新建 `xxx.md`，`layout: page`（正文页）或 `layout: list`（列表页）+ `permalink`，再到 `_includes/header.html` 加导航 |
 | 首页一个新分节 | `_layouts/home.html` 里复制一段 `<section class="block">…</section>` |
 | 文章配图 | 图片放 `assets/img/`，正文用 `<figure class="post-figure">`（模板见 `README.md`） |
+
+## 7. 日期怎么控制
+
+文章的 `date:` 在 front matter 里，**只用于排序，页面上不显示**（2026-10-26 起）。
+
+- 列表行：`_includes/post-row.html`（首页、`/blog/` 共用）—— 已去掉日期
+- 文章页顶部：`_layouts/post.html` 的 eyebrow —— 已去掉日期，只留分类和阅读时长
+- 归档页：`archive.html` 仍按**年份**分组，但不显示具体到日
+
+想加回来：
+
+1. `post-row.html` 里加 `<span class="row-date">{{ post.date | date: '%Y.%m.%d' }}</span>`（放在 `row-num` 后面）
+2. `style.css` 的 `.post-row-link` 列宽改成 `56px 116px minmax(0, 1fr) 24px`
+3. `.row-excerpt` 的左 margin 改回 `212px`
+
+> 副作用：RSS 和 sitemap 里仍然带真实日期（订阅器和搜索引擎需要），只是页面上看不到。

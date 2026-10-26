@@ -530,7 +530,7 @@ p {
 
 .post-row-link {
   display: grid;
-  grid-template-columns: 56px 116px minmax(0, 1fr) 24px;
+  grid-template-columns: 56px minmax(0, 1fr) 24px;
   gap: 20px;
   align-items: baseline;
   text-decoration: none;
@@ -579,7 +579,7 @@ p {
 }
 
 .row-excerpt {
-  margin: 10px 0 0 212px;
+  margin: 10px 0 0 76px;
   max-width: 56ch;
   font-size: 0.9rem;
   line-height: 1.75;
@@ -1075,9 +1075,7 @@ p {
 }
 
 .archive-posts a {
-  display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
-  gap: 16px;
+  display: block;
   padding: 13px 0;
   border-bottom: 1px solid var(--rule);
   text-decoration: none;
