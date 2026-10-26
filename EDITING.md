@@ -130,3 +130,31 @@ git push
 3. `.row-excerpt` 的左 margin 改回 `212px`
 
 > 副作用：RSS 和 sitemap 里仍然带真实日期（订阅器和搜索引擎需要），只是页面上看不到。
+
+## 8. 加一个系列
+
+三步：
+
+1. **`_data/series.yml`** 加一块：
+
+   ```yaml
+   my-series:
+     title: "系列名"
+     subtitle: "一句话副标题"
+     url: "/series/my-series/"
+     years: "2026"
+     blurb: >-
+       系列简介。
+   ```
+
+2. **建目录页**：复制 `series/ai-harness/index.md`，改 `permalink` 和文案。目录是动态生成的 —— `{% assign parts = site.posts | where: "series", "my-series" | sort: "series_part" %}`，不用手写列表。
+
+3. **文章 front matter** 加三行：
+
+   ```yaml
+   series: my-series
+   series_part: 1
+   nav_title: "目录里显示的短标题"
+   ```
+
+**注意**：`permalink` 不能和任何已有页面撞。这次就踩过——长文占了 `/harness/`，目录页只能挪到 `/series/ai-harness/`。加新页面前先在仓库里搜一遍 `permalink:`。
