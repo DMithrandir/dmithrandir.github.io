@@ -58,4 +58,4 @@ excerpt: "上下文腐化、工具误用、重试成瘾、评测泄漏、终止�
 
 ## 素材
 
-- `_drafts/ai-harness-01-what-is-harness.md`（结构）、`-02`（指标）
+- 已发布：`/harness/`（总纲）、`_drafts/ai-harness-02-evaluating-harness.md`（指标）

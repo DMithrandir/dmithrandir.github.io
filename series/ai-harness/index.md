@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "AI Harness"
-permalink: /harness/
+permalink: /series/ai-harness/
 eyebrow: "SERIES · 2026 →"
 description: "模型之外的那一层：上下文、工具、重试、回放与评测。同样的模型，换一层外框，完成率可以差一倍。"
 ---

@@ -58,5 +58,5 @@ excerpt: "评测 harness 的最小可用设计：真实任务集 + 四类指标 
 
 ## 素材
 
-- `_drafts/ai-harness-04-failure-patterns.md`（失败分类的基础）
+- `_drafts/ai-harness-04-failure-patterns.md`（失败分类的基础）、已发布的 `/harness/`（总纲）
 - 内容治理里的评测口径可以复用：见 `/governance/` 系列

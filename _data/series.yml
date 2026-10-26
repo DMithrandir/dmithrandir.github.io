@@ -22,7 +22,7 @@ governance:
 ai-harness:
   title: "AI Harness"
   subtitle: "模型之外，让任务真正跑起来的那一层"
-  url: "/harness/"
+  url: "/series/ai-harness/"
   years: "2026 →"
   blurb: >-
     同样的模型，换一层外框，完成率可以差一倍。这里记录我自己搭、自己测、自己踩坑的过程：

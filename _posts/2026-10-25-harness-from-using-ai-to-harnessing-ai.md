@@ -4,6 +4,9 @@ title: 'Harness：从"使用 AI"到"驾驭 AI"'
 date: 2026-10-25 21:30:00 +0800
 categories: 工程笔记
 tags: [Harness, AI 工程, Vibe Coding, 技术债务, 技术复盘]
+series: ai-harness
+series_part: 1
+nav_title: "从使用 AI 到驾驭 AI"
 permalink: /harness/
 description: '一场技术分享的复盘，加上逐条核对过的证据：门槛确实降了，但验证、迁移、担责没有跟着变便宜；harness 这门 2026 年才被命名的工程学科，到底管什么。'
 excerpt: 'Vibe coding 让生成变便宜。METR 的随机对照试验里，资深开发者用上 AI 反而慢了 19%，自己却觉得快了 20%。这篇把分享里的判断逐条拆开核对：七个子系统与五个模块怎么对表，技术债的账怎么记，验证为什么成了主成本，以及"国家级新学科"这类说法该往回收多少。'
