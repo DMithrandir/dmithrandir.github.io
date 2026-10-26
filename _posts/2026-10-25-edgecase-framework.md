@@ -3,6 +3,9 @@ layout: post
 title: "把模糊地带变成可复制的判定机制 · EdgeCase Framework"
 date: 2026-10-25 09:00:00 +0800
 categories: 治理框架
+series: governance
+series_part: 1
+nav_title: "灰度判定：把判不了的做成流程"
 tags: [内容治理, 人机协同, LLM, 评测, 标注质量]
 permalink: /edgecase-framework/
 description: "把「判不了的案例」从感觉变成统计：三段决策流程、9 类归因编码、四条常识判断原则，以及三票多数决的人机投票规则。"

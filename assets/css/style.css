@@ -2022,6 +2022,22 @@ mjx-container[display="true"] {
   color: var(--accent);
 }
 
+.series-strip-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  flex: 1 1 420px;
+}
+
+.series-strip-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+}
+
 .series-strip a {
   color: var(--ink);
   text-decoration: none;

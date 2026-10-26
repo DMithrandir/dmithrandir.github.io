@@ -5,11 +5,17 @@ permalink: /blog/
 eyebrow: "WRITING"
 description: "治理机制、人机协同、评测与标注。写下来的，都是做过的。"
 ---
-<p class="series-strip">
+<div class="series-strip">
   <span class="series-strip-kicker">系列</span>
-  <a href="{{ '/mcmc/' | relative_url }}">噪声、不等式与采样器</a>
-  <span class="series-strip-note">一条 MCMC 加速研究线的六年复核 · 6 篇</span>
-</p>
+  <ul class="series-strip-list">
+    {%- for s in site.data.series %}
+    <li>
+      <a href="{{ s[1].url | relative_url }}">{{ s[1].title }}</a>
+      <span class="series-strip-note">{{ s[1].subtitle }}</span>
+    </li>
+    {%- endfor %}
+  </ul>
+</div>
 
 <ol class="post-index">
   {%- for post in site.posts %}

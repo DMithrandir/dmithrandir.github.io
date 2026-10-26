@@ -33,6 +33,7 @@ plugins:
 exclude:
   - README.md
   - EDITING.md
+  - DRAFTS.md
   - LICENSE
   - Gemfile
   - Gemfile.lock
