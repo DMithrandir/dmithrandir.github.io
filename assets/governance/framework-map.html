@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>治理框架 · 顶层设计</title>
+<style>
+  :root{
+    --bg:#0d1014; --panel:#151a21; --panel2:#1b212a; --line:#28303c;
+    --fg:#e7ebf1; --fg2:#98a3b2; --fg3:#6a7482;
+    --c0:#ff8a5c; --c1:#5cc8ff; --c2:#7ee787; --c3:#ffd866; --c4:#c792ea;
+    --accent:#1f6feb;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:var(--bg);color:var(--fg);font-size:14px;line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    display:flex;flex-direction:column;height:100vh}
+  header{background:var(--panel);border-bottom:1px solid var(--line);padding:11px 18px;
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;flex-shrink:0}
+  header h1{font-size:15px;margin:0;font-weight:650;letter-spacing:.2px}
+  header .sub{color:var(--fg3);font-size:12px}
+  .spacer{flex:1}
+  button{background:var(--panel2);color:var(--fg);border:1px solid var(--line);
+    border-radius:6px;padding:5px 11px;font-size:12px;cursor:pointer;font-family:inherit;transition:.15s}
+  button:hover{background:#232b36;border-color:#3a4350}
+  button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  input[type=search]{background:var(--panel2);color:var(--fg);border:1px solid var(--line);
+    border-radius:6px;padding:5px 10px;font-size:12px;width:180px;font-family:inherit}
+  input[type=search]::placeholder{color:var(--fg3)}
+  main{flex:1;display:flex;overflow:hidden}
+
+  #canvas{flex:1;overflow:auto;padding:22px 28px 100px}
+
+  /* ===== 核心论点卡 ===== */
+  #thesis{
+    background:linear-gradient(135deg,#1a2029,#151a21);
+    border:1px solid #2f3844;border-left:3px solid var(--c0);
+    border-radius:10px;padding:18px 22px;margin-bottom:26px;max-width:1100px;
+  }
+  #thesis .lbl{font-size:11px;letter-spacing:1.2px;color:var(--c0);text-transform:uppercase;margin-bottom:8px}
+  #thesis .big{font-size:19px;font-weight:650;line-height:1.5;margin-bottom:10px;color:#fff}
+  #thesis .hint{font-size:13px;color:var(--fg2)}
+  #thesis .hint b{color:var(--c1);font-weight:600}
+
+  /* ===== 分支卡片 ===== */
+  .branch{margin-bottom:20px;border:1px solid var(--line);border-radius:10px;
+    background:var(--panel);overflow:hidden;max-width:1100px}
+  .bhead{display:flex;align-items:center;gap:10px;padding:13px 18px;cursor:pointer;
+    background:#171d25;border-bottom:1px solid transparent;transition:.15s}
+  .bhead:hover{background:#1c232c}
+  .branch.open .bhead{border-bottom-color:var(--line)}
+  .bnum{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:700;flex-shrink:0}
+  .btitle{font-size:15px;font-weight:650}
+  .bsub{font-size:12px;color:var(--fg3);margin-left:auto;flex-shrink:0}
+  .chev{color:var(--fg3);font-size:10px;transition:transform .15s;flex-shrink:0}
+  .branch.open .chev{transform:rotate(90deg)}
+  .bbody{display:none;padding:6px 18px 16px}
+  .branch.open .bbody{display:block}
+
+  /* ===== 条目 ===== */
+  .item{padding:11px 0;border-bottom:1px dashed #232b35}
+  .item:last-child{border-bottom:none}
+  .itop{display:flex;align-items:flex-start;gap:9px}
+  .idx{font-size:11px;color:var(--fg3);font-variant-numeric:tabular-nums;padding-top:3px;min-width:18px}
+  .ih{font-weight:600;font-size:13.5px;color:var(--fg)}
+  .tag{font-size:10px;padding:1px 6px;border-radius:4px;border:1px solid var(--line);
+    color:var(--fg3);margin-left:7px;white-space:nowrap;vertical-align:middle}
+  .tag.hot{border-color:#7a3a1f;color:#ffab7f;background:#2a1a12}
+  .tag.key{border-color:#1f4a7a;color:#8ec5ff;background:#12202e}
+  .ibody{font-size:12.5px;color:var(--fg2);margin:5px 0 0 27px;line-height:1.7}
+  .ibody b{color:var(--fg);font-weight:600}
+  .ibody .ref{color:var(--c1);font-size:11.5px}
+  .ibody ul{margin:5px 0 0;padding-left:17px}
+  .ibody li{margin:2px 0}
+
+  /* ===== 侧栏 ===== */
+  aside{width:270px;flex-shrink:0;border-left:1px solid var(--line);background:var(--panel);
+    overflow:auto;padding:16px 18px}
+  aside.hide{display:none}
+  aside h2{font-size:11px;letter-spacing:1px;color:var(--fg3);text-transform:uppercase;
+    margin:0 0 10px;font-weight:650}
+  aside .nav{display:flex;flex-direction:column;gap:3px;margin-bottom:20px}
+  aside .nav a{color:var(--fg2);text-decoration:none;font-size:12.5px;padding:5px 9px;border-radius:5px}
+  aside .nav a:hover{background:var(--panel2);color:var(--fg)}
+  aside .nav .n{color:var(--fg3);margin-right:7px;font-variant-numeric:tabular-nums}
+  .note{font-size:11.5px;color:var(--fg3);line-height:1.7}
+  .note code{background:var(--panel2);padding:1px 5px;border-radius:3px;color:var(--c3);font-size:11px}
+  kbd{background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:11px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+  .legend span{font-size:11px;color:var(--fg2);display:flex;align-items:center;gap:5px}
+  .dot{width:7px;height:7px;border-radius:50%}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>治理框架 · 顶层设计</h1>
+  <span class="sub" id="stat"></span>
+  <span class="spacer"></span>
+  <input type="search" id="q" placeholder="搜索…（/ 聚焦）">
+  <button onclick="toggleAll(true)">全部展开</button>
+  <button onclick="toggleAll(false)">全部收起</button>
+  <button id="btnTwo" onclick="toggleL3()">显示三级</button>
+  <button onclick="window.print()">打印 / 存 PDF</button>
+  <button onclick="document.getElementById('side').classList.toggle('hide')">侧栏</button>
+</header>
+
+<main>
+  <div id="canvas">
+    <div id="thesis">
+      <div class="lbl">核心论点</div>
+      <div class="big">治理失效的多数根因，不是技术不够强，而是「问题没被定义对」和「指标被单方向博弈」。</div>
+      <div class="hint">
+        所以这套框架不回答"用什么模型"，而回答三件事：<b>问题怎么被定义</b>、<b>责任怎么被分配</b>、<b>结果怎么被度量</b>。
+      </div>
+    </div>
+    <div id="branches"></div>
+  </div>
+
+  <aside id="side">
+    <h2>四个分支</h2>
+    <div class="nav" id="nav"></div>
+    <h2>层级图例</h2>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--c0)"></i>核心判断</span>
+      <span><i class="dot" style="background:var(--c1)"></i>链路结构</span>
+      <span><i class="dot" style="background:var(--c2)"></i>贯穿机制</span>
+      <span><i class="dot" style="background:var(--c3)"></i>判断工具</span>
+      <span><i class="dot" style="background:var(--c4)"></i>成立条件</span>
+    </div>
+    <h2>怎么看</h2>
+    <div class="note">
+      这是<b>概括版</b>：只保留框架的<b>骨架与内在逻辑</b>，不展开模块细节。<br><br>
+      想看细节 → 打开 <code>治理框架-思维导图.html</code>（479 节点 / 5 层，含全部模块、案例、指标口径）。<br><br>
+      每条带 <span class="ref" style="color:#5cc8ff">→ M?</span> 的，是指该判断的详细展开位置。<br><br>
+      <kbd>/</kbd> 搜索 · 点标题展开/收起
+    </div>
+    <h2 style="margin-top:18px">配套文档</h2>
+    <div class="nav">
+      <a href="互联网内容治理-整体框架-总纲.md">总纲（五层链路全貌）</a>
+      <a href="治理框架-思维导图.html">详细版导图（479 节点）</a>
+    </div>
+  </aside>
+</main>
+
+<script>
+/* ============================================================
+   顶层设计 · 只放骨架，不放细节
+   字段：h=标题  b=说明(支持 <b> 与 <span class="ref">)  t=标签
+        tag=hot(反直觉) / key(关键)  subs=[{h,b}] 三级条目(默认隐藏)
+   ============================================================ */
+const DATA = [
+{
+  n:"01", c:"var(--c0)", title:"一、五个反直觉的核心判断",
+  sub:"框架的立论基础 · 最值得记住的部分",
+  items:[
+    {h:"发现与定义问题，比解决问题更难更重要",
+     b:"解决问题技术驱动、最容易量化；发现与定义问题依赖经验与价值取向，产出抽象。正因为可量化的产出容易获得资源，组织会结构性偏科：打击能力持续变强，但永远慢半拍。",
+     t:"hot", ref:"→ M0", subs:[
+       {h:"推论：只有 M0 能在问题规模化之前介入", b:"M1~M5 处理的是「已被发现的问题」"},
+       {h:"风险感知关键词是「异常」", b:"异常 → 痛点 → 治理需求；但要先分辨真问题与噪声"},
+       {h:"候选问题成案率决定 M1 产能是否被浪费", b:"若只有 10%，规则运营 90% 产能在处理噪声（成本记在别人账上）"}
+     ]},
+    {h:"治理的上限由「接口质量」决定，而非单点技术",
+     b:"链路的每个交接点都需要一份契约：交出去什么、下游需要什么、谁验收。最好的模型接在最差的接口上，整体仍是差的。",
+     t:"hot", ref:"→ M7", subs:[
+       {h:"五个关键接口", b:"M0→M1 可定义 · M1→M2 可判定 · M2→M3 可校准 · M3→M5 可归因 · M5→M1 可追溯"},
+       {h:"最易断的三个", b:"① 置信度不可比（须先校准）② 结论不可归因（分不清规则问题还是能力问题）③ 评估口径不独立（自己评估自己）"}
+     ]},
+    {h:"指标一旦进入考核，就不再是度量工具，而是行为契约",
+     b:"它规定了整个组织会朝哪个方向用力。所以问题不是「选哪个指标好看」，而是「怎么设计一组不能被单方向博弈的指标」。",
+     t:"hot", ref:"→ M4", subs:[
+       {h:"四类博弈", b:"摊薄型（扩大分母）· 缩量型（减少曝光）· 搬迁型（问题移到口径外）· 篡改型（污染数据源）"},
+       {h:"最锋利的一条：方向不可逆", b:"任何「少做事就能改善」的指标，最终一定会被发现并利用"},
+       {h:"校准本身就是收益", b:"CAUC：校准后精度 +1.9% 且省掉 47% 强模型调用"}
+     ]},
+    {h:"规则必须决定自己「住在哪里」",
+     b:"规则不再只有文本形态。变更频率 × 证据具体程度，决定它是该进 Prompt、检索库、模型权重，还是判例库。",
+     t:"hot", ref:"→ M1 / M2", subs:[
+       {h:"四象限", b:"变更慢+证据具体→权重；变更快+证据具体→检索库/Prompt；变更快+证据抽象→判例库；变更慢+证据抽象→这条规则不该存在"},
+       {h:"对从业者的要求", b:"写不出一条规则的具体证据，就不该把问题转给策略团队"}
+     ]},
+    {h:"对抗不是异常，而是治理的常态环境",
+     b:"胜负不由模型的绝对能力决定，而由「攻防迭代速度的相对差」决定。内容可以伪装，行为与关系难以伪装。",
+     t:"hot", ref:"→ M6", subs:[
+       {h:"Δ 迭代速度差", b:"Δ = 平台迭代周期 − 对手变异周期。Δ 远大于 0 时，纯语义匹配必然失效"},
+       {h:"→ 转向行为模式 + 关系图谱", b:"改话术要几分钟，改变现路径要重建整个链条"},
+       {h:"判定器本身也是攻击面", b:"用低困惑度无害 token 即可操纵判定边界，完全黑盒"}
+     ]}
+  ]
+},
+{
+  n:"02", c:"var(--c1)", title:"二、五层链路：一张责任分配表",
+  sub:"链路不是流程图 · 每层回答一个不同的问题",
+  items:[
+    {h:"输入层 — 谁有资格定义「什么是问题」",
+     b:"法律监管 / 社会事件 / 平台价值取向 / 用户反馈 / 竞品水位。这里最要紧的区分是：法律底线 vs 生态水位。",
+     t:"key", ref:"→ 总纲 §二", subs:[
+       {h:"底线类", b:"常与用户偏好冲突、不能个性化 → 看漏放率/阻断率（绝对合规导向）"},
+       {h:"水位类", b:"通常与用户偏好一致、可个性化 → 看低质 VV 占比/举报率（相对水位导向）"},
+       {h:"拿错标尺的后果", b:"用底线标尺管水位 → 有效内容被一起压掉；用水位标尺管底线 → 99.9% 阻断仍被通报"},
+       {h:"处置光谱五档", b:"硬阻断 / 限流 / 个性化 / 标注 / 预警——不是只有删和不删"}
+     ]},
+    {h:"中间层 — 从「问题」到「可执行动作」",
+     b:"五个环节：定义 → 编译 → 执行 → 处置 → 回流。最容易出错的不是任何单环，而是跨环的指标错配。",
+     t:"key", ref:"→ 总纲 §三", subs:[
+       {h:"核心风险：责任人不是同一个", b:"用策略指标考核规则、用审核指标考核策略，各自最优但整体最差"},
+       {h:"M1 定义", b:"产出不只是标准文本，还有标签体系与指标口径——后两者是全链路接口"},
+       {h:"M2 编译", b:"约束是硬的：吞吐 / 单件成本 / 误伤上限。视频 VLM 与图片审核约 35 倍吞吐差"},
+       {h:"M3 执行", b:"产能可被替代，度量不可。人审是全链路唯一能给出「真值」的地方"},
+       {h:"M5 回流", b:"申诉是全链路唯一的证伪机制——能推翻第一判，是误伤率唯一直接测量口径"}
+     ]},
+    {h:"输出层 — 治理到底管住没有",
+     b:"四层指标：合规层（对监管）/ 生态层（对业务）/ 成本层（内部效率）/ 过程层（诊断用）。",
+     t:"key", ref:"→ M4", subs:[
+       {h:"滞后与先行要配对", b:"只建滞后指标的组织永远在事后救火"},
+       {h:"最值得借鉴的单一指标", b:"VVR 违规曝光率——以观看量为分母，天然抗「多发内容摊薄」"},
+       {h:"最稀缺的公开数字", b:"误伤率 / 申诉率 / 新规上线到全量生效时延"}
+     ]}
+  ]
+},
+{
+  n:"03", c:"var(--c2)", title:"三、三个贯穿性机制",
+  sub:"不是某一环的事 · 而是全链路共有的约束",
+  items:[
+    {h:"机制 A：对抗与博弈",
+     b:"治理不是静态优化，而是与主动规避者的持续博弈。防御应分四层，而且顺序很重要。",
+     ref:"→ M6", subs:[
+       {h:"L1 提高规避成本（最有效、最少被用）", b:"打断变现阶段、抬高账号成本、处置上移到组织层。它不是算法问题，是业务与法务问题"},
+       {h:"L2 输入规范化（最便宜、最该先做）"},
+       {h:"L3 判定层韧性", b:"多模板投票 + 多信号交叉"},
+       {h:"L4 感知与迭代", b:"对抗样本库 + 红队 + 误判复盘自主迭代"},
+       {h:"对变现型黑产，封账号是无效手段", b:"有效的是打断变现阶段——所以处置要上移到组织层"}
+     ]},
+    {h:"机制 B：口径与防博弈",
+     b:"口径定义必须含五要素，缺一不可；且指标要成组交叉验证。",
+     ref:"→ M4", subs:[
+       {h:"口径五要素", b:"分子 / 分母 / 时间窗 / 加权 / 版本。最易跳过的是「版本」——改了不回刷历史，跨期比较直接作废"},
+       {h:"指标三元组", b:"效果 + 成本 + 规模，三者同时改善才算真改善。只动一个，通常是在搬移问题"},
+       {h:"三种「申诉成功率」", b:"分母不同含义完全相反——同一个 20% 可能对应 1% 的实际影响"},
+       {h:"误伤率的三池口径", b:"申诉成功池只能给上界；不能外推全量（幸存者偏差）"}
+     ]},
+    {h:"机制 C：权限与隔离",
+     b:"链路里天然存在三处利益冲突，必须用制度隔离——它们的共同结构都是「让被质疑方做裁判」。",
+     ref:"→ M7", subs:[
+       {h:"不能自己评估自己", b:"低质水位须由独立团队或第三方评估"},
+       {h:"不能自己复审自己", b:"原审核团队不可裁定自己的判罚"},
+       {h:"规则制定者不裁个案", b:"Policy 只提修订提案，个案改判仍由独立复审决定"},
+       {h:"危害不是判错", b:"而是误伤的发现率被系统性压低——没人愿意证明自己错了"}
+     ]}
+  ]
+},
+{
+  n:"04", c:"var(--c3)", title:"四、可操作的判断工具",
+  sub:"能在会议上直接用的东西 · 不是理念",
+  items:[
+    {h:"规则住宿四象限", b:"用「变更频率 × 证据具体程度」决定规则进 Prompt / 检索库 / 权重 / 判例库。", ref:"→ M1"},
+    {h:"Δ 迭代速度差", b:"Δ = 平台迭代周期 − 对手变异周期。先量 Δ，再决定投语义还是投行为。", ref:"→ M0 / M6"},
+    {h:"指标三元组", b:"效果 + 成本 + 规模同屏。汇报强制三个都给。", ref:"→ M4"},
+    {h:"口径五要素", b:"分子 / 分母 / 时间窗 / 加权 / 版本。", ref:"→ M4"},
+    {h:"误伤率上下界", b:"日常监控用上界（变化即预警），季度验收用下界（抽样）。都不需要全量复核。", ref:"→ M5"},
+    {h:"申诉三类归因", b:"判罚错误 → 改审核；规则缺陷 → 改规则（最有价值）；信号污染 → 防滥用。", ref:"→ M5"},
+    {h:"三个必问（换体裁/换业务时）", b:"① 时态是什么（过去时/进行时）？② 误判代价落在谁身上？③ 风险主体什么粒度？", ref:"→ M8"},
+    {h:"漏放与误伤同时恶化 → 一定是规则问题", b:"模型只会在两者间取舍，不可能同时变差。此时调参是白费的。", t:"key"},
+    {h:"Agent 编排：Event Flow 为骨架，ReAct 只作局部判据", b:"能用确定性流程（Event Flow）就别用自主 Agent。判据：步骤能否枚举 / 反馈是否快且可验证 / 是否需事后重放。审核三项都指向流程，只有「证据够不够定级」这一处该用模型判断。", t:"hot", ref:"→ 应用篇 §2.4", subs:[
+      {h:"Anthropic 的命名", b:"workflows（预定义代码路径）vs agents（LLM 自行指挥）——即 Event Flow vs ReAct——它建议「能用流程就不用 Agent」"},
+      {h:"自主动 Agent 成立的条件", b:"反馈要「快且可验证」（如代码靠自动测试收敛）；治理的反馈延迟、稀疏、有偏，缺这块地基"},
+      {h:"治理场景独有的硬理由", b:"每次处置都可能被申诉与监管问询 → 需事后重放证据链；而 ReAct 的推理路径是运行时生成的，几乎无法复现"},
+      {h:"生产失败数据", b:"纯 ReAct 无步数上限会死循环；全自主「让 agent 决定」几乎从不适合生产；建议 p50<5 步 / p99<15 步"},
+      {h:"三条约束", b:"① 工具过滤（每状态只暴露允许工具）② 处置动作在子流程边界外（Agent 只有建议权）③ 四重上限 + 优雅降级"},
+      {h:"诚实边界", b:"问题空间确实无法分解时（如新型风险第一批样本）ReAct 仍更优——不是一边倒"}
+    ]}
+  ]
+},
+{
+  n:"05", c:"var(--c4)", title:"五、成立条件与边界",
+  sub:"这套框架在什么前提下有效 · 什么情况下会失效",
+  items:[
+    {h:"前提一：问题可以被定义成「有证据的判断」",
+     b:"若某一类风险本质上无法枚举证据（纯主观尺度），框架只能退化为人工仲裁，不能靠模型规模化。"},
+    {h:"前提二：误伤率可以通过某种方式被测量",
+     b:"若申诉通道不健全、或用户根本不申诉（如 P0 类内容），误伤率就不可观测，框架的反馈环会断。"},
+    {h:"前提三：组织愿意接受「指标三元组」而不是单一 KPI",
+     b:"若考核只认一个数字，框架会被立刻博弈掉——这不是方法论问题，是治理意愿问题。"},
+    {h:"边界一：这是外部研究框架，不是内部实践记录",
+     b:"它证明的是「理解这套业务」，不等于「做过这套业务」。两者在面试与评审中会被严格区分。", t:"hot"},
+    {h:"边界二：不适用于「无对手」的治理场景",
+     b:"若不存在主动规避者（如内部文档审核），M6 的绝大部分结论用不上，成本可大幅简化。"},
+    {h:"边界三：分域差异不能被抹平",
+     b:"直播是「进行时、不可回扫」，商品是「静态但有生命周期」。跨域只能迁移问题定义与方法论，不能迁移判定证据、阈值、链路、处置梯度。"}
+  ]
+}
+];
+
+/* ================= 渲染 ================= */
+const holders = document.getElementById('branches');
+const navEl = document.getElementById('nav');
+let totalItems = 0, totalSubs = 0;
+
+DATA.forEach((sec, i) => {
+  totalItems += sec.items.length;
+  const br = document.createElement('section');
+  br.className = 'branch' + (i === 0 ? ' open' : '');
+  br.id = 'sec' + i;
+
+  const head = document.createElement('div');
+  head.className = 'bhead';
+  head.innerHTML = `<div class="bnum" style="background:${sec.c}22;color:${sec.c}">${sec.n}</div>
+    <div class="btitle">${sec.title}</div>
+    <div class="bsub">${sec.sub}</div>
+    <div class="chev">▶</div>`;
+  head.onclick = () => br.classList.toggle('open');
+  br.appendChild(head);
+
+  const body = document.createElement('div');
+  body.className = 'bbody';
+  sec.items.forEach((it, j) => {
+    const d = document.createElement('div');
+    d.className = 'item';
+    let html = `<div class="itop"><div class="idx">${j+1}</div><div>
+        <span class="ih">${it.h}</span>
+        ${it.t === 'hot' ? '<span class="tag hot">反直觉</span>' : ''}
+        ${it.t === 'key' ? '<span class="tag key">关键</span>' : ''}
+      </div></div>
+      <div class="ibody">${it.b || ''}${it.ref ? ` <span class="ref">${it.ref}</span>` : ''}`;
+
+    if (it.subs && it.subs.length) {
+      totalSubs += it.subs.length;
+      html += `<ul class="subs" style="display:none">`;
+      it.subs.forEach(s => {
+        html += `<li><b>${s.h}</b>${s.b ? ' — ' + s.b : ''}</li>`;
+      });
+      html += `</ul><div style="margin-top:6px"><button class="more" style="padding:2px 9px;font-size:11px">展开 ${it.subs.length} 条细节</button></div>`;
+    }
+    html += `</div>`;
+    d.innerHTML = html;
+    const btn = d.querySelector('.more');
+    if (btn) {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const ul = d.querySelector('.subs');
+        const open = ul.style.display !== 'none';
+        ul.style.display = open ? 'none' : 'block';
+        btn.textContent = open ? `展开 ${it.subs.length} 条细节` : '收起细节';
+      };
+    }
+    body.appendChild(d);
+  });
+  br.appendChild(body);
+  holders.appendChild(br);
+
+  const a = document.createElement('a');
+  a.href = '#sec' + i;
+  a.innerHTML = `<span class="n">${sec.n}</span>${sec.title.replace(/^[一二三四五]、/, '')}`;
+  a.onclick = (e) => { e.preventDefault(); br.classList.add('open'); br.scrollIntoView({behavior:'smooth', block:'start'}); };
+  navEl.appendChild(a);
+});
+
+document.getElementById('stat').textContent =
+  `${DATA.length} 个分支 · ${totalItems} 条判断 · ${totalSubs} 条三级细节`;
+document.getElementById('thesis').scrollIntoView;
+
+/* ================= 交互 ================= */
+function toggleAll(open){
+  document.querySelectorAll('.branch').forEach(b => b.classList.toggle('open', open));
+}
+let l3on = false;
+function toggleL3(){
+  l3on = !l3on;
+  const btnTwo = document.getElementById('btnTwo');
+  btnTwo.classList.toggle('on', l3on);
+  btnTwo.textContent = l3on ? '隐藏三级' : '显示三级';
+  document.querySelectorAll('.subs').forEach(ul => { ul.style.display = l3on ? 'block' : 'none'; });
+  document.querySelectorAll('.more').forEach(btn => {
+    const n = btn.closest('.ibody').querySelectorAll('.subs li').length;
+    btn.textContent = l3on ? '收起细节' : ('展开 ' + n + ' 条细节');
+  });
+}
+
+const q = document.getElementById('q');
+q.addEventListener('input', () => {
+  const kw = q.value.trim().toLowerCase();
+  document.querySelectorAll('.item').forEach(it => {
+    if (!kw) { it.style.display = ''; it.style.opacity = 1; return; }
+    const hit = it.textContent.toLowerCase().includes(kw);
+    it.style.display = hit ? '' : 'none';
+  });
+  document.querySelectorAll('.branch').forEach(b => {
+    if (!kw) return;
+    const any = [...b.querySelectorAll('.item')].some(i => i.style.display !== 'none');
+    if (any) b.classList.add('open');
+  });
+});
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== q) { e.preventDefault(); q.focus(); }
+  if (e.key === 'Escape') { q.value = ''; q.dispatchEvent(new Event('input')); q.blur(); }
+});
+</script>
+</body>
+</html>

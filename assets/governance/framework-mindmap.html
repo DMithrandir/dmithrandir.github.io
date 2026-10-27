@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>互联网内容治理 · 知识框架思维导图</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#161a21; --panel2:#1c2129; --line:#2a313c;
+    --fg:#e6e9ef; --fg2:#9aa4b2; --fg3:#6b7480;
+    --l0:#ff8a5c; --l1:#5cc8ff; --l2:#7ee787; --l3:#ffd866; --l4:#c792ea; --l5:#ff7b9c;
+    --miss:#ff6b6b; --ok:#3fb950;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--bg); color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:14px; line-height:1.6; display:flex; flex-direction:column; height:100vh;
+  }
+  header{
+    background:var(--panel); border-bottom:1px solid var(--line);
+    padding:10px 16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; flex-shrink:0;
+  }
+  header h1{font-size:15px; margin:0; font-weight:600; letter-spacing:.3px}
+  header .sub{color:var(--fg3); font-size:12px}
+  .spacer{flex:1}
+  button{
+    background:var(--panel2); color:var(--fg); border:1px solid var(--line);
+    border-radius:6px; padding:5px 11px; font-size:12px; cursor:pointer;
+    font-family:inherit; transition:.15s;
+  }
+  button:hover{background:#242b35; border-color:#3a4350}
+  button.primary{background:#1f6feb; border-color:#1f6feb; color:#fff}
+  button.primary:hover{background:#2b7cf0}
+  input[type=search]{
+    background:var(--panel2); color:var(--fg); border:1px solid var(--line);
+    border-radius:6px; padding:5px 10px; font-size:12px; width:200px; font-family:inherit;
+  }
+  input[type=search]::placeholder{color:var(--fg3)}
+  main{flex:1; display:flex; overflow:hidden}
+  #tree-wrap{flex:1; overflow:auto; padding:20px 24px 80px}
+  #side{
+    width:330px; flex-shrink:0; border-left:1px solid var(--line);
+    background:var(--panel); overflow:auto; padding:14px 16px;
+  }
+  #side.hide{display:none}
+
+  /* 树 */
+  ul.tree{list-style:none; margin:0; padding-left:0}
+  ul.tree ul{list-style:none; margin:0; padding-left:20px; border-left:1px dashed var(--line)}
+  li.node{position:relative; margin:2px 0}
+  .row{display:flex; align-items:flex-start; gap:6px; padding:3px 6px; border-radius:6px; cursor:default}
+  .row:hover{background:#1a1f27}
+  .twist{
+    width:16px; height:20px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; color:var(--fg3); font-size:10px; user-select:none; transition:transform .15s;
+  }
+  .twist.leaf{visibility:hidden}
+  .twist.collapsed{transform:rotate(-90deg)}
+  .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:7px}
+  .lbl{font-weight:500}
+  .tag{
+    font-size:10px; padding:1px 6px; border-radius:4px; margin-left:6px;
+    border:1px solid var(--line); color:var(--fg3); white-space:nowrap;
+  }
+  .desc{color:var(--fg3); font-size:12px; margin-left:6px}
+  li.collapsed > ul{display:none}
+  .depth0 > .row .lbl{font-size:16px; font-weight:700; color:var(--l0)}
+  .depth1 > .row .lbl{font-size:14.5px; font-weight:650; color:var(--l1)}
+  .depth2 > .row .lbl{font-size:13.5px; color:var(--fg); font-weight:600}
+  .depth3 > .row .lbl{font-size:13px; color:var(--fg2); font-weight:400}
+  .depth4 > .row .lbl{font-size:12.5px; color:var(--fg3); font-weight:400}
+  mark.hit{background:#7a5c00; color:#ffe9a8; border-radius:3px; padding:0 2px}
+  li.dim > .row{opacity:.28}
+
+  /* 侧栏 */
+  #side h2{font-size:12px; text-transform:uppercase; letter-spacing:.8px; color:var(--fg3); margin:0 0 10px; font-weight:600}
+  #side .doclist{display:flex; flex-direction:column; gap:4px; margin-bottom:18px}
+  #side .doclist a{
+    color:var(--l1); text-decoration:none; font-size:12px; padding:5px 8px; border-radius:5px;
+    background:var(--panel2); border:1px solid var(--line); display:flex; justify-content:space-between; gap:8px;
+  }
+  #side .doclist a:hover{background:#242b35}
+  #side .doclist a span.n{color:var(--fg3); font-size:11px; flex-shrink:0}
+  .legend{display:flex; flex-direction:column; gap:6px; font-size:12px; color:var(--fg2); margin-bottom:18px}
+  .legend div{display:flex; align-items:center; gap:8px}
+  .note{font-size:12px; color:var(--fg3); line-height:1.7}
+  .note code{background:var(--panel2); padding:1px 5px; border-radius:3px; font-size:11.5px; color:var(--l3)}
+  kbd{background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:11px;color:var(--fg2)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>互联网内容治理 · 知识框架</h1>
+  <span class="sub" id="stat"></span>
+  <span class="spacer"></span>
+  <input type="search" id="q" placeholder="搜索节点…（/ 聚焦）">
+  <button onclick="expandAll()">全部展开</button>
+  <button onclick="collapseAll()">全部折叠</button>
+  <button onclick="expandTo(2)">展开到 2 层</button>
+  <button class="primary" onclick="exportMD()">导出 Markdown</button>
+  <button onclick="document.getElementById('side').classList.toggle('hide')">侧栏</button>
+</header>
+
+<main>
+  <div id="tree-wrap"><ul class="tree" id="tree"></ul></div>
+  <aside id="side">
+    <h2>配套文档</h2>
+    <div class="doclist" id="doclist"></div>
+    <h2>层级图例</h2>
+    <div class="legend">
+      <div><span class="dot" style="background:var(--l0)"></span>总纲 · 框架层</div>
+      <div><span class="dot" style="background:var(--l1)"></span>起点 / 定义层</div>
+      <div><span class="dot" style="background:var(--l2)"></span>实现 / 执行层</div>
+      <div><span class="dot" style="background:var(--l3)"></span>回流层（指标 · 申诉）</div>
+      <div><span class="dot" style="background:var(--l4)"></span>环境层（对抗 · 组织）</div>
+      <div><span class="dot" style="background:var(--l5)"></span>投影层（分域）</div>
+    </div>
+    <h2>怎么修改</h2>
+    <div class="note">
+      全部内容在文件里的 <code>DATA</code> 常量中，是一棵纯 JSON 树，格式：<br><br>
+      <code>{ t:"标题", d:"说明", tag:"标签", k:"type", c:[ 子节点… ] }</code><br><br>
+      · <code>t</code> 标题（必填）<br>
+      · <code>d</code> 说明（可省）<br>
+      · <code>tag</code> 右侧小标签（可省）<br>
+      · <code>k</code> 层级配色：<code>l0</code>~<code>l5</code>（可省）<br>
+      · <code>c</code> 子节点数组（可省）<br><br>
+      改完存盘、刷新页面即可。点「导出 Markdown」可把当前树导出为大纲，便于回贴到文档里。<br><br>
+      快捷键：<kbd>/</kbd> 搜索 · <kbd>Esc</kbd> 清空
+    </div>
+  </aside>
+</main>
+
+<script>
+/* ============================================================
+   ★ 全部内容都在这里 —— 直接改这个 DATA 即可
+   字段：t=标题  d=说明  tag=标签  k=层级配色(l0~l5)  c=子节点
+   ============================================================ */
+const DATA = {
+  t:"互联网内容治理 · 知识框架", d:"8 篇模块 + 总纲 + 技术素材层", k:"l0", c:[
+
+    { t:"总纲 · 整体框架", d:"先有框架，再拆模块", k:"l0", c:[
+      { t:"四层 + 两个贯穿机制", d:"链路不是流程图，是责任分配表", c:[
+        { t:"输入层", d:"约束从哪来 · 谁有资格定义问题" },
+        { t:"中间层", d:"Policy → Strategy → Execution → 判罚 → 回流" },
+        { t:"输出层", d:"生态结果 · 合规 / 生态 / 成本 / 过程 四层指标" },
+        { t:"贯穿 A：对抗与博弈", d:"对抗是常态，不是异常" },
+        { t:"贯穿 B：口径与防博弈", d:"指标一旦进考核，就是行为契约" }
+      ]},
+      { t:"核心判断", d:"全篇的立论基础", c:[
+        { t:"最难的是定义问题，不是解决问题", d:"策略只是最后的落地环节" },
+        { t:"责任人不是同一个", d:"用策略指标考核规则、用审核指标考核策略，各自最优但整体最差" },
+        { t:"治理上限由接口质量决定", d:"而非单点技术" },
+        { t:"法律底线 vs 生态水位", d:"处置逻辑完全不同：前者看漏放率，后者看水位占比" }
+      ]},
+      { t:"审核产品三兄弟", d:"用户定义：三套独立系统，各有团队", c:[
+        { t:"召回 M3", d:"平台发起 · 本质是筛选", tag:"算法/策略" },
+        { t:"举报 M9", d:"用户（消费者）发起 · 本质是发现", tag:"审核产品" },
+        { t:"申诉 M5", d:"用户（被处置方）发起 · 本质是纠错", tag:"审核产品" },
+        { t:"一句话区分", d:"召回是平台找该审的；举报是用户说该审的；申诉是用户说不该罚的" },
+        { t:"为什么必须分开", d:"平台侧信号输入是「内容」，用户侧信号输入是「人」" }
+      ]}
+    ]},
+
+    { t:"M0 · 风险感知", d:"全链路起点：从异常中发现真问题", tag:"第 07 节", k:"l1", c:[
+      { t:"核心判断", c:[
+        { t:"发现问题比解决问题更重要", d:"后者技术驱动、最容易量化；前者经验与价值驱动、产出抽象" },
+        { t:"结构性偏科", d:"可量化产出易获资源 → 「发现能力」长期欠投资" },
+        { t:"关键词是「异常」", d:"有异常就有痛点，有痛点就有治理需求" },
+        { t:"唯一能在规模化前介入的环节", d:"M1~M5 处理已发现的问题" }
+      ]},
+      { t:"感知半径（定量的根本局限）", c:[
+        { t:"机审指标 → 只见已知问题", d:"用机审指标找新问题 = 用答案找问题" },
+        { t:"人审指标 → 只见送进来的内容" },
+        { t:"举报率 → 只见用户愿意表达的问题" },
+        { t:"推论：真未知风险在所有既有指标上都「正常」" }
+      ]},
+      { t:"六大指标渠道", d:"C端消费 / B端供给 / 推荐后验 / 机审 / 人审 / 用户体验" },
+      { t:"定性分析", d:"解释「为什么」· 与定量构成假设检验闭环", c:[
+        { t:"不可替代性", d:"标签树不是从数据长出来的，是被价值取向牵引出来的" },
+        { t:"冲突时优先信定性", d:"然后查「为什么指标没反映出来」→ 通常是口径问题或指标盲区" }
+      ]},
+      { t:"主动 vs 被动", c:[
+        { t:"主动：工具各家都差不多", d:"差别在能否多维下钻" },
+        { t:"六维下钻清单", d:"渠道 / 时间 / 用户画像 / 内容 / 账号 / 同期对照" },
+        { t:"被动：应急处置最关键", d:"快速定位 + 水位评估 + 止损 + 必须补规则" }
+      ]},
+      { t:"⭐ 四类业界案例", d:"本轮新增", tag:"实证", c:[
+        { t:"抖音 AI 反网暴", d:"识别模型+研判模型双轨；潜在风险人群 +91.5%、外呼援助 +147%", c:[
+          { t:"从内容语义 → 行为模式", d:"不再只盯单条评论关键词，看整体互动情况" },
+          { t:"从单条 → 事件级", d:"整合近 30 天多模态数据还原脉络" },
+          { t:"梯度化识别标准", d:"未成年人/老年人风险敏感度不同" },
+          { t:"全天候复盘误判案例", d:"把「误判」变成感知能力的输入" }
+        ]},
+        { t:"闲鱼暗语治理", d:"封 98,358 个账号仍追不上「日抛暗语」", c:[
+          { t:"黑产用日常词汇充当暗语", d:"「二手空调」「捷安特」「苹果卡针」" },
+          { t:"原文金句", d:"审核逻辑始终是「已知拦截」，而黑产的暗语是「未知变异」" },
+          { t:"关键词库迭代数周~数月 vs 暗语几分钟", d:"Δ 极大" },
+          { t:"转向行为模式", d:"改话术只要几分钟，改变现路径要重建整个链条" }
+        ]},
+        { t:"快手直播双信号", d:"举报质量 + 用户情绪 + 图计算；低俗举报率 −55%" },
+        { t:"抖音 AI 求真", d:"机器+人工判定共同入库形成谣言库；准确率 95%" }
+      ]},
+      { t:"⭐ 新概念：Δ 迭代速度差", d:"Δ = 平台迭代周期 − 对手变异周期", tag:"可诊断", c:[
+        { t:"Δ >> 0 → 纯语义匹配必然失效", d:"转向行为模式 + 关系图谱" },
+        { t:"Δ ≈ 0 → 语义+行为并行" },
+        { t:"Δ < 0 → 可优先投入词库", d:"成本更低" },
+        { t:"价值：把技术偏好问题变成可测量问题" }
+      ]},
+      { t:"校验三维度", d:"发现能力 / 判断准确 / 前置程度", c:[
+        { t:"发现时延", d:"分子不可知 → 用回溯法 + 外部锚点" },
+        { t:"候选问题成案率", d:"若只有 10%，M1 有 90% 产能处理噪声（成本记在别人账上）" }
+      ]}
+    ]},
+
+    { t:"M1 · Policy 规则运营", d:"上游：定义问题，交付可判定性与口径", tag:"第 05 节", k:"l1", c:[
+      { t:"三个产出物", d:"后两个常被忽略", c:[
+        { t:"标准文本 + case", d:"表面产出" },
+        { t:"标签体系", d:"问题的结构化表达 → 全链路接口" },
+        { t:"指标口径", d:"决定优化方向会不会被博弈" }
+      ]},
+      { t:"表象 vs 本质", c:[
+        { t:"表象", d:"场景拆分 + 图文规则 + 典型 case" },
+        { t:"本质", d:"具象化问题 / 定严重程度 / 明确平台态度 / 承上启下" },
+        { t:"金句", d:"如果规则运营只是写标准的工具人，为什么不让 AI 来代替写作呢？" }
+      ]},
+      { t:"法律底线 vs 生态水位", d:"两类处置逻辑完全不同", c:[
+        { t:"底线：常与用户偏好冲突、不能个性化", d:"看漏放率/阻断率" },
+        { t:"水位：通常与用户偏好一致、可个性化", d:"看低质 VV 占比/举报率" }
+      ]},
+      { t:"处置光谱五档", d:"不是只有删/不删", c:[
+        { t:"硬阻断 / 限流 / 个性化 / 标注 / 预警" },
+        { t:"KuaiMod 对应", d:"严格过滤违法 → 移出推荐池 → 作推荐特征 → AI 标识 → 弹窗遮罩断播" }
+      ]},
+      { t:"规则的四种形态演进", c:[
+        { t:"不可见（专家判断）", d:"「有多少人工就有多少智能」" },
+        { t:"规则化 / 标签化 / 策略化" },
+        { t:"Prompt / 判例库 / 权重", d:"规则与实现合一" }
+      ]},
+      { t:"标签体系的三个条件", d:"正交性 / 完备性 / 可判定性", c:[
+        { t:"快手三步生产法", d:"描述 → 表征聚合生成标签树 → 大模型做标签-规则匹配与冲突校验" },
+        { t:"开集 Tagging", d:"标签转自然语言稠密向量 → 新类零样本扩展，「语义热插拔」" }
+      ]},
+      { t:"⭐ 规则住在哪里（四选一）", d:"本篇最核心的决策", tag:"四象限", c:[
+        { t:"变更慢 + 证据具体 → 权重（CPT/微调）" },
+        { t:"变更快 + 证据具体 → 检索库 / Prompt" },
+        { t:"变更快 + 证据抽象 → 判例库" },
+        { t:"变更慢 + 证据抽象 → ⚠️ 这条规则不该存在", d:"先回去定义问题" },
+        { t:"自我要求", d:"写不出具体证据，就不该把问题转给策略团队" }
+      ]},
+      { t:"规则合理性校验（三步）", d:"明确目的与对象 → 找可映射指标 → 验证结果", c:[
+        { t:"维度一：问题覆盖度", d:"低质 VV 占比、C端消费指标（核心）", c:[
+          { t:"必须引入第三方视角", d:"避免 Policy 既是规则制定者又是结论裁决者" }
+        ]},
+        { t:"维度二：审核可落地性", d:"审核准确率、人效（核心）；双审一致率、质检灰度率", c:[
+          { t:"效率与质量应同时向好", d:"若准确率上去人效暴跌 → 是规则表述问题" }
+        ]},
+        { t:"⚠️ 纠偏", d:"准确率高只说明规则可判定，说明不了规则对不对" }
+      ]},
+      { t:"两个诊断技巧", c:[
+        { t:"认知对齐测试", d:"让 3~5 名审核员各自复述规则，分歧大 = 规则有歧义（不是培训问题）" },
+        { t:"机审召回体检", d:"某规则下机审召回长期 <40% → 该规则本质是主观判断，应改人工仲裁" }
+      ]},
+      { t:"指标口径五要素", d:"分子 / 分母 / 时间窗 / 加权 / 版本", c:[
+        { t:"缺一不可", d:"尤其是「版本」——改了不回刷历史，跨期比较直接作废" }
+      ]}
+    ]},
+
+    { t:"M2 · Strategy 策略与模型", d:"实施层：约束下的最优分配", k:"l2", c:[
+      { t:"前提：约束是硬的", c:[
+        { t:"吞吐", d:"快手 KuaiMod 48×4090 / QPS 6.81 / 60 万条/日" },
+        { t:"单件成本", d:"Joom 目标 2 万→200 万件且成本持平" },
+        { t:"误伤上限", d:"SIRF：真实约束不是平均准确率，而是高精度+秒级延迟下能自动处理多少" }
+      ]},
+      { t:"⭐ 吞吐推算（最有力论证）", d:"6.81 QPS × 86400 ≈ 58.8 万 ≈ 论文的 60 万/日", c:[
+        { t:"单卡约 7 秒/条", d:"视频多帧 VLM 判定" },
+        { t:"对照：双卡 L20 单图 VQA 约 10 QPS（0.2 秒/条）" },
+        { t:"≈ 35 倍吞吐差", d:"所以前置小模型不是优化项，是前提" }
+      ]},
+      { t:"四类路由策略", c:[
+        { t:"前置拦截", d:"快手商业化拦截逾 80% 常规案例" },
+        { t:"级联路由", d:"TikTok Filter-And-Refine：F1 +66.5%、算力 1.5%" },
+        { t:"置信度门控", d:"Joom 仅置信不足时唤醒大模型" },
+        { t:"判例兜底", d:"UNIVID：10 万条判例库；漏放 −42.7%、误伤 −37.0%" }
+      ]},
+      { t:"两级坑（必须知道）", c:[
+        { t:"缺失标签当负样本", d:"RADAR：0.5B 骨干 R@P60 直接掉 18.42 分" },
+        { t:"小模型的对齐税", d:"COGNIT-Guard：域外 60.33%→56.81%；需 experience replay 恢复" },
+        { t:"治理的对抗变异恰恰全是域外的", d:"谐音/形近字/AIGC 新样本" }
+      ]},
+      { t:"蒸馏两条路线", c:[
+        { t:"生成式框架（黑盒/response-level）", d:"保留推理能力" },
+        { t:"判别式框架（白盒/logits）", d:"离散分类打标性价比更好" },
+        { t:"收益", d:"快手：7B 对标开源 32B/72B，年度节约千万量级" }
+      ]},
+      { t:"阈值标定三原则", c:[
+        { t:"按风险类分别标定", d:"RADAR 实测正例率 9.0%（虚假互动）~ 25.5%（低质）" },
+        { t:"在约束下优化", d:"APR@R90/R95（召回约束下最大化旁路率）、R@P60" },
+        { t:"校准是前置条件", d:"CAUC：跨模型置信度不可比；校准带来精度 +1.9% 且省 47% 强模型调用" }
+      ]},
+      { t:"成本工程杠杆排序", c:[
+        { t:"① 级联路由（数量级收益）" },
+        { t:"② 批处理 → ③ FP8 量化（+26.7% TPS）" },
+        { t:"④ 蒸馏换小模型 → ⑤ Multi-LoRA → ⑥ 投机解码（审核收益有限）" },
+        { t:"⚠️ 反直觉坑", d:"显存不紧张时纯 weight-only INT4 因反量化开销全面退化" },
+        { t:"引擎分工", d:"生成式走 vLLM+FP8；判别式走 ONNX Runtime INT8 + CPU" }
+      ]},
+      { t:"线上流程与回扫", c:[
+        { t:"五步上线", d:"离线 R@P → 影子模式 → 小流量灰度 → 放量 → 监控回滚" },
+        { t:"最大 gap", d:"离线指标与线上生态指标之间的鸿沟，必须靠影子+灰度桥接" },
+        { t:"回扫", d:"商品需全生命周期回扫；直播无法回扫" }
+      ]}
+    ]},
+
+    { t:"M3 · Execution 召回与质检", d:"平台侧：谁决定哪些内容该进审核", k:"l2", c:[
+      { t:"审核的双身份", d:"产能可被替代，度量不可", c:[
+        { t:"① 产能", d:"批量判定 → 正在被大模型替代（智能标注自动化率目标 ≥70%）" },
+        { t:"② 度量", d:"全链路唯一能给出「真值」的地方" },
+        { t:"推论", d:"人审量下降不等于治理进步；若伴随申诉率上升则是度量能力被削" }
+      ]},
+      { t:"主流程三类审核", d:"发布时机由误判代价的不对称决定", c:[
+        { t:"安全审核", d:"先审后发（漏放不可逆）" },
+        { t:"质量审核", d:"先发召回（误判可逆，但需时效保障）" },
+        { t:"高热审核", d:"发布后复审（头部聚集效应，KuaiMod 有 High-Engagement 队列）" }
+      ]},
+      { t:"⭐ 召回总览", d:"七个来源", tag:"本轮新增", c:[
+        { t:"① 机审全量扫描 → 只见已知问题" },
+        { t:"② 人审补位 / ③ 巡检 → 未知变体的入口" },
+        { t:"④ 举报 M9 / ⑤ 申诉回流 M5 → 用户侧信号" },
+        { t:"⑥ 消费行为信号 → 成本最低、最被低估" },
+        { t:"⑦ 主动学习 → 模型能力边界" },
+        { t:"关键判断", d:"只靠机审全量扫描的召回体系，在所有新风险上都慢半拍" }
+      ]},
+      { t:"串行 vs 并行（接 M8）", c:[
+        { t:"图文/短视频：串行 + 基于消费情况划分", d:"可用消费数据当召回信号" },
+        { t:"直播：并行 + 基本不依赖消费情况", d:"无法等后验信号，只能靠实时流" }
+      ]},
+      { t:"召回的成本约束", c:[
+        { t:"目标函数", d:"在「日进审量 ≤ 人力上限」下，最大化 [召回覆盖率 × 有效送审率]" },
+        { t:"不同来源用不同阈值", d:"机审扫描成本低→召回优先；人审/巡检成本高→精度优先" }
+      ]},
+      { t:"⭐ 送审策略（笔记核心）", d:"机审要精度、人审要命中量", tag:"反教科书", c:[
+        { t:"机审", d:"通常是最终判罚者 → 误伤不可逆 → 准确率 > 召回率" },
+        { t:"人审", d:"劳动力瓶颈环节 → 产能有限 → 命中量 > 准确率" },
+        { t:"两层限定", d:"① 机审是否终局判罚决定精度/召回优先；② 按风险类再分一次" },
+        { t:"红线类召回优先 / 低质类精度优先" }
+      ]},
+      { t:"质检：执行问题 vs 非执行问题", d:"本模块最重要的判断", c:[
+        { t:"执行问题", d:"审核员判错了 → 回流 M3（培训）" },
+        { t:"非执行问题", d:"审核员按规则判对了但规则有问题 → 回流 M1" },
+        { t:"核心推论", d:"「按规则判对但用户仍不满」是规则问题，不是培训问题" }
+      ]},
+      { t:"灰度率的四种反推", c:[
+        { t:"灰度率偏低 → 质量数据本身不可信" },
+        { t:"某类目执行问题检出率极低 → 回查送审召回是否缺失" },
+        { t:"某类目长期查不出问题而送审量大 → 送审策略过宽，人力被浪费" },
+        { t:"抽检发现规则违规但机审漏了 → 机审召回不足" }
+      ]},
+      { t:"推荐场景：直接 + 间接", c:[
+        { t:"直接", d:"不推荐 / 个性化（DAU +0.028%、总 AUT +0.063%）/ 冷启干预" },
+        { t:"间接", d:"审核结果作负向信号 → 影响正负样本量级" },
+        { t:"管理含义", d:"送审策略变化会改变推荐模型的训练数据分布" }
+      ]}
+    ]},
+
+    { t:"M9 · 举报产品", d:"用户侧「发现」通道", tag:"第 09 节", k:"l1", c:[
+      { t:"双重价值", d:"第二重几乎总被浪费", c:[
+        { t:"① 处置信号", d:"被举报内容需尽快审掉" },
+        { t:"② 发现信号", d:"暴露漏召、漏放、标准不覆盖 → 归属 M0/M1" },
+        { t:"只当工单处理 = 浪费唯一可持续的用户反馈通道" }
+      ]},
+      { t:"五段链路", d:"前端入口 → 一二级交互 → 后端送审 → 结果透传 → 创作者申诉", c:[
+        { t:"最后一段属于 M5", d:"举报与申诉串在同一产品里" }
+      ]},
+      { t:"两个理念", c:[
+        { t:"兜底", d:"尽可能广泛召回疑似高风险 → 用「或」逻辑放宽，而非降低阈值" },
+        { t:"及时", d:"被举报内容待审期间不可推荐 → 停推有损体验", c:[
+          { t:"⚠️ 成本归属", d:"误报的代价落在被举报的创作者身上" },
+          { t:"所以时效要「两头看」", d:"消费者侧时延 + 创作者侧停推时长" }
+        ]}
+      ]},
+      { t:"三类补充信号", d:"把举报次数从标量扩展为三维", c:[
+        { t:"消费梯度：阅读举报率 = 举报次数 / 曝光次数", d:"能捞到小曝光但高反感比例的内容" },
+        { t:"举报信息质量：手写理由、图片举证", d:"是真实反感的强信号" },
+        { t:"用户身份权重：高价值用户、尺度敏感用户", c:[
+          { t:"⚠️ 限定", d:"尺度敏感 ≠ 社会共识；只当复核信号，不当判定依据" }
+        ]},
+        { t:"两类信号解决不同问题", d:"举报率是「召回」手段；后两类是「人力上限内提升有效送审率」的手段" }
+      ]},
+      { t:"简化版召回链路", d:"普通召回（与逻辑）+ 兜底召回（或逻辑）→ 进审 → 待审停推 → 审出 → 处置 → 反馈+申诉" },
+      { t:"人力成本上限", d:"笔记批注 = 最关键约束", c:[
+        { t:"目标函数", d:"有效送审率 = 命中 ÷ 进审；在人力上限内最大化 有效送审率 × 召回覆盖" }
+      ]},
+      { t:"异常挖掘三类归因", d:"同一份数据变成三种行动", tag:"⭐", c:[
+        { t:"① 认知 Diff（平台 vs 用户视角）", d:"有共识 → 补规则 → M1" },
+        { t:"② 恶意举报", d:"无共识 → 防滥用 → M6" },
+        { t:"③ 散点问题", d:"换信号（负评率等）继续观察 → M0" },
+        { t:"类型①最有价值", d:"它是 M3「非执行问题」的举报侧形态" }
+      ]},
+      { t:"前端设计决定后端策略空间", d:"抖音 vs 视频号", tag:"UI→策略", c:[
+        { t:"抖音：「我不喜欢」为首条", d:"收大量个人偏好（弱信号）→ 后端需更强过滤" },
+        { t:"视频号：置灰文字强调客观违规", d:"量小但更接近客观违规（强信号）" },
+        { t:"因果链", d:"前端如何引导 → 信号质量 → 后端过滤强度 → 人力成本" },
+        { t:"反向也成立", d:"人力紧 → 推动前端把「客观违规」置于首位" }
+      ]},
+      { t:"防滥用的四种形态", c:[
+        { t:"单点冲突 / 批量恶意举报 / 团伙竞争 / 试探规则边界" },
+        { t:"设计原则", d:"不能一刀切降低举报权重（会压低真实信号）→ 按可信度分层赋权" }
+      ]}
+    ]},
+
+    { t:"M5 · Feedback 申诉与回流", d:"全链路唯一的证伪机制", k:"l3", c:[
+      { t:"三个身份", d:"第三个几乎无人使用", c:[
+        { t:"① 用户权益通道", d:"恢复内容/账号/收入" },
+        { t:"② 质量信号源", d:"暴露误伤、规则缺陷、审核偏差" },
+        { t:"③ 唯一的证伪机制", d:"能推翻「第一判」→ 误伤率唯一的直接测量口径" },
+        { t:"推论", d:"没有申诉统计的治理体系，无法知道自己的误伤率" }
+      ]},
+      { t:"特殊性", d:"唯一由被处置方发起的环节", c:[
+        { t:"举证责任倒置" },
+        { t:"只有一部分人会申诉 → 系统性选择偏差" },
+        { t:"动机混杂：真误伤/不服气/想恢复收入/试探边界" },
+        { t:"第一条纪律", d:"申诉率低 ≠ 误伤少（入口隐蔽、成本高都会压低）" }
+      ]},
+      { t:"⭐ 模块七组件", d:"申诉作为一个业务模块的结构", tag:"骨架", c:[
+        { t:"1 入口与触达", d:"入口可达性是治理诚信问题" },
+        { t:"2 受理与分类", d:"核心分流器：按责任/影响面/对象/可申诉性" },
+        { t:"3 复审与判定", d:"谁有权改判、依据什么" },
+        { t:"4 改判执行", d:"四层动作（见下）" },
+        { t:"5 结果透传", d:"必须给理由；区分「判错」与「规则如此」" },
+        { t:"6 数据与归类", d:"价值不在处理完，在归到哪一类" },
+        { t:"7 回流闭环", d:"判例沉淀（正向+负向）" }
+      ]},
+      { t:"⭐ 改判执行四层", d:"漏任何一层都会「判改了但用户没感知」", c:[
+        { t:"内容级", d:"恢复内容 / 重进推荐池" },
+        { t:"账号级", d:"解除限制 + 清除违规记录（信用分回滚）" },
+        { t:"资金级", d:"恢复收益 / 退还罚金" },
+        { t:"⚠️ 训练数据级", d:"从推荐模型负向样本中剔除 —— 几乎无人处理" }
+      ]},
+      { t:"⭐ 指标口径", d:"本模块最硬的一节", tag:"口径", c:[
+        { t:"规模：申诉率", d:"分母是处置数（不是内容数）" },
+        { t:"质量：申诉成功率", d:"必须以「案件」为单位去重" },
+        { t:"效率：处理时效", d:"P50/P90/P99，必须分层报" },
+        { t:"信号：源头修正率", d:"因申诉而修订的规则数 / 申诉总量" },
+        { t:"⚠️ 三种「申诉成功率」", d:"分母不同含义完全不同", c:[
+          { t:"以申诉数为分母 → 用户诉求满足程度" },
+          { t:"以已复审数为分母 → 复审倾向" },
+          { t:"以处置总数为分母 → 对处置准确率的整体影响" },
+          { t:"例：处置1万、申诉500、成功100 → 20% vs 1%" }
+        ]}
+      ]},
+      { t:"⭐ 误伤率的上下界口径", d:"三池结构", tag:"统计", c:[
+        { t:"申诉成功池", d:"强误伤信号 → 可估上界" },
+        { t:"申诉失败池 / 未申诉池", d:"需抽样才能判断；未申诉池是唯一盲区" },
+        { t:"❌ 错误做法", d:"全量误伤率 = 申诉池误伤率 × 申诉成功率（幸存者偏差）" },
+        { t:"✅ 四步法", d:"无偏抽检申诉池 → 估池内绝对值 → 作为上界警戒线 → 另抽两池加权得下界" },
+        { t:"管理用法", d:"日常监控用上界；季度验收用下界；都不需要全量复核" },
+        { t:"修正 M4", d:"申诉成功率是「上界代理」而非先行指标，且需先剔除信号污染" }
+      ]},
+      { t:"三类归因", d:"决定一切下游动作", c:[
+        { t:"① 判罚错误", d:"审核员判错了 → M3 培训 → 计入误伤率" },
+        { t:"② 规则缺陷", d:"审核判对但规则有问题 → M1 → 不计误伤，计入规则缺陷率" },
+        { t:"③ 信号污染", d:"重复/模板化/团伙 → 从成功率剔除 → M6" },
+        { t:"不分则申诉成功率是三者混合，作为误伤指标不成立" },
+        { t:"类型②最有价值", d:"说明平台有能力发现自己的规则问题" }
+      ]},
+      { t:"⭐ 三处必须隔离的权限", d:"共同结构：让被质疑方做裁判", tag:"制度", c:[
+        { t:"① 评估水位", d:"不能 Policy 自己评估 → 独立/第三方" },
+        { t:"② 复审申诉", d:"不能原审核团队复审自己的判罚" },
+        { t:"③ 规则缺陷裁定", d:"Policy 只提修订提案，个案仍由独立复审决定" },
+        { t:"危害不是判错", d:"而是误伤的发现率被系统性压低" }
+      ]},
+      { t:"时效：分层而非整体提速", c:[
+        { t:"矛盾：用户要快 vs 审得快易判错" },
+        { t:"三层：优先级队列 / 常规队列 / 批量账号级" },
+        { t:"锚点", d:"TikTok Shop 复杂案 24 小时；腾讯纠错回流约 10 分钟" },
+        { t:"直播特殊性", d:"不可回扫 → 目标不是恢复内容，而是撤销处罚/追回收益/回流规则" }
+      ]},
+      { t:"校验三维度", c:[
+        { t:"纠正能力", d:"误伤率（上下界）、改判率" },
+        { t:"信号价值", d:"源头修正率（灵魂指标）" },
+        { t:"可持续", d:"申诉 ROI、恢复执行完整率" },
+        { t:"一句话", d:"只看补救层 = 成本中心；做了信号层 = 治理资产" }
+      ]}
+    ]},
+
+    { t:"M4 · Metrics 指标与实验", d:"口径贯穿全链路", k:"l3", c:[
+      { t:"核心判断", d:"指标一旦用于考核，就不再是度量工具，而是行为契约" },
+      { t:"四层指标架构", c:[
+        { t:"L1 合规层", d:"漏放率、阻断率（绝对导向）" },
+        { t:"L2 生态层", d:"VVR、低质 VV 占比、举报率（相对导向）" },
+        { t:"L3 成本层", d:"误伤率、申诉率、单件成本、SLA（约束导向）" },
+        { t:"L4 过程层", d:"双审一致率、灰度率、机审召回（诊断用，不可外传为结论）" }
+      ]},
+      { t:"口径五要素", d:"分子 / 分母 / 时间窗 / 加权 / 版本", c:[
+        { t:"最易跳过的是「版本」", d:"口径改了不回刷历史 → 跨期比较作废" }
+      ]},
+      { t:"⭐ 指标三元组", d:"效果 + 成本 + 规模，三者同时改善才算真改善", c:[
+        { t:"只动一个，通常是在搬移问题" },
+        { t:"落地形式", d:"固定报表，汇报强制三个都给" }
+      ]},
+      { t:"四类博弈模式", c:[
+        { t:"摊薄型", d:"扩大分母 → 分母改用观看量（VVR 的设计）" },
+        { t:"缩量型", d:"减少曝光 → 改用相对指标（举报率天然抗）" },
+        { t:"搬迁型", d:"问题移到口径外 → 按风险类分解，看最差类目" },
+        { t:"篡改型", d:"污染数据源 → 质检独立 + 申诉通道" }
+      ]},
+      { t:"可靠性六项验收", c:[
+        { t:"分子可归因 / 分母不可操纵 / 口径可版本化" },
+        { t:"⭐ 方向不可逆", d:"指标改善不可能来自「少做事」——最锋利的一条" },
+        { t:"有先行指标配对 / 有成本侧配对" }
+      ]},
+      { t:"时效指标拆三段", d:"编译时延 / 推送时延 / 放量时延", c:[
+        { t:"稀缺锚点", d:"腾讯纠错 10 分钟 → 直播秒级 → 判例 in-context → 天级更新 → CPT 需重训" },
+        { t:"最关键的空白", d:"商品全生命周期回扫时延 = 未公开" }
+      ]},
+      { t:"归因框架（六行速查）", c:[
+        { t:"举报率降但申诉率升 → 判定变松" },
+        { t:"低质 VV 占比突变 → 回扫上线（口径是否含回扫）" },
+        { t:"生态指标跨期不可比 → 口径变了" },
+        { t:"⭐ 漏放与误伤同时恶化 → 规则不可判定", d:"回 M1 改规则，不要在指标层调参" }
+      ]},
+      { t:"三方契约", d:"指标 owner（业务）/ 数据团队 / 独立抽检", c:[
+        { t:"不能自定自评", d:"数据团队不决定指标方向" }
+      ]}
+    ]},
+
+    { t:"M6 · Adversarial 对抗与黑灰产", d:"贯穿性机制 A 的完整展开", k:"l4", c:[
+      { t:"核心判断", d:"对抗不是异常，是常态环境", c:[
+        { t:"把对抗当异常 → 按自然分布优化 → 被主动规避者系统性击穿" },
+        { t:"胜负不由模型绝对能力决定，而由攻防迭代速度的相对差决定" }
+      ]},
+      { t:"三类对手与对策", c:[
+        { t:"① 变现型黑产", d:"组织化、有 ROI → 封账号无效，须打断变现阶段" },
+        { t:"② 规避型生产者", d:"试错式、成本敏感 → 提高摩擦成本（限流/提示）" },
+        { t:"③ 攻击型对手", d:"低成本高频 → 识别行为模式 + 限制权益" },
+        { t:"快手的处置上移", d:"团播从单场断播 → 直播权限管控，近 100 家公会" }
+      ]},
+      { t:"攻击面全景", d:"治理体系自身就是攻击面", tag:"易忽略", c:[
+        { t:"⚠️ 判定模型本身可被操纵", d:"AdvJudge-Zero：低困惑度无害 token 操纵 logit gap，完全黑盒" },
+        { t:"多模态绕过", d:"MM-SafetyBench：12 个 SOTA 模型被相关图像攻破" },
+        { t:"Emoji 注入 / 护栏指纹识别" },
+        { t:"举报武器化 / 申诉滥用 / 人审疲劳攻击 / 规模化攻击" }
+      ]},
+      { t:"四类手法与对策", c:[
+        { t:"文本变形", d:"谐音形近字→词库；暗语→⚠️词库必输，转行为模式" },
+        { t:"多模态对抗", d:"跨模态漂移（字幕-语音）→ 矛盾即信号" },
+        { t:"行为与组织", d:"批量账号/矩阵运营/跨域导流/节奏控制 → 图计算+关系图谱" },
+        { t:"攻击判定器", d:"规范化 + 多模板投票 + 格式异常升级人审" }
+      ]},
+      { t:"防御纵深四层", d:"顺序很重要", c:[
+        { t:"L1 提高规避成本", d:"最有效但最少被用（不是算法问题，是业务与法务问题）" },
+        { t:"L2 输入规范化", d:"最便宜、最该先做" },
+        { t:"L3 判定层韧性", d:"多模板投票 + 多信号交叉" },
+        { t:"L4 感知与迭代", d:"对抗样本库 + 红队 + 误判复盘自主迭代" }
+      ]},
+      { t:"红队机制", d:"没有红队，只能等黑产当红队", c:[
+        { t:"三个必备测试项", d:"结构化模板测试 / 跨模态矛盾测试 / 同主体高频测试" }
+      ]},
+      { t:"校验三维度", c:[
+        { t:"韧性", d:"对抗样本集上的召回 —— 必须单独出报表" },
+        { t:"发现速度", d:"Δ、新变体发现时延" },
+        { t:"⭐ 成本结构", d:"对手的单位规避成本是否上升（抓得多但对手成本在降 = 防线恶化）" }
+      ]}
+    ]},
+
+    { t:"M7 · Org 组织与角色", d:"收口篇：把协作契约显性化", k:"l4", c:[
+      { t:"核心判断", d:"治理失效的多数根因不是技术，而是接口断裂与指标错配" },
+      { t:"角色地图", d:"每个模块的主导角色", c:[
+        { t:"M0 → 数据分析/策略运营", d:"问题嗅觉 + 多维下钻" },
+        { t:"M1 → 规则运营", d:"问题定义 + 可判定性设计" },
+        { t:"M2 → 算法/策略", d:"约束下最优 + 成本工程" },
+        { t:"M3 → 审核运营", d:"认知对齐 + 度量有效性" },
+        { t:"M5+M9 → 审核产品（同一类角色）", d:"用户侧信号设计 + 权限正义" },
+        { t:"M6 → 安全算法/风控", d:"攻防节奏 + 成本结构" }
+      ]},
+      { t:"能力模型的误认", c:[
+        { t:"规则运营 ≠ 会写标准文档" },
+        { t:"策略 ≠ 把准确率做上去" },
+        { t:"审核运营 ≠ 处理量与人效" },
+        { t:"审核产品 ≠ 做前端交互" }
+      ]},
+      { t:"岗位三级跃迁", d:"快手商业化一手口径", tag:"官方", c:[
+        { t:"规则表达式 → Prompt Engineer → RAG 运营 → 模型教练" },
+        { t:"2025 Q3 起把 SFT 线上化，由运营直接运维模型 pipeline" },
+        { t:"本质", d:"规则运营的交付物从「文本」变成「可运行的资产」" },
+        { t:"组织指标", d:"代码 AI 自动入库率 >35%；智能标注自动化率目标 ≥70%；日均 Token 1 亿" }
+      ]},
+      { t:"产能 vs 度量", d:"被替代的是产能，被强化的是度量", c:[
+        { t:"「部分一线审核员实际上已经被大模型替换掉了」" },
+        { t:"但度量身份不可替代 —— 机器无法自己证明自己对" }
+      ]},
+      { t:"跨环节协作契约", d:"每个接口一份", c:[
+        { t:"M0→M1 可定义 / M1→M2 可判定 / M2→M3 可校准" },
+        { t:"M3→M5 可归因 / M5→M1 可追溯 / M6→M1M2 可回归" },
+        { t:"三个最易断裂", d:"① 置信度可校准 ② 结论可归因 ③ 评估口径独立于优化目标" }
+      ]},
+      { t:"三处必须制度化的隔离", d:"详见 M5", c:[
+        { t:"谁评估低质水位 → 不能 Policy 自评" },
+        { t:"谁复审申诉 → 不能原审核团队" },
+        { t:"谁裁定规则缺陷 → Policy 只提提案" }
+      ]},
+      { t:"校验三维度", c:[
+        { t:"接口完整", d:"每个接口有唯一责任人；三问自检" },
+        { t:"指标同向", d:"用三元组逐角色对齐；只看一个指标必做错选择" },
+        { t:"角色有效", d:"度量身份是否被强化（真值产出、反馈单数）" }
+      ]}
+    ]},
+
+    { t:"M8 · Domain & Modality 分域", d:"同一套方法论投影到四体裁", k:"l5", c:[
+      { t:"核心判断", d:"直播不是「更快的短视频」，而是「不可控」" },
+      { t:"直播的三重失控", c:[
+        { t:"商业失控", d:"极重营收 → 安全/增长/效率三者制衡更紧 → 处置梯度偏向「先警后断」" },
+        { t:"内容失控", d:"内容与风险同步生产 → 主播与观众都不可控" },
+        { t:"风险面失控", d:"连麦/PK/语音房/弹幕/礼物多维叠加 → 多路异质信号" },
+        { t:"第一原则", d:"直播治理的目标不是判定一个直播间，而是定位一个时段" }
+      ]},
+      { t:"⭐ 四体裁对比矩阵", tag:"核心表", c:[
+        { t:"图文", d:"过去时、串行、可回扫 —— 方法论基准" },
+        { t:"短视频", d:"过去时 + 多模态 —— 判据最复杂，但仍可一次判一条" },
+        { t:"直播", d:"进行时、并行、不可回扫 —— 时效即生命线" },
+        { t:"商品", d:"静态但有生命周期 —— 唯一需要「修复」而非「删除」，瓶颈在规则变更效率" }
+      ]},
+      { t:"时态差异的根本是「不可回扫」", d:"直播没有回扫这个杠杆，全部希望压在事中时效上" },
+      { t:"架构含义", d:"直播用不成 7 秒/条的完整 VLM 链路", c:[
+        { t:"需流式分类头", d:"Qwen3Guard Stream 变体" },
+        { t:"需轻量判别式模型", d:"COGNIT-Guard 322M：单 NPU 21.77ms / 45.90 QPS" },
+        { t:"四种审核手段", d:"切片 / 抽帧 / 音频 / 实时流盯播（盯播是图文没有的兜底）" }
+      ]},
+      { t:"跨体裁迁移规则", c:[
+        { t:"✅ 可迁移：问题定义层、指标定义方法、数据飞轮机制" },
+        { t:"❌ 不可迁移：判定证据、阈值、审核链路、处置梯度" },
+        { t:"三个必问", d:"① 时态？② 误判代价落在谁身上？③ 风险主体粒度？" }
+      ]},
+      { t:"直播最缺的能力", c:[
+        { t:"事前预测（空的）", d:"可用行为序列 + 关系图谱补" },
+        { t:"事中全链路秒级闭环", d:"「分钟级→秒级」只解决了识别环节" }
+      ]}
+    ]},
+
+    { t:"技术层素材", d:"另一份独立文档，供引用与核对", c:[
+      { t:"大模型到机审小模型 · 博客素材", d:"9112 中文字 / 46 外链", c:[
+        { t:"信源五级标注", d:"论文 / 官方 / 自述·口径未公开 / 推断 / 未证实" },
+        { t:"可引用金句 9 条" },
+        { t:"引用陷阱 9 条" },
+        { t:"关键数字速查 30 行" }
+      ]},
+      { t:"⭐ 引用时必须带的限定", tag:"防错", c:[
+        { t:"KuaiMod「举报率 −20%」只适用举报 ≥5 次的高风险池" },
+        { t:"「20%」与「26%/24%」是两个口径" },
+        { t:"主站安全算法中心 vs 商业化/磁力引擎是两支团队，数字不可互代" },
+        { t:"KuaiMod 基座是 YuanQi，不是 Keye" },
+        { t:"平台自述比率（99.9% / 96.7% / 0.1%）口径未公开，不可与论文指标并列" }
+      ]},
+      { t:"明确空白（公开材料缺失）", c:[
+        { t:"误伤率 / 申诉率 / 新规上线到全量生效时延" },
+        { t:"TikTok「CIP」缩写 —— 查无实据，建议弃用" },
+        { t:"腾讯混元自营审核效果、B站/知乎技术材料、Meta/Google 审核量化说明" }
+      ]}
+    ]},
+
+    { t:"应用篇 · 短视频审核 Agent 方案", d:"一份完整方案 × 框架 × 学术工业整合", tag:"整合稿", k:"l5", c:[
+      { t:"核心纲领", d:"三级漏斗是必要条件，不是优化项", c:[
+        { t:"Agent 价值", d:"不是「更准的分类器」，而是能做推理与主动取证" },
+        { t:"代价", d:"延迟与成本 → 必须把 LLM 调用压在 5%~10%" },
+        { t:"量化依据", d:"视频多帧 VLM 与单图 VQA 约 35 倍吞吐差" }
+      ]},
+      { t:"① 风险定义层", c:[
+        { t:"⭐ 隐性风险三分类", d:"原方案最大增量", tag:"新增维度", c:[
+          { t:"keyframe 关键帧型", d:"整个视频只有一两帧有问题（0.5 秒刀片特写）→ 需帧级定位" },
+          { t:"segment 片段型", d:"某几秒连续才构成语义（3 秒内话术+引流文字）→ 需时序建模" },
+          { t:"crossmodal 组合型", d:"单模态都正常，叠加才违规（视频+评论区联系方式）→ 必须上 Agent" },
+          { t:"⭐ 与 M1 标签体系正交", d:"建议给每个标签加 detection_shape 字段，直接决定采样策略" }
+        ]},
+        { t:"P0~P3 分级", d:"P0 实时拦截 / P1 1分钟 / P2 10分钟 / P3 1小时人审", c:[
+          { t:"校准点 4", d:"应改为二维：严重程度 × 风险类（基础率差 9.0%~25.5%）" }
+        ]}
+      ]},
+      { t:"② 识别层（三级漏斗）", c:[
+        { t:"L1 判别式快筛", d:"指纹黑库 + 封面标题分类 + 概率预估 → 过 60%", c:[
+          { t:"校准点 1", d:"50ms 是架构红线 → 锁定判别式 + CPU/INT8；须注明 P50 还是 P99" }
+        ]},
+        { t:"L2 智能采样打分", d:"高熵帧定位（画面突变/人脸/字幕）→ 剩 5%~10%", c:[
+          { t:"学术支撑", d:"Adaptive Keyframe Sampling / STEC 时空熵覆盖率 / CUEKFS" },
+          { t:"建议", d:"用 STEC 类指标度量「采样质量」，它是 L3 输入质量的上游" }
+        ]},
+        { t:"L3 深度理解（Event Flow 骨架）", d:"⭐ 2026-10-25 修正：控制流放编排层而非模型内。状态机做主干，ReAct 只作「证据充分性判据」局部", tag:"架构改动", c:[
+          { t:"为什么不是 ReAct（六条）", d:"延迟不可预测 / 成本不可预算 / 不可审计 / 不可回归 / 不可局部修复 / 无界探索本身是攻击面" },
+          { t:"最关键两条", d:"治理判定会被申诉与监管问询 → 需事后重放证据链；每周迭代需可回归测试" },
+          { t:"Anthropic：workflows vs agents", d:"「能用流程就不用 Agent」；自主动 Agent 需「快且可验证的反馈」——审核的反馈延迟且有偏，缺这块地基" },
+          { t:"工业锚点", d:"Scott Logic（Agents decide how, workflows decide when/where/constraints）；NVIDIA Colang（event-driven）；AWS T&S（Step Functions 状态机，按状态转移计费）" },
+          { t:"生产失败数据", d:"纯 ReAct 无 step budget 会死循环；全自主「让 agent 决定」几乎从不适合生产；p50<5 步 / p99<15 步" },
+          { t:"三条约束", d:"① 工具过滤（每状态只暴露允许工具）② 处置动作在子流程边界外（Agent 只有建议权）③ 四重上限+降级" },
+          { t:"反面（诚实边界）", d:"问题空间确实无法分解时 ReAct 仍更优——新型风险第一批样本属于此类" },
+          { t:"工具集", d:"切帧/ASR/OCR/人脸物体/语义检索/黑库/情感意图（由 detection_shape 分派，不需模型决定）" },
+          { t:"工业对标", d:"快手安全审核智能体（多维度感知+长链推理+知识库记忆）；UNIVID 判例 RAG" },
+          { t:"校准点 3", d:"「低置信走 Agent」前必须先做置信度校准（CAUC：+1.9% 精度且省 47% 调用）" },
+          { t:"校准点 6（已被架构解决）", d:"改 Event Flow 后路径固定，预算约束是架构自带的；仍建议四重上限" },
+          { t:"补强 8（已被架构缓解）", d:"容量型 DoS：路径固定 + 可按状态限流 + 降级是正常状态转移" }
+        ]},
+        { t:"专项对抗策略", c:[
+          { t:"单帧违禁图 → 视觉突变定位高熵区间再逐帧" },
+          { t:"音频话术 → ASR 全量 + 敏感语义向量检索（比关键词抗变体）" },
+          { t:"组合型 → 依赖 Agent 跨模态关联推理" },
+          { t:"噪点遮挡 → 对抗样本增强 + 时序连贯性建模" }
+        ]}
+      ]},
+      { t:"③ 准入层", c:[
+        { t:"⭐ 限流发布（最漂亮的设计）", d:"非0即1之间的缓冲档，降误伤、减申诉", c:[
+          { t:"一手数字", d:"KuaiMod 判定嵌入推荐特征 → DAU +0.028%、总 AUT +0.063%" },
+          { t:"校准点 5", d:"须与 P 级绑定：P0 不能用（原文：明确违法的严格过滤），P2/P3 最适用" },
+          { t:"跨模块收益", d:"同时降误伤率 + 申诉压力 + 创作者体验损害（三者本是对立的）" }
+        ]},
+        { t:"账号差异化", d:"冷新号全量过 Agent / 高信誉快审 / 历史违规强制 / 高潜力提权", c:[
+          { t:"高潜力提权是交叉创新", d:"M3 高热审核是发布后，原方案是发布前预判 → 阈值应偏保守（误判代价不对称）" }
+        ]}
+      ]},
+      { t:"④ 治理层", c:[
+        { t:"存量巡检三触发", d:"举报超阈 / 传播加速 / 模型更新回扫" },
+        { t:"对抗闭环", d:"收集新手法 → 每周迭代 → A/B 灰度 → 全量 → 监控", c:[
+          { t:"M6 补强", d:"Δ 迭代速度差可判断「每周一版」够不够" },
+          { t:"M6 补强", d:"原方案缺防御 L1（提高规避成本）——唯一改变成本结构的一层" },
+          { t:"方法学提醒", d:"不能随机分流 → 用影子模式 + DID；误伤是低频事件需先算样本量" }
+        ]},
+        { t:"核心指标", d:"P0/P1 召回 >99.5% / 误伤 <0.1% / P1 时延 <1min", c:[
+          { t:"校准点 2", d:"误伤率口径未定义 → 用 M5 三池上下界；先测基线再定目标" },
+          { t:"召回率分母问题", d:"「全部实际存在的 P0/P1」无法直接观测 → 需外部锚点+主动抽样" },
+          { t:"⚠️ P0 特殊", d:"P0 漏放通常无用户申诉 → 不能用申诉池估计，只能靠外部锚点" },
+          { t:"校准点 7", d:"人工转化率下降可能因判定放宽而虚假改善 → 须与误伤/召回配对" }
+        ]}
+      ]},
+      { t:"⑤ 生态建设层", c:[
+        { t:"样本五来源", d:"举报 / 蜜罐诱饵 / 暗网情报 / Agent 自动入库 / 行业共享", c:[
+          { t:"蜜罐最有价值", d:"能捕获完整攻击链路，而非单个样本" },
+          { t:"暗网情报 = 前置化", d:"把风险感知前置到黑产部署之前（M0 发现时延的最优状态）" },
+          { t:"行业共享的合规边界", d:"建议共享「手法特征」而非「原始内容」" }
+        ]},
+        { t:"知识沉淀", d:"Playbook→Prompt / 案例库 / 确定性规则卸载回规则引擎", c:[
+          { t:"⭐ 性价比最高的一条", d:"规则卸载 = 把 L3 流量回落到 L1，成本差一到两个数量级" }
+        ]},
+        { t:"人机协作闭环", d:"转人工 → 反哺 Agent（RLHF/Prompt）→ 不确定率下降 → 人力减少" }
+      ]},
+      { t:"⭐ 八处校准/补强（本篇最有价值）", tag:"落地前必看", c:[
+        { t:"C1 L1 50ms → 架构红线，锁定判别式路线" },
+        { t:"C2 误伤 0.1% → 口径未定义，先测基线" },
+        { t:"C3 低置信分流 → 须先校准置信度" },
+        { t:"C4 分级一维 → 改二维（严重度 × 风险类）" },
+        { t:"C5 限流缓冲 → 与 P 级绑定，P0 除外" },
+        { t:"C6 Agent 预算 → 加工具/时间预算与降级路径" },
+        { t:"C7 人工转化率 → 须与误伤/召回配对" },
+        { t:"C8 容量型 DoS → 新增攻击面与四项对策" }
+      ]},
+      { t:"如果只保留三句话", c:[
+        { t:"① 三级漏斗是必要条件，不是优化项" },
+        { t:"② Agent 的价值是主动取证，但必须给它预算与降级路径" },
+        { t:"③ 最该补的是置信度校准、指标口径、新攻击面防御" }
+      ]}
+    ]},
+
+    { t:"待补 / 已知缺口", d:"留给自己继续填的部分", tag:"TODO", c:[
+      { t:"「我是如何发现潜在低俗风险的」真实案例", d:"笔记标注为解锁文档，正文未提供 → M0 已预留位置" },
+      { t:"面试真题（0530）与 Landing（0509）", d:"0418 节目录中出现标题但无正文" },
+      { t:"校验框架的维度对齐", d:"M1 是两维度（覆盖/执行），M2 是三维度（+成本）—— 待确认是否统一为三维度" },
+      { t:"M1/M2 瘦身", d:"口径部分可改为引用 M4，各减约 1 页" }
+    ]}
+  ]
+};
+
+/* ================= 渲染 ================= */
+const docMap = {
+  "总纲":"互联网内容治理-整体框架-总纲.md",
+  "M0":"治理模块-M0-风险感知与发现问题专题.md",
+  "M1":"治理模块-Policy-规则运营专题.md",
+  "M2":"治理模块-Strategy-策略与机审模型专题.md",
+  "M3":"治理模块-Execution-审核运营与质检专题.md",
+  "M4":"治理模块-Metrics-指标与实验专题.md",
+  "M5":"治理模块-Feedback-申诉与回流专题.md",
+  "M6":"治理模块-M6-对抗与黑灰产专题.md",
+  "M7":"治理模块-M7-组织与角色专题.md",
+  "M8":"治理模块-M8-治理域与体裁对比-含直播治理.md",
+  "M9":"治理模块-举报产品专题.md",
+  "应用":"治理应用-短视频审核Agent方案-整合稿.md",
+  "素材":"大模型到机审小模型-内容与商品治理-博客素材.md"
+};
+const tagMap = {
+  "总纲":"总纲","M0":"起点","M1":"定义层","M2":"实现层","M3":"执行层",
+  "M4":"回流层","M5":"回流层","M6":"环境层","M7":"环境层","M8":"投影层","M9":"执行层",
+  "应用":"应用篇","素材":"素材层"
+};
+document.getElementById("doclist").innerHTML = Object.entries(docMap).map(([k,v])=>
+  `<a href="${encodeURI(v)}" title="${v}">${k} · ${tagMap[k]}<span class="n">.md</span></a>`
+).join("");
+
+const treeEl = document.getElementById("tree");
+let totalNodes = 0, maxDepth = 0;
+
+function render(nodes, depth, parentUl){
+  nodes.forEach(n=>{
+    totalNodes++; maxDepth = Math.max(maxDepth, depth);
+    const li = document.createElement("li");
+    li.className = "node depth" + depth;
+    const kids = n.c && n.c.length ? n.c : null;
+    if(kids) li.classList.add("open");
+
+    const row = document.createElement("div");
+    row.className = "row";
+    const tw = document.createElement("span");
+    tw.className = "twist" + (kids ? "" : " leaf");
+    tw.textContent = "▼";
+    tw.onclick = e => { e.stopPropagation(); li.classList.toggle("collapsed"); tw.classList.toggle("collapsed"); };
+    row.appendChild(tw);
+
+    if(n.k){
+      const dot = document.createElement("span");
+      dot.className = "dot"; dot.style.background = "var(--"+n.k+")";
+      row.appendChild(dot);
+    }
+    const lbl = document.createElement("span");
+    lbl.className = "lbl"; lbl.textContent = n.t;
+    row.appendChild(lbl);
+
+    if(n.tag){
+      const tg = document.createElement("span");
+      tg.className = "tag"; tg.textContent = n.tag;
+      row.appendChild(tg);
+    }
+    if(n.d){
+      const de = document.createElement("span");
+      de.className = "desc"; de.textContent = "— " + n.d;
+      row.appendChild(de);
+    }
+    li.appendChild(row);
+
+    if(kids){
+      const ul = document.createElement("ul");
+      render(kids, depth+1, ul);
+      li.appendChild(ul);
+    }
+    parentUl.appendChild(li);
+  });
+}
+render([DATA], 0, treeEl);
+
+document.getElementById("stat").textContent =
+  `共 ${totalNodes} 个节点 · 最深 ${maxDepth+1} 层 · 11 篇文档`;
+
+/* ================= 展开 / 折叠 ================= */
+function expandAll(){
+  document.querySelectorAll("li.node").forEach(li=>{
+    li.classList.remove("collapsed");
+    const t=li.querySelector(":scope > .row > .twist"); if(t) t.classList.remove("collapsed");
+  });
+}
+function collapseAll(){
+  document.querySelectorAll("li.node").forEach(li=>{
+    if(li.querySelector(":scope > ul")){
+      li.classList.add("collapsed");
+      const t=li.querySelector(":scope > .row > .twist"); if(t) t.classList.add("collapsed");
+    }
+  });
+}
+function expandTo(d){
+  document.querySelectorAll("li.node").forEach(li=>{
+    const depth = parseInt((li.className.match(/depth(\d+)/)||[0,0])[1],10);
+    if(li.querySelector(":scope > ul") && depth >= d){
+      li.classList.add("collapsed");
+      const t=li.querySelector(":scope > .row > .twist"); if(t) t.classList.add("collapsed");
+    } else {
+      li.classList.remove("collapsed");
+      const t=li.querySelector(":scope > .row > .twist"); if(t) t.classList.remove("collapsed");
+    }
+  });
+}
+expandTo(2);
+
+/* ================= 搜索 ================= */
+const q = document.getElementById("q");
+q.addEventListener("input", ()=>{
+  const kw = q.value.trim().toLowerCase();
+  const lis = [...document.querySelectorAll("li.node")];
+  if(!kw){
+    lis.forEach(li=>{
+      li.classList.remove("dim");
+      li.querySelectorAll("mark.hit").forEach(m=>{ m.replaceWith(document.createTextNode(m.textContent)); });
+    });
+    return;
+  }
+  lis.forEach(li=>{
+    const row = li.querySelector(":scope > .row");
+    const txt = row.textContent.toLowerCase();
+    const hit = txt.includes(kw);
+    li.classList.toggle("dim", !hit);
+    // 命中的自动展开祖先，便于看到层级
+    if(hit){
+      let p = li.parentElement.closest("li.node");
+      while(p){ p.classList.remove("collapsed"); const t=p.querySelector(":scope > .row > .twist"); if(t) t.classList.remove("collapsed"); p = p.parentElement.closest("li.node"); }
+    }
+  });
+});
+document.addEventListener("keydown", e=>{
+  if(e.key === "/" && document.activeElement !== q){ e.preventDefault(); q.focus(); }
+  if(e.key === "Escape"){ q.value = ""; q.dispatchEvent(new Event("input")); q.blur(); }
+});
+
+/* ================= 导出 Markdown ================= */
+function exportMD(){
+  let out = "";
+  (function walk(nodes, depth){
+    nodes.forEach(n=>{
+      const pad = "  ".repeat(depth);
+      let line = pad + "- " + n.t;
+      if(n.tag) line += " `" + n.tag + "`";
+      if(n.d) line += " —— " + n.d;
+      out += line + "\n";
+      if(n.c) walk(n.c, depth+1);
+    });
+  })([DATA], 0);
+
+  const blob = new Blob([out], {type:"text/markdown;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "治理框架-思维导图-导出.md";
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>
