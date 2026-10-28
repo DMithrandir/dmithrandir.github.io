@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一条内容从投稿到处置 · 内容审核链路的成本与决策简报</title>
+<meta name="description" content="结论：治理成本不取决于模型精度，而取决于三件事的次序——先定 Policy 与标签，再定人审预算，最后定通道优先级与阈值。先审、VV 召回、Running Review、敏感词、举报、评论、账号各在解决什么问题，代价落在谁身上，逐节展开。全文数字为示意值，只用于说明机制。">
+<style>
+:root{
+  --paper:#f7f3ea; --paper2:#fcfaf4; --ink:#1b1916; --ink2:#4a443b; --muted:#8b8172;
+  --rule:#ddd3bf; --rule2:#ebe3d2; --accent:#a3321f; --teal:#2f4b52;
+  --serif:'Sitka Text','Sitka Banner',Constantia,Cambria,'Source Han Serif SC','Noto Serif CJK SC','Songti SC',SimSun,serif;
+  --display:'Sitka Banner','Sitka Display',Constantia,Cambria,'Source Han Serif SC','Noto Serif CJK SC','Songti SC',SimSun,serif;
+  --mono:'Cascadia Code','Cascadia Mono',Consolas,'SF Mono','DejaVu Sans Mono',monospace;
+  --rail:258px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:32px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:17px;line-height:1.9;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(circle at 14% 6%,rgba(163,50,31,.05),transparent 40%),
+             radial-gradient(circle at 86% 2%,rgba(47,75,82,.06),transparent 36%),
+             repeating-linear-gradient(0deg,rgba(27,25,22,.012) 0 1px,transparent 1px 3px);
+  mix-blend-mode:multiply}
+#progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:60;transition:width .1s linear}
+
+/* 侧栏 */
+.rail{position:fixed;top:0;left:0;bottom:0;width:var(--rail);padding:34px 24px 30px;
+  border-right:1px solid var(--rule);background:linear-gradient(180deg,var(--paper2),var(--paper));
+  overflow-y:auto;z-index:20}
+.rail::-webkit-scrollbar{width:6px}
+.rail::-webkit-scrollbar-thumb{background:var(--rule);border-radius:3px}
+.brand{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-family:var(--mono);margin-bottom:10px}
+.rail-title{font-family:var(--display);font-size:19px;line-height:1.4;font-weight:600;margin:0 0 6px;letter-spacing:.01em}
+.rail-sub{font-size:12.5px;color:var(--muted);margin-bottom:22px;line-height:1.6}
+.toc{list-style:none;margin:0;padding:0}
+.toc li{margin:0}
+.toc a{display:flex;gap:9px;align-items:baseline;padding:5px 0 5px 9px;color:var(--ink2);
+  text-decoration:none;font-size:13.5px;line-height:1.45;border-left:2px solid transparent;border-radius:0 3px 3px 0}
+.toc a:hover{color:var(--accent)}
+.toc a.active{color:var(--accent);border-left-color:var(--accent);background:rgba(163,50,31,.05)}
+.toc .n{font-family:var(--mono);font-size:10.5px;color:var(--muted);min-width:18px;flex:0 0 auto}
+.toc a.active .n{color:var(--accent)}
+.rail-foot{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule);font-size:11.5px;color:var(--muted);line-height:1.7}
+
+/* 正文 */
+main{position:relative;z-index:1;margin-left:var(--rail)}
+.wrap{max-width:760px;margin:0 auto;padding:66px 44px 96px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--accent);
+  text-transform:uppercase;margin-bottom:20px}
+h1{font-family:var(--display);font-size:40px;line-height:1.28;font-weight:600;margin:0 0 14px;letter-spacing:.005em}
+.h1sub{font-family:var(--display);font-size:21px;line-height:1.5;color:var(--ink2);font-weight:400;margin:0 0 26px}
+.lead{font-size:18px;line-height:1.85;color:var(--ink2);margin:0 0 26px}
+.lead::first-letter{font-size:1.05em}
+.meta{display:flex;flex-wrap:wrap;gap:8px 22px;font-family:var(--mono);font-size:11.5px;
+  color:var(--muted);letter-spacing:.04em;padding:16px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+h2{font-family:var(--display);font-size:27px;line-height:1.42;font-weight:600;margin:70px 0 18px;
+  letter-spacing:.005em;scroll-margin-top:28px}
+h2 .sec-num{display:block;font-family:var(--mono);font-size:11.5px;color:var(--accent);
+  letter-spacing:.16em;margin-bottom:8px;font-weight:400}
+h3{font-size:19px;font-weight:600;margin:38px 0 12px;line-height:1.55}
+p{margin:18px 0}
+strong{font-weight:600}
+em{font-style:normal;background:linear-gradient(transparent 62%,rgba(163,50,31,.16) 62%)}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(163,50,31,.32)}
+a:hover{border-bottom-color:var(--accent)}
+ul{margin:18px 0;padding-left:1.25em}
+li{margin:7px 0;padding-left:.15em}
+li::marker{color:var(--accent)}
+code{font-family:var(--mono);font-size:.86em;background:var(--rule2);padding:2px 5px;border-radius:3px}
+blockquote{margin:26px 0;padding:6px 0 6px 20px;border-left:2px solid var(--accent);color:var(--ink2)}
+blockquote p{margin:8px 0}
+
+.table-wrap{margin:28px 0;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14.5px;line-height:1.65}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{background:rgba(107,90,46,.06);font-weight:600;font-size:13px;color:var(--ink2);
+  border-top:1px solid var(--rule);white-space:nowrap}
+tbody tr:hover{background:rgba(255,255,255,.35)}
+td:first-child{color:var(--ink2)}
+
+figure.fig{margin:40px -44px;padding:22px 26px 18px;background:var(--paper2);
+  border:1px solid var(--rule);border-radius:5px}
+figure.fig svg{display:block;width:100%;height:auto}
+figcaption{margin-top:14px;font-size:12.5px;line-height:1.7;color:var(--muted)}
+.fig-num{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--accent);
+  margin-right:8px;text-transform:uppercase}
+hr{border:0;border-top:1px solid var(--rule);margin:44px 0}
+.foot{margin-top:52px;padding-top:22px;border-top:1px solid var(--rule);font-size:12.5px;
+  color:var(--muted);line-height:1.8}
+
+@media (max-width:1120px){
+  .rail{display:none}
+  main{margin-left:0}
+}
+@media (max-width:900px){
+  figure.fig{margin:32px 0}
+}
+@media (max-width:720px){
+  body{font-size:16.5px}
+  .wrap{padding:44px 20px 72px}
+  h1{font-size:30px}
+  .h1sub{font-size:18px}
+  .lead{font-size:16.5px}
+  h2{font-size:23px;margin-top:52px}
+  figure.fig{margin:30px -6px;padding:14px 12px 12px}
+  th,td{padding:8px 9px;font-size:13.5px}
+  th{white-space:normal}
+}
+@media print{
+  #progress,.rail{display:none}
+  main{margin:0}
+  .wrap{max-width:none;padding:0}
+  body{font-size:11.5pt;background:#fff}
+  body::before{display:none}
+  figure.fig{break-inside:avoid;margin:18pt 0}
+  h2{break-after:avoid}
+  a{color:inherit;border:0}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<aside class="rail">
+  <div class="brand">Content Moderation</div>
+  <p class="rail-title">一条内容从投稿到处置</p>
+  <p class="rail-sub">内容审核链路的成本与决策简报</p>
+  <ul class="toc"><li><a href="#s00"><span class="n">00</span><span>执行摘要</span></a></li><li><a href="#s01"><span class="n">01</span><span>从一笔账开始</span></a></li><li><a href="#s02"><span class="n">02</span><span>三个维度：发现、审核、监控</span></a></li><li><a href="#s03"><span class="n">03</span><span>先审：把最贵的判断放在发布前</span></a></li><li><a href="#s04"><span class="n">04</span><span>召回：用 VV 决定谁该进人审</span></a></li><li><a href="#s05"><span class="n">05</span><span>Running Review：按期望风险排序</span></a></li><li><a href="#s06"><span class="n">06</span><span>敏感词与 NLP：文本通道</span></a></li><li><a href="#s07"><span class="n">07</span><span>复审与三审：VV 继续涨怎么办</span></a></li><li><a href="#s08"><span class="n">08</span><span>特殊先审：政策驱动的名单</span></a></li><li><a href="#s09"><span class="n">09</span><span>消重：同一条内容不该审两次</span></a></li><li><a href="#s10"><span class="n">10</span><span>通用举报：用户侧的召回</span></a></li><li><a href="#s11"><span class="n">11</span><span>评论召回：第二个内容场</span></a></li><li><a href="#s12"><span class="n">12</span><span>账号审核：从内容到主体</span></a></li><li><a href="#s13"><span class="n">13</span><span>三件不随模型变化的事</span></a></li><li><a href="#s14"><span class="n">14</span><span>决策清单与待确认事项</span></a></li></ul>
+  <div class="rail-foot">2026.10<br>约 10,200 字 · 26 分钟</div>
+</aside>
+<main>
+  <article class="wrap">
+    <div class="eyebrow">Trust &amp; Safety · 2026.10</div>
+    <h1>一条内容从投稿到处置</h1>
+    <p class="h1sub">内容审核链路的成本与决策简报</p>
+    <p class="lead">结论：治理成本不取决于模型精度，而取决于三件事的次序——先定 Policy 与标签，再定人审预算，最后定通道优先级与阈值。先审、VV 召回、Running Review、敏感词、举报、评论、账号各在解决什么问题，代价落在谁身上，逐节展开。全文数字为示意值，只用于说明机制。</p>
+    <div class="meta"><span>约 10,200 字</span><span>阅读 26 分钟</span><span>内容治理 · 公开版</span></div>
+<h2 id="s00"><span class="sec-num">00</span>执行摘要</h2>
+<p><strong>结论。</strong> 在固定的人审产能下，内容治理的成本不取决于模型精度，而取决于三件事的次序：先定 Policy 与标签体系，决定什么叫"有问题"；再定人审预算，决定每天能审多少条；最后才定通道优先级与阈值，决定把这些判断花在谁身上。模型只决定第三条曲线的位置，改变不了前两条。</p>
+<p><strong>口径。</strong> 全文用示意平台推演：每天 100 万条投稿、其中 5 万条按政策应被处置、一名审核员每天完成 500 条一审。这些数字不对应任何真实平台。外部公开引用只有两处：快手 KuaiMod 的标签体系与队列设计（<a href="https://arxiv.org/abs/2504.14904" target="_blank" rel="noopener">arXiv:2504.14904</a>）、YouTube 的 VVR 披露口径。其余为机制层面的通用描述，不含内部数据、政策代码与系统名。</p>
+<p><strong>十个判定的分工。</strong> 整条链路可以拆成十个把内容送进人审的通道，它们的触发依据和失效方式各不相同：</p>
+<div class="table-wrap"><table><thead><tr><th>通道</th><th>触发依据</th><th>优化目标</th><th>主要失效模式</th></tr></thead><tbody><tr><td>先审</td><td>模型高风险分档</td><td>发布前拦住不可逆的风险</td><td>高风险档精度不够，机审直接误杀</td></tr><tr><td>VV 召回</td><td>播放量过阈值</td><td>控制风险扩散范围</td><td>等量到了才审，传播已完成</td></tr><tr><td>Running Review</td><td>期望风险 p × v 排名</td><td>决定审谁，而不是何时审</td><td>预测失准，或只学会预测热度</td></tr><tr><td>敏感词 / NLP</td><td>文本命中或语义判定</td><td>覆盖文本侧风险</td><td>变体绕过；正常语境误伤</td></tr><tr><td>复审 / 三审 / 高热</td><td>更高 VV 或新增信号</td><td>边际风险再确认</td><td>无新信息地重复审；低热高后果被挤出</td></tr><tr><td>特殊先审</td><td>政策名单</td><td>不出错</td><td>清单维护失效</td></tr><tr><td>消重</td><td>指纹与向量近邻</td><td>省人审，避免判定不一致</td><td>近似重复被当作完全重复放行</td></tr><tr><td>通用举报</td><td>举报率与强信号</td><td>从用户侧发现风险</td><td>噪声与恶意举报；信号源枯竭</td></tr><tr><td>评论召回</td><td>热度、负面率、模型分</td><td>覆盖第二内容场</td><td>缺上下文导致误伤</td></tr><tr><td>账号审核</td><td>投稿、举报、资料</td><td>主体级治理</td><td>关系识别不足，封了又开</td></tr></tbody></table></div>
+<p><strong>对决策的含义。</strong></p>
+<p>1. 先定 Policy 与标签粒度，再谈模型。标签粗到"低俗"这一级，审核员拿到手里无法做决定。 2. 把人审产能写成预算约束，所有通道共用同一份产能；阈值是调度器在预算内算出的结果。 3. 通道按"误判代价落在谁身上"分级，而不是按模型能力分级。代价不可逆的通道必须前置。 4. 指标成组看：违规曝光率看影响面、抽查漏放率看覆盖、举报率看用户感受、申诉成功率看误伤。 5. 留出一份探索预算：随机抽检的工单看起来不值，它是整套系统保持可信的成本。</p>
+<p><strong>不确定性。</strong> 文中数字为示意值，未用真实平台口径校准，结论在数量级上稳健，具体阈值不可直接套用；外部公开信息只覆盖 KuaiMod 与 YouTube 两处，账号关系识别、评论链路阈值等缺少可比口径；本文也未做平台间对照与各通道的边际收益测算，落到具体平台需要用自己的基线重算。</p>
+<h2 id="s01"><span class="sec-num">01</span>从一笔账开始</h2>
+<p><strong>人审产能是这条链路唯一不能按需扩容的环节，后面所有设计都是在固定产能下分配判断力。</strong></p>
+<p>用示意设定推演：平台每天收到 100 万条投稿，其中 5 万条按政策应被处置。全部交给人工，召回率是 100%，但按每名审核员每天 500 条一审计算，需要 2000 名审核员；其中 95 万条是正常内容，审核员大部分时间花在"确认没问题"上。</p>
+<p>换成机审先筛：模型挑出最可疑的 10 万条送进人审，其中 4 万条确有问题。</p>
+<div class="table-wrap"><table><thead><tr><th>指标</th><th>全部人审</th><th>机审先筛，再人审</th></tr></thead><tbody><tr><td>送进人审</td><td>100 万条</td><td>10 万条</td></tr><tr><td>其中真问题</td><td>5 万条</td><td>4 万条</td></tr><tr><td>召回率</td><td>100%</td><td>80%</td></tr><tr><td>人审命中率</td><td>5%</td><td>40%</td></tr><tr><td>漏放</td><td>0</td><td>1 万条</td></tr><tr><td>人审成本</td><td>100%</td><td>10%</td></tr></tbody></table></div>
+<p>这里的漏放只指"没有被送进人审"；人审判得准不准是另一件事，由质检、双审与申诉负责。把"要不要送审"和"判得对不对"分开，后面的讨论才不会混。</p>
+<p>在模型能力不变的前提下，召回率、人审命中率、人审成本三个数不能同时变好。召回率从 80% 提到 95%，送审量要从 10 万加到 30 万甚至更多，人审成本翻几倍，命中率还会掉；命中率从 40% 提到 70%，阈值就得收紧，送审量下降，漏放的坏内容变多。</p>
+<p>因此这条链路的第一性问题只有一句：<strong>在有限的人审产能下，把 5 万条坏内容尽量早、尽量准地捞出来，同时别把太多正常内容拖进来。</strong> 召回率与准确率怎么换，后面每个环节都由此展开。</p>
+<p>这里有两个作用完全不同的杠杆。</p>
+<p><strong>移动阈值。</strong> 在既有模型能力上把分数线往上或往下挪：挪上去，命中率涨、召回掉；挪下来，召回涨、人审量涨。这条曲线上没有免费的位置，只是在两类错误之间换比例。</p>
+<p><strong>把整条曲线往外推。</strong> 训练更好的模型、补更细的标签、接入新的信号源，同样的召回率下命中率更高，或同样的命中率下召回更高。治理体系的长期进步几乎全部来自这一类，但周期以月计；阈值可以当天调。</p>
+<p>多数治理争论是把这两件事混在了一起：业务方看到漏放，要求降阈值；审核方看到无效工单，要求升阈值。双方都在动同一个旋钮，没有人去推那条曲线。</p>
+<p>还有一项成本常被漏算。人审不是可以无限加班的机器：长期接触底线内容会造成真实的心理负担，KuaiMod 的论文把心理负担与成本、偏见并列为人工审核的三个主要问题。这意味着人审产能不只是"人头数 × 每条耗时"，它还有一个随强度衰减的上限。按免费资源来设计召回，代价会在几个月后显现。</p>
+<figure class="fig" id="fig1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" width="100%" role="img" style="font-family:'Source Han Serif SC','Noto Serif CJK SC','Songti SC',SimSun,serif"><rect width="800" height="380" fill="#fcfaf4"/><text x="46" y="26" font-size="15" font-weight="600" fill="#1b1916">①  全部交给人工审核</text><text x="46" y="44" font-size="11.5" fill="#8b8172">所有内容都进人审</text><rect x="46" y="60" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="67" y="60" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="88" y="60" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="109" y="60" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="130" y="60" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="151" y="60" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="172" y="60" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="193" y="60" width="17" height="17" rx="2" fill="#a3321f"/><rect x="214" y="60" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="235" y="60" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="46" y="81" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="67" y="81" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="88" y="81" width="17" height="17" rx="2" fill="#a3321f"/><rect x="109" y="81" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="130" y="81" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="151" y="81" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="172" y="81" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="193" y="81" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="214" y="81" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="235" y="81" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="46" y="102" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="67" y="102" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="88" y="102" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="109" y="102" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="130" y="102" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="151" y="102" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="172" y="102" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="193" y="102" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="214" y="102" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="235" y="102" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="46" y="123" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="67" y="123" width="17" height="17" rx="2" fill="#a3321f"/><rect x="88" y="123" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="109" y="123" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="130" y="123" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="151" y="123" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="172" y="123" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="193" y="123" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="214" y="123" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="235" y="123" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="46" y="144" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="67" y="144" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="88" y="144" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="109" y="144" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="130" y="144" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="151" y="144" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="172" y="144" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="193" y="144" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="214" y="144" width="17" height="17" rx="2" fill="#a3321f"/><rect x="235" y="144" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="46" y="165" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="67" y="165" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="88" y="165" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="109" y="165" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="130" y="165" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="151" y="165" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="172" y="165" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="193" y="165" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="214" y="165" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="235" y="165" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="46" y="186" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="67" y="186" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="88" y="186" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="109" y="186" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="130" y="186" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="151" y="186" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="172" y="186" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="193" y="186" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="214" y="186" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="235" y="186" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="46" y="207" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="67" y="207" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="88" y="207" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="109" y="207" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="130" y="207" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="151" y="207" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="172" y="207" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="193" y="207" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="214" y="207" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="235" y="207" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="46" y="228" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="67" y="228" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="88" y="228" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="109" y="228" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="130" y="228" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="151" y="228" width="17" height="17" rx="2" fill="#a3321f"/><rect x="172" y="228" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="193" y="228" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="214" y="228" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="235" y="228" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="46" y="249" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="67" y="249" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="88" y="249" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="109" y="249" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="130" y="249" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="151" y="249" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="172" y="249" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="193" y="249" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="214" y="249" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="235" y="249" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><text x="272" y="90" font-size="11" fill="#8b8172">送进人审</text><text x="272" y="114" font-size="21" font-weight="600" fill="#1b1916">100 万</text><text x="272" y="152" font-size="11" fill="#8b8172">召回率</text><text x="272" y="176" font-size="21" font-weight="600" fill="#1b1916">100%</text><text x="272" y="214" font-size="11" fill="#8b8172">人审命中率</text><text x="272" y="238" font-size="21" font-weight="600" fill="#1b1916">5%</text><text x="456" y="26" font-size="15" font-weight="600" fill="#1b1916">②  机审先筛，再人工审核</text><text x="456" y="44" font-size="11.5" fill="#8b8172">只有模型认为可疑的进人审</text><rect x="456" y="60" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="477" y="60" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="498" y="60" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="519" y="60" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="540" y="60" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="561" y="60" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="582" y="60" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="603" y="60" width="17" height="17" rx="2" fill="#a3321f"/><rect x="624" y="60" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="645" y="60" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="456" y="81" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="477" y="81" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="498" y="81" width="17" height="17" rx="2" fill="#a3321f"/><rect x="519" y="81" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="540" y="81" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="561" y="81" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="582" y="81" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="603" y="81" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="624" y="81" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="645" y="81" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="456" y="102" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="477" y="102" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="498" y="102" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="519" y="102" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="540" y="102" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="561" y="102" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="582" y="102" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="603" y="102" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="624" y="102" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="645" y="102" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="456" y="123" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="477" y="123" width="17" height="17" rx="2" fill="#a3321f"/><rect x="498" y="123" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="519" y="123" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="540" y="123" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="561" y="123" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="582" y="123" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="603" y="123" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="624" y="123" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="645" y="123" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="456" y="144" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="477" y="144" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="498" y="144" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="519" y="144" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="540" y="144" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="561" y="144" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="582" y="144" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="603" y="144" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="624" y="144" width="17" height="17" rx="2" fill="#a3321f"/><rect x="645" y="144" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="456" y="165" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="477" y="165" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="498" y="165" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="519" y="165" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="540" y="165" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="561" y="165" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="582" y="165" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="603" y="165" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="624" y="165" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="645" y="165" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="456" y="186" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="477" y="186" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="498" y="186" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="519" y="186" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="540" y="186" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="561" y="186" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="582" y="186" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="603" y="186" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="624" y="186" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="645" y="186" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="456" y="207" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="477" y="207" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="498" y="207" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="519" y="207" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="540" y="207" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="561" y="207" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="582" y="207" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="603" y="207" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="624" y="207" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="645" y="207" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="456" y="228" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="477" y="228" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="498" y="228" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="519" y="228" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="540" y="228" width="17" height="17" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><rect x="561.6" y="228.6" width="15.8" height="15.8" rx="2" fill="none" stroke="#a3321f" stroke-width="1.4" stroke-dasharray="3 2"/><rect x="582" y="228" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="603" y="228" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="624" y="228" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="645" y="228" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="456" y="249" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="477" y="249" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="498" y="249" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="519" y="249" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="540" y="249" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="561" y="249" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="582" y="249" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="603" y="249" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="624" y="249" width="17" height="17" rx="2" fill="#ebe3d3"/><rect x="645" y="249" width="17" height="17" rx="2" fill="#ebe3d3"/><text x="682" y="90" font-size="11" fill="#8b8172">送进人审</text><text x="682" y="114" font-size="21" font-weight="600" fill="#1b1916">10 万</text><text x="682" y="152" font-size="11" fill="#8b8172">召回率</text><text x="682" y="176" font-size="21" font-weight="600" fill="#1b1916">80%</text><text x="682" y="214" font-size="11" fill="#8b8172">人审命中率</text><text x="682" y="238" font-size="21" font-weight="600" fill="#1b1916">40%</text><rect x="46" y="307" width="13" height="13" rx="2" fill="#ebe3d3"/><text x="66" y="318" font-size="11.5" fill="#4a443b">未送人审</text><rect x="190" y="307" width="13" height="13" rx="2" fill="#2f4b52" fill-opacity=".15" stroke="#2f4b52" stroke-opacity=".36" stroke-width=".9"/><text x="210" y="318" font-size="11.5" fill="#4a443b">送进人审</text><rect x="340" y="307" width="13" height="13" rx="2" fill="#a3321f"/><text x="360" y="318" font-size="11.5" fill="#4a443b">有问题且被审到</text><rect x="560.6" y="307.6" width="12" height="12" rx="2" fill="none" stroke="#a3321f" stroke-width="1.3" stroke-dasharray="3 2"/><text x="580" y="318" font-size="11.5" fill="#4a443b">有问题但漏放</text><text x="46" y="356" font-size="11" fill="#8b8172">每个格子代表 1 万条投稿；红色为按政策应处置的 5 万条。</text></svg><figcaption><span class="fig-num">图 1</span>两种审法的对比。左图全部进人审，召回满分，但 95% 的人力花在正常内容上；右图机审先筛，人审量降到十分之一，代价是 1 万条问题内容漏放。</figcaption></figure>
+<h2 id="s02"><span class="sec-num">02</span>三个维度：发现、审核、监控</h2>
+<p><strong>发现决定队列里有什么，审核决定判断准不准，监控决定这套系统在变好还是变坏；三者互为约束。</strong></p>
+<p><strong>怎么发现这批内容。</strong> 平台主动扫描、按播放量召回、用户举报、评论区信号、账号历史，每条都是把内容送进审核队列的通道。通道决定了队列里装的是什么，也决定了后续人力花在哪。</p>
+<p><strong>怎么审核这批内容。</strong> 人审怎么判、判得一致不一致、判错能不能纠正。这一步消耗人力，也是全链路唯一能产出"真值"的地方。</p>
+<p><strong>怎么监控平台上有多少这类内容。</strong> 前两步做好，只说明你在处理已经进来的问题；监控回答整体水位在升还是在降。</p>
+<p>三者互相咬合：发现得越多，审核越堵，时效越差，内容在队列里停留越久，风险暴露越大；而只有监控能说明这条链路整体在变好还是变坏。监控本身也要分层，否则很容易只看一层：</p>
+<div class="table-wrap"><table><thead><tr><th>层</th><th>指标</th><th>回答什么</th><th>局限</th></tr></thead><tbody><tr><td>结果</td><td>违规曝光率、低质曝光占比、举报率</td><td>违规暴露有没有降</td><td>滞后，通常按月看</td></tr><tr><td>过程</td><td>进审量、命中率、时效、队列积压</td><td>链路运转是否正常</td><td>可被单点优化，不等于水位下降</td></tr><tr><td>抽查</td><td>漏放率、误伤率、双审一致率</td><td>判断本身准不准</td><td>成本高，只能抽样</td></tr></tbody></table></div>
+<p>只报结果，问题发现时已经扩散一两个月；只报过程，团队会把进审量与处置量做成漂亮的数字而水位不动。三层要一起看，并且先约定口径：分母是播放量还是条数、时间窗多长、是否含回扫、口径版本号是多少。</p>
+<p>VVR 值得单独说。它的分子是违规内容获得的观看量，分母是总观看量。换成"违规条数 / 总条数"，多发正常内容就能把比率做低，这是典型摊薄；用观看量做分母，想摊薄就得把总观看量做上去，代价大得多。YouTube 从 2021 年起按季度在<a href="https://transparencyreport.google.com/youtube-policy/views?hl=en" target="_blank" rel="noopener">透明度报告</a>披露这个数（首期覆盖 2020 年第四季度）。国内平台公开口径不多，但这个设计思路可以直接借。</p>
+<h2 id="s03"><span class="sec-num">03</span>先审：把最贵的判断放在发布前</h2>
+<p><strong>先审只处理模型判为高风险的那部分内容，它天然会漏；它的价值在于把错误代价最高的一次判断，放在成本最低的时刻。</strong></p>
+<p>投稿进来后，模型从色情、低俗、暴恐、违法等维度逐项打分，高风险的送人审确认：通过则发布，不通过则按 Policy 处置。</p>
+<p>先审的机审通常不是两档，而是三档：</p>
+<ul><li><strong>明确违规</strong>：模型置信度很高，直接处置，不进人审；</li><li><strong>可疑</strong>：进人审，这是先审的主要流量；</li><li><strong>明确正常</strong>：直接发布。</li></ul>
+<p>三档比两档省人力的地方，在于把一部分判断从人审里彻底拿掉。但"明确违规"这一档必须有很高精度，它是机审直接生效、没有下游兜底的环节。这里的阈值应偏保守：宁可把边界样本推给人审，也不要让机审直接误杀。</p>
+<p><strong>先审不是全量审。</strong> 所有内容发布前都过人审，理论上最安全，工程上不成立：发布延迟直接伤害创作者体验，人审产能也撑不住。先审只覆盖高风险部分，其余直接发布，因此先审必定漏，漏掉的部分要靠后面的召回补。</p>
+<p><strong>也不是所有内容都值得先审。</strong> 业界通常分三类：</p>
+<div class="table-wrap"><table><thead><tr><th>类型</th><th>审什么</th><th>发布时机</th><th>误判一次的代价</th></tr></thead><tbody><tr><td>安全审核</td><td>红线、违法类</td><td>先审后发，未过审不可推荐</td><td>漏放不可逆，可能触发监管风险</td></tr><tr><td>质量审核</td><td>低质、擦边类</td><td>先发后召回</td><td>漏放只是被消费一小段，可恢复</td></tr><tr><td>高热审核</td><td>头部内容的画风</td><td>发布后复审</td><td>影响面大，但可以事后处理</td></tr></tbody></table></div>
+<p>分界线是"误判代价落在谁身上"。安全类漏放一次，内容进了分发就收不回来，必须前置；质量类误判一次，最坏结果是移出推荐，可以恢复，允许后置。这条判断决定后面所有通道的优先级。</p>
+<p>先审的模型输出要细到"可判定"。快手公开的 KuaiMod 论文里，评测用的标签体系是 4 个大类、15 个子类；线上实际运行的版本已扩展到 100 多个标签，而且体系本身仍在扩展（<a href="https://arxiv.org/abs/2504.14904" target="_blank" rel="noopener">arXiv:2504.14904</a>）。论文里那 15 个是为泛化做的简化版，线上要细到能直接对照 Policy：粗到"低俗"这一级，审核员无法做决定；细到"低俗-未成年相关"，才能直接判。</p>
+<p>模型上线也有节奏。新模型先跑影子模式：不参与处置，只记录它会怎么判，与人审结论对比。影子期的主指标是分歧率，不是准确率。分歧集中的类目，往往就是标签定义本身有歧义的地方。分歧收敛、误伤可控之后，再让它接管某一档。</p>
+<h2 id="s04"><span class="sec-num">04</span>召回：用 VV 决定谁该进人审</h2>
+<p><strong>伤害约等于违规概率乘以曝光量，所以用 VV 触发召回；但固定阈值只能控制"什么时候审"，控制不了"审谁"。</strong></p>
+<p>这里的"召回"指把内容捞进审核队列，与上一节的召回率不是一回事。先审会漏放一部分问题内容，平台希望这些内容在播放量还很低时被拦住。业内常用的一种示意口径是：线上 90% 的播放量（VV）都经过了人审，就可以认为风险处于可控范围。</p>
+<p>流程因此是：内容发布后先跑流量，VV 超过预设值时送人审，按 Policy 处理。</p>
+<p>用 VV 做触发条件，是因为一条内容有没有问题在发布那一刻基本确定，但它造成多大伤害取决于多少人看到。VV 是"被看到多少"最直接的计数。</p>
+<p>"90% 的 VV 经过人审"这句话，分母是播放量而不是条数。换成条数口径，同样的人审量只覆盖 10% 的内容，但风险可能仍然可控，因为剩余 90% 的内容几乎没有播放量。这也是治理指标反复强调分母的原因：用条数考核，团队会倾向审大量低播放的长尾内容，数字好看，风险没降。</p>
+<p>口径还要说清分子：算的是"经人审后放行的播放量"，还是"人审接触过的播放量"，审前已经产生的那部分算不算。定义不同，同一个平台能算出差一倍的数字。</p>
+<p>更根本的是，它是一个投入指标：只能说明多少播放量经过了人审，不能说明没覆盖到的流量里违规占多少。要判断风险是否真的可控，还得配结果指标（VVR）与抽查指标（漏放率）。</p>
+<p><strong>固定阈值的问题。</strong> 所有内容用同一个 VV 阈值判断是否进审，逻辑简单，但对两类内容的处理都不理想。</p>
+<p>对有问题的那部分，阈值意味着"先让它跑到这个量再拦"。一条擦边视频在达到阈值前已经完成一轮传播，等进审、判完、处置，最早的观众已经看过。</p>
+<p>对没问题的那部分，阈值意味着"跑到这个量就得被拉去审一次"。一条正常的热门内容可能因 VV 高而被反复送审，既占人力，又可能在待审期间被停推。停不停推取决于产品设计，但这段时间的播放损失，创作者能直接感知。</p>
+<p>也就是说，固定阈值只能控制"什么时候审"，控制不了"审谁"；而人审产能是固定的，该优化的是把一分钟花在哪条内容上。</p>
+<p>实际系统里阈值通常分层，而不是一个全局数字：</p>
+<ul><li>按风险类目：色情、暴恐这类一票否决类目阈值可以很低；低质、擦边类要高得多，否则人审会被淹没；</li><li>按作者：有违规历史、被举报率高的作者阈值下调；新作者或高信用作者阈值上调；</li><li>按时效：热点事件、突发话题期间阈值临时下调，因为播放量增长完全不是同一量级。</li></ul>
+<p>层与层之间还要联动。当天进审总量必须收敛到人力上限以内，所以阈值本质上是调度器算出来的结果，配置表里那个数字只是某一天的快照。人力请假、模型换版、突发舆情，都会让同一个阈值在第二天变成错的。</p>
+<p>但不管怎么分层，它仍是"等播放量到某个数再送审"：先有量，后有判断。下一节换掉的就是这个顺序。</p>
+<h2 id="s05"><span class="sec-num">05</span>Running Review：按期望风险排序</h2>
+<p><strong>Running Review 把触发依据从播放量换成期望风险 p × v，优化目标随之从"什么时候审"变成"审谁"。</strong></p>
+<p>对每条刚发布的内容估计两个量：p 是最终被判定违规的概率，v 是未来一段时间可能获得的播放量。期望风险约等于 p × v。在每天的人审预算约束下（假设 10 万条），按 p × v 从高到低取前 10 万条送审。阈值不再是一个固定 VV 数字，而是一条随当日内容池与人力预算浮动的分数线。</p>
+<div class="table-wrap"><table><thead><tr><th>比较项</th><th>固定 VV 阈值</th><th>Running Review</th></tr></thead><tbody><tr><td>触发条件</td><td>播放量达到预设值</td><td>期望风险排名进入当日预算</td></tr><tr><td>排序依据</td><td>只有播放量一个标量</td><td>违规概率 × 预期播放量</td></tr><tr><td>优化目标</td><td>控制"什么时候审"</td><td>控制"审谁"</td></tr><tr><td>主要失效模式</td><td>坏内容传播完才被审；好内容被反复召</td><td>预测失准、冷启动偏差、只学会预测热度</td></tr></tbody></table></div>
+<p>工程上有四个前提。</p>
+<p><strong>模型分数要能当概率用。</strong> 如果输出只是"可疑程度"的排序分，取 top-K 的结果会随当天分布漂移。要做校准，让 p=0.6 真的对应六成违规率，才能把 p × v 与人力预算放在同一尺度上比较。</p>
+<p><strong>早期信号方差很大。</strong> 发布后一小时的 VV 与互动，对最终播放量的预测能力有限；越新作者、新体裁、新热点，预测越不准。所以 Running Review 通常是多次决策：先按早期信号排一次，几小时后用新数据再排，而不是一锤定音。</p>
+<p><strong>要防止模型学会预测热度而不是风险。</strong> 如果训练样本里高播放内容天然更容易被举报、被审出问题，模型可能只是学会了"这条会火"。负样本设计与分层评估（按类目、按作者层级）比模型结构更重要。评估时要专门看两类样本：预测会火但最终判为正常的，和预测不会火但最终违规的。</p>
+<p><strong>审完的结果要回流。</strong> 每次人审判定都是一条标注，既校准 p，也更新"哪类内容在什么阶段容易出问题"。没有这个闭环，几周之后就会失准。</p>
+<p>还有一项容易被跳过的设计：探索预算。全部按期望风险排序，意味着低风险、低播放的区域永远审不到，模型也就永远拿不到那里的真值。通常要留一小部分产能做随机或分层抽样，专门校准模型、监测漏放。这部分工单看起来"不值"，它是整套系统保持可信的成本。</p>
+<p>评估时盯两件事。一是送审时点不等于处置时点：从进审、判定到实际拦截还有时滞，期间播放量仍在涨，要看处置时点的累计播放量，而不只是送审时的。二是纯按 p × v 排序，会让暴恐这类低播放、高后果的类目被高播放内容挤出预算，一票否决类目通常要设独立配额下限，不能只靠总分排队。</p>
+<p>收益可以量化成两个指标：同样人力下，问题内容的平均进审时点（送审时的 VV）是否下降；或同样风险水平下，进审量是否下降。前者衡量拦得早不早，后者衡量审得值不值。</p>
+<figure class="fig" id="fig3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="100%" role="img" style="font-family:'Source Han Serif SC','Noto Serif CJK SC','Songti SC',SimSun,serif"><rect width="800" height="400" fill="#fcfaf4"/><text x="78" y="38" font-size="10.5" fill="#8b8172">累计曝光 VV（示意）</text><line x1="78" y1="318.0" x2="742" y2="318.0" stroke="#ddd3bf" stroke-width=".8"/><text x="68" y="322.0" font-size="10" fill="#8b8172" text-anchor="end">0</text><line x1="78" y1="266.0" x2="742" y2="266.0" stroke="#ddd3bf" stroke-width=".8"/><text x="68" y="270.0" font-size="10" fill="#8b8172" text-anchor="end">20k</text><line x1="78" y1="214.0" x2="742" y2="214.0" stroke="#ddd3bf" stroke-width=".8"/><text x="68" y="218.0" font-size="10" fill="#8b8172" text-anchor="end">40k</text><line x1="78" y1="162.0" x2="742" y2="162.0" stroke="#ddd3bf" stroke-width=".8"/><text x="68" y="166.0" font-size="10" fill="#8b8172" text-anchor="end">60k</text><line x1="78" y1="110.0" x2="742" y2="110.0" stroke="#ddd3bf" stroke-width=".8"/><text x="68" y="114.0" font-size="10" fill="#8b8172" text-anchor="end">80k</text><line x1="78" y1="58.0" x2="742" y2="58.0" stroke="#ddd3bf" stroke-width=".8"/><text x="68" y="62.0" font-size="10" fill="#8b8172" text-anchor="end">100k</text><line x1="78.0" y1="58" x2="78.0" y2="318" stroke="#ddd3bf" stroke-width=".8" stroke-opacity=".6"/><text x="78.0" y="336" font-size="10" fill="#8b8172" text-anchor="middle">0h</text><line x1="244.0" y1="58" x2="244.0" y2="318" stroke="#ddd3bf" stroke-width=".8" stroke-opacity=".6"/><text x="244.0" y="336" font-size="10" fill="#8b8172" text-anchor="middle">12h</text><line x1="410.0" y1="58" x2="410.0" y2="318" stroke="#ddd3bf" stroke-width=".8" stroke-opacity=".6"/><text x="410.0" y="336" font-size="10" fill="#8b8172" text-anchor="middle">24h</text><line x1="576.0" y1="58" x2="576.0" y2="318" stroke="#ddd3bf" stroke-width=".8" stroke-opacity=".6"/><text x="576.0" y="336" font-size="10" fill="#8b8172" text-anchor="middle">36h</text><line x1="742.0" y1="58" x2="742.0" y2="318" stroke="#ddd3bf" stroke-width=".8" stroke-opacity=".6"/><text x="742.0" y="336" font-size="10" fill="#8b8172" text-anchor="middle">48h</text><text x="410.0" y="356" font-size="10.5" fill="#8b8172" text-anchor="middle">发布后时间（小时）</text><polyline points="78.0,318.0 87.2,303.9 96.4,290.7 105.7,278.1 114.9,266.2 124.1,254.9 133.3,244.3 142.6,234.2 151.8,224.7 161.0,215.7 170.2,207.2 179.4,199.1 188.7,191.5 197.9,184.3 207.1,177.5 216.3,171.0 225.6,164.9 234.8,159.1 244.0,153.6 253.2,148.5 262.4,143.6 271.7,139.0 280.9,134.6 290.1,130.5 299.3,126.5 308.6,122.8 317.8,119.3 327.0,116.0 336.2,112.9 345.4,109.9 354.7,107.1 363.9,104.5 373.1,101.9 382.3,99.6 391.6,97.3 400.8,95.2 410.0,93.2 419.2,91.3 428.4,89.5 437.7,87.8 446.9,86.2 456.1,84.7 465.3,83.2 474.6,81.9 483.8,80.6 493.0,79.3 502.2,78.2 511.4,77.1 520.7,76.1 529.9,75.1 539.1,74.2 548.3,73.3 557.6,72.5 566.8,71.7 576.0,70.9 585.2,70.2 594.4,69.6 603.7,69.0 612.9,68.4 622.1,67.8 631.3,67.3 640.6,66.8 649.8,66.3 659.0,65.9 668.2,65.4 677.4,65.0 686.7,64.6 695.9,64.3 705.1,63.9 714.3,63.6 723.6,63.3 732.8,63.0 742.0,62.8" fill="none" stroke="#8b8172" stroke-width="2"/><polyline points="78.0,318.0 87.2,310.7 96.4,303.8 105.7,297.2 114.9,290.9 124.1,284.9 133.3,279.2 142.6,273.8 151.8,268.6 161.0,263.6 170.2,258.9 179.4,254.4 188.7,250.1 197.9,246.0 207.1,242.1 216.3,238.4 225.6,234.8 234.8,231.4 244.0,228.2 253.2,225.1 262.4,222.2 271.7,219.4 280.9,216.7 290.1,214.2 299.3,211.7 308.6,209.4 317.8,207.2 327.0,205.1 336.2,203.1 345.4,201.2 354.7,199.4 363.9,197.6 373.1,196.0 382.3,194.4 391.6,192.9 400.8,191.5 410.0,190.1 419.2,188.8 428.4,187.5 437.7,186.4 446.9,185.2 456.1,184.1 465.3,183.1 474.6,182.1 483.8,181.2 493.0,180.3 502.2,179.5 511.4,178.6 520.7,177.9 529.9,177.1 539.1,176.4 548.3,175.8 557.6,175.1 566.8,174.5 576.0,173.9 585.2,173.4 594.4,172.8 603.7,172.3 612.9,171.9 622.1,171.4 631.3,171.0 640.6,170.5 649.8,170.1 659.0,169.8 668.2,169.4 677.4,169.1 686.7,168.7 695.9,168.4 705.1,168.1 714.3,167.8 723.6,167.6 732.8,167.3 742.0,167.1" fill="none" stroke="#a3321f" stroke-width="2.4"/><text x="738" y="54.8" font-size="11.5" fill="#8b8172" text-anchor="end">正常内容</text><text x="738" y="159.1" font-size="11.5" fill="#a3321f" text-anchor="end">问题内容</text><line x1="78" y1="214.0" x2="742" y2="214.0" stroke="#4a443b" stroke-width="1" stroke-dasharray="6 4" stroke-opacity=".75"/><text x="738" y="206.0" font-size="10.5" fill="#4a443b" text-anchor="end">固定阈值 4 万曝光</text><line x1="162.8" y1="214.0" x2="162.8" y2="318" stroke="#4a443b" stroke-opacity=".25" stroke-dasharray="3 3"/><line x1="291.3" y1="214.0" x2="291.3" y2="318" stroke="#a3321f" stroke-opacity=".3" stroke-dasharray="3 3"/><circle cx="162.8" cy="214.0" r="4.5" fill="#fcfaf4" stroke="#4a443b" stroke-width="1.6"/><circle cx="291.3" cy="214.0" r="4.5" fill="#a3321f"/><circle cx="119.5" cy="287.9" r="4.5" fill="#fcfaf4" stroke="#a3321f" stroke-width="2"/><circle cx="162.8" cy="193.0" r="9" fill="#fcfaf4" stroke="#a3321f" stroke-width="1.1"/><text x="162.8" y="196.6" font-size="10" fill="#a3321f" text-anchor="middle">1</text><circle cx="291.3" cy="237.0" r="9" fill="#fcfaf4" stroke="#a3321f" stroke-width="1.1"/><text x="291.3" y="240.6" font-size="10" fill="#a3321f" text-anchor="middle">2</text><circle cx="98.5" cy="287.9" r="9" fill="#fcfaf4" stroke="#a3321f" stroke-width="1.1"/><text x="98.5" y="291.5" font-size="10" fill="#a3321f" text-anchor="middle">3</text><circle cx="78.0" cy="374.0" r="9" fill="#fcfaf4" stroke="#a3321f" stroke-width="1.1"/><text x="78.0" y="377.6" font-size="10" fill="#a3321f" text-anchor="middle">1</text><text x="95" y="378" font-size="11" fill="#4a443b">正常内容 6 小时碰到阈值</text><circle cx="318.0" cy="374.0" r="9" fill="#fcfaf4" stroke="#a3321f" stroke-width="1.1"/><text x="318.0" y="377.6" font-size="10" fill="#a3321f" text-anchor="middle">2</text><text x="335" y="378" font-size="11" fill="#4a443b">问题内容 15 小时才被审</text><circle cx="558.0" cy="374.0" r="9" fill="#fcfaf4" stroke="#a3321f" stroke-width="1.1"/><text x="558.0" y="377.6" font-size="10" fill="#a3321f" text-anchor="middle">3</text><text x="575" y="378" font-size="11" fill="#4a443b">Running Review 3 小时送审</text></svg><figcaption><span class="fig-num">图 3</span>固定阈值下的错位：正常的热门内容 6 小时就碰到阈值，问题内容反而到 15 小时才被审。Running Review 用“违规概率 × 预期曝光”排序，把有限的产能提前花在更危险的内容上。</figcaption></figure>
+<h2 id="s06"><span class="sec-num">06</span>敏感词与 NLP：文本通道</h2>
+<p><strong>词表与模型是两种错误分布不同的工具，谁也替代不了谁；词表的作用已从主判据转为热修复通道与可解释性依据。</strong></p>
+<p>先审的模型主要看画面，敏感词流程看文本：标题、话题标签、简介、字幕。历史上平台维护多语言的敏感词表，投稿文本命中任意词表，就进入对应语种的审核队列，由具备该语言能力的审核员判断。</p>
+<p>词表的好处是快、可解释、可审计：新风险出现时，加一个词当天就能上线。问题在于它只能匹配"写出来的样子"——谐音、拼音、拆字、符号、emoji、外语混写都能绕过；反过来，正常语境里的同形词会被误伤，医学、新闻、教育内容里的正常表述也会命中。</p>
+<p>词表还有维护成本，且随语种数量线性增长。每个语种都要有母语审核员判断这个词在当地语境是否真的敏感，网络用语的半衰期又很短，不更新就迅速失效。几十种语言的平台，词表本身就是一个需要持续投入的系统。</p>
+<p>现在的做法通常是用 NLP 模型替代词表做语义判断：多语言、带上下文、能识别变体。但词表没有消失，它变成了两样东西：一是新风险的热修复通道，模型还没学会的先用词表挡住；二是审计与解释的依据，为什么这条被拦，能指到具体命中的词。</p>
+<p>文本通道还有一个容易忽略的设计点：命中的是"硬词"还是"软词"。硬词（明确违法、明确红线）可以直接处置或强制人审；软词只能作为"值得看一眼"的信号，进低优先级队列。两者混在一个队列里，要么误伤太多，要么漏放太多。</p>
+<p>合理的组合是：词表作为高置信度的硬信号，模型作为覆盖语义变体的主通道，两边都命中的优先处置，只命中一边的按类目分流。词表命中的多半是真的，但接不住写法变体；模型覆盖广，在语料稀疏的语种和小众语境上又容易过度触发。</p>
+<h2 id="s07"><span class="sec-num">07</span>复审与三审：VV 继续涨怎么办</h2>
+<p><strong>复审的成本是重复的，收益只在"有新信息"时成立；触发条件必须叠加新信号，而不只是更高的 VV。</strong></p>
+<p>内容通过召回阈值后并没有结束。VV 继续上涨意味着风险传播范围扩大，漏放后果随之上升，所以平台会在更高的 VV 节点上再判一次，方法与上一轮召回相同，只是阈值更高、处置更谨慎。</p>
+<p>这一层要算边际收益：同一条内容被反复审，每次新增的信息很有限——画面没变、政策没变，变的只是播放量。所以复审的触发条件通常不只 VV，还叠加新信号：举报量突增、评论区负面率上升、作者被投诉、话题进入热榜。没有新信息的复审，只是重复消耗人力。</p>
+<p>阈值通常按 10 倍左右递增：召回设在一万级播放，复审抬到十万级，三审到百万级，具体数值每个平台不同。这样同一条内容最多被审三四次，成本可控；每次触发时风险量级已比上次高一个数量级，值得再审一遍。阶梯只是上限：过了复审线的内容仍按风险信号排优先级，不一定每条都立刻审。</p>
+<p>如果复审结论与之前一致，结果是"维持原判"，这条记录应被用来降低它下一次被复审的优先级；如果结论翻转，那就不只是一条内容的问题，而是召回或判定口径的问题，要回到规则与模型层面查。</p>
+<p>与复审相邻的是高热审核：对当天最热的一批内容单独设队列，做最后一道人工把关。KuaiMod 在在线精修阶段专门引入 High-Engagement Videos 队列，理由写得很直接：这些视频的受众规模远大于长尾，其中任何违规对生态的风险都更大。一条头部内容的违规，影响面可能比长尾内容高几个数量级，这个杠杆决定了高热队列值得单独存在。</p>
+<h2 id="s08"><span class="sec-num">08</span>特殊先审：政策驱动的名单</h2>
+<p><strong>这类内容不追求自动化率，追求不出错；难点不在模型，而在清单的维护与留痕。</strong></p>
+<p>王室成员、特殊历史事件、地域性敏感议题这类内容不适合用模型自动判：量很小，但一旦出错代价远超普通违规；规则随政治与外交环境变化，模型学不过来。</p>
+<p>处理方式是政策驱动的：政策团队维护规则清单，叠加地理与时间条件，命中即进专家审核，先审后发。它不追求自动化率，通常由熟悉当地政策的团队直接负责，模型只做辅助提示。</p>
+<p>这类流程的关键在清单的维护机制：谁有权加、什么时候失效、误加之后怎么撤回。清单一旦出错，代价与漏放一样大，所以每一步变更都要留痕、可回溯。</p>
+<h2 id="s09"><span class="sec-num">09</span>消重：同一条内容不该审两次</h2>
+<p><strong>消重的收益是省人审，风险是把近似重复当成完全重复放行；两者必须分开处理。</strong></p>
+<p>搬运、矩阵号、重复投稿造出成批的"新内容"，其中不少是同一份物料。每条都从头审一遍，人审产能会被重复劳动吃掉；更麻烦的是同一条内容两次判定可能不一致，处置结果前后矛盾。</p>
+<p>消重的做法是给内容建指纹，分层处理：</p>
+<ul><li>文件级哈希（MD5/SHA）：完全相同的文件直接命中，成本几乎为零；</li><li>感知哈希、关键帧、音频指纹：改分辨率、加字幕、剪片头之后仍能匹配；</li><li>向量近邻：语义或画面高度相似，用于识别二次剪辑、换配乐、镜像翻转。</li></ul>
+<p>文件级完全相同的命中，直接复用已有结论：已判定合规的放行，已判定违规的按原结论处置，并带上时效与版本。政策变了，旧结论要重算。</p>
+<p>风险在另一头。同一段新闻素材、同一个官方通稿常被多个正常账号使用，只按"相似"就判搬运会误伤正规内容。所以消重通常只做两件事：降低重复内容的审核优先级，或者把相似内容聚成一簇、审一簇而不是审一条。</p>
+<p>"完全相同"与"高度相似"要分开。前者可以直接复用结论，因为风险完全一致；后者只能聚类和降优先级，因为改动本身可能就是规避手段：改一帧、换一段配乐、镜像翻转，画面相似度依然很高，但违规点可能被藏起来了。把近似重复当完全重复放行，是消重最常见的漏放来源。</p>
+<h2 id="s10"><span class="sec-num">10</span>通用举报：用户侧的召回</h2>
+<p><strong>举报是最可信的用户侧信号，也是噪声最大的通道；它必须是一条完整的产品链路，而不只是一个信号入口。</strong></p>
+<p>举报是优先级最高的队列之一，原因有两个：被举报内容有较高概率意味着风险已经外溢；举报同时关联消费者与创作者两端的体验。</p>
+<p>点举报是有成本的动作，用户只在相当反感时才会做，所以它比"不喜欢"这类一键反馈更可信。但平台尺度上举报总量大、噪声也大：误报、重复举报、恶意举报都在里面，不能把举报次数直接当风险信号。这也是举报策略通常不只依赖次数的原因：</p>
+<ul><li>用举报率（举报次数 / 播放次数）替代绝对次数，能捞出播放量不大但反感比例高的内容；</li><li>手写理由、图片举证是强信号，能直接回答"用户认为哪里有问题"；</li><li>举报人身份可以加权，但要小心：少数尺度敏感用户的举报只能作为"值得复核"，不能直接当判定依据，否则平台会被推向过度治理。</li></ul>
+<p>工程实现通常是普通召回加兜底召回两路。普通召回要求播放量与举报次数同时达标，防长尾噪声；兜底召回只要满足任一强信号（举报率高、带举证、特殊身份举报）就进审，防漏放。</p>
+<p>举报是一条完整产品链路，不只是"收一个信号"：前端入口设计、一二级交互页面、后端送审、处置结果透传、创作者申诉，五段缺一段，用户下次就不举报了。反馈做得差，举报率会下降，看起来指标变好，实际是信号源枯竭。</p>
+<p>成本侧有一项常被忽略：被举报内容在待审期间通常不可推荐，这段时间的播放损失落在创作者身上。所以举报的时效指标要两头看：消费者侧看"举报到处置"的时延，创作者侧看误报内容的停推时长。</p>
+<p>KuaiMod 在构建数据与在线难例时用了 High Report Videos 队列，取当天按举报量排序的前若干条，每条超过 30 次举报；同时还有 High Dislike 队列（点踩率超过 50%）与 Negative Comment 队列。这几条通道的共同点是：信号来自用户的真实负反馈，不是模型自己的判断。</p>
+<p>举报还有第二重价值：异常挖掘。某类内容的举报量突然抬升，往往说明出现了新的风险变体，或者规则口径出了问题。这种信号比单条举报更有用，但需要独立监控，而不是埋在举报队列的处理流程里。</p>
+<h2 id="s11"><span class="sec-num">11</span>评论召回：第二个内容场</h2>
+<p><strong>评论是独立的内容场，判据依赖上下文；处置要先设计粒度，再谈判得准不准。</strong></p>
+<p>评论区量大、生命周期短、高度依赖上下文。一条正常视频下面的评论，可能因反讽、引用、玩梗而看起来有问题；反过来，真正的问题评论往往藏在热门视频的长尾里。</p>
+<p>评论召回的基本形态是先发后审：评论发布后直接展示，按热度、负面反馈、举报、模型打分决定是否进审。热度是重要的排序信号——同样一条违规评论，挂在十万赞视频下面和挂在无人问津的视频下面，影响面差几个数量级。</p>
+<p>难点在语境。判一条评论往往要先看它回复的是谁、在什么视频下面、前后几条在说什么。这决定了评论审核很难只靠单条文本分类，需要把视频标题、父评论、对话链一起喂给模型；也决定了评论的误伤率通常比正文更高，处置上要更保守，比如折叠、降权，而不是直接删除。</p>
+<p>处置粒度要提前设计。评论的可见范围有几种状态：所有人可见、仅自己可见、折叠、删除。不同状态对应不同误伤成本与申诉入口。把"删"作为唯一手段，误伤会立刻变成用户体验问题。</p>
+<h2 id="s12"><span class="sec-num">12</span>账号审核：从内容到主体</h2>
+<p><strong>内容级处置解决不了主体级问题；账号审核的难点在识别账号之间的关系，不在判定单个账号。</strong></p>
+<p>前面所有通道处理的都是"一条内容"，但很多问题的主体是账号：矩阵号批量搬运、养号导流、反复擦边。逐条处理内容成本高、见效慢，封一条开一条。</p>
+<p>账号审核有三个入口。</p>
+<p><strong>投稿触发。</strong> 用户投稿时，用户模型根据历史 Profile 判断账号是否有问题：历史违规次数、被举报率、设备与登录异常、内容相似度。有问题的账号，投稿直接进入更高优先级的队列，甚至先审后发。</p>
+<p><strong>举报。</strong> 用户可以举报账号，账号进入举报流程，按 Policy 处理。账号级举报的价值在于它聚合了多条内容的信号，比单条内容举报更能反映主体意图。</p>
+<p><strong>资料审核。</strong> 用户修改昵称、头像、简介时，由模型审核是否含违规信息。这类内容量小、单条影响面小，但合规要求高：头像与昵称是最外显的平台形象，出问题的舆论成本远高于一条普通视频。</p>
+<p>账号级处置收益高，风险也高。封号的误伤成本远大于删一条视频，所以账号审核通常要求更强的证据链：多条内容、多个信号、人工复核，并且必须配申诉通道。</p>
+<p>处置本身分级：警告、限流、禁言、封禁，每一步的误伤成本不同，需要的证据强度也不同。矩阵号专挑成本最低的处置下手：限流对正常创作者是惩罚，对批量养号的机器账号几乎不构成成本。所以账号审核的难点不在判定单个账号，而在识别账号之间的关系：设备指纹、行为序列、内容相似度图，这些才是主体级信号里最有效的部分。</p>
+<figure class="fig" id="fig2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 470" width="100%" role="img" style="font-family:'Source Han Serif SC','Noto Serif CJK SC','Songti SC',SimSun,serif"><rect width="800" height="470" fill="#fcfaf4"/><defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+  <path d="M0,0 L10,5 L0,10 z" fill="#8b8172"/>
+</marker></defs><text x="32" y="26" font-size="11.5" letter-spacing="1.5" fill="#8b8172">平台侧信号 · 输入是内容</text><text x="768" y="26" font-size="11.5" letter-spacing="1.5" fill="#8b8172" text-anchor="end">用户侧信号 · 输入是人和动机</text><rect x="32" y="52" width="236" height="44" rx="7" fill="#2f4b52" fill-opacity=".07" stroke="#2f4b52" stroke-opacity=".30"/><text x="46" y="72" font-size="12.5" fill="#1b1916">机审全量扫描</text><text x="46" y="87" font-size="10.5" fill="#8b8172">已知问题域</text><path d="M268,74 C282,74 282,170 294,170" fill="none" stroke="#8b8172" stroke-opacity=".55" marker-end="url(#ar)"/><rect x="32" y="108" width="236" height="44" rx="7" fill="#2f4b52" fill-opacity=".07" stroke="#2f4b52" stroke-opacity=".30"/><text x="46" y="128" font-size="12.5" fill="#1b1916">曝光召回 / Running Review</text><text x="46" y="143" font-size="10.5" fill="#8b8172">早拦 + 排序</text><path d="M268,130 C282,130 282,185 294,185" fill="none" stroke="#8b8172" stroke-opacity=".55" marker-end="url(#ar)"/><rect x="32" y="164" width="236" height="44" rx="7" fill="#2f4b52" fill-opacity=".07" stroke="#2f4b52" stroke-opacity=".30"/><text x="46" y="184" font-size="12.5" fill="#1b1916">敏感词 / NLP</text><text x="46" y="199" font-size="10.5" fill="#8b8172">文本与多语种</text><path d="M268,186 C282,186 282,200 294,200" fill="none" stroke="#8b8172" stroke-opacity=".55" marker-end="url(#ar)"/><rect x="32" y="220" width="236" height="44" rx="7" fill="#2f4b52" fill-opacity=".07" stroke="#2f4b52" stroke-opacity=".30"/><text x="46" y="240" font-size="12.5" fill="#1b1916">消重指纹</text><text x="46" y="255" font-size="10.5" fill="#8b8172">同一物料不重复审</text><path d="M268,242 C282,242 282,215 294,215" fill="none" stroke="#8b8172" stroke-opacity=".55" marker-end="url(#ar)"/><rect x="32" y="276" width="236" height="44" rx="7" fill="#2f4b52" fill-opacity=".07" stroke="#2f4b52" stroke-opacity=".30"/><text x="46" y="296" font-size="12.5" fill="#1b1916">特殊名单</text><text x="46" y="311" font-size="10.5" fill="#8b8172">政策驱动，专家审</text><path d="M268,298 C282,298 282,230 294,230" fill="none" stroke="#8b8172" stroke-opacity=".55" marker-end="url(#ar)"/><rect x="532" y="100" width="236" height="44" rx="7" fill="#6b5a2e" fill-opacity=".07" stroke="#6b5a2e" stroke-opacity=".30"/><text x="546" y="120" font-size="12.5" fill="#1b1916">举报</text><text x="546" y="135" font-size="10.5" fill="#8b8172">兜底 + 异常挖掘</text><path d="M532,122 C518,122 518,180 506,180" fill="none" stroke="#8b8172" stroke-opacity=".55" marker-end="url(#ar)"/><rect x="532" y="156" width="236" height="44" rx="7" fill="#6b5a2e" fill-opacity=".07" stroke="#6b5a2e" stroke-opacity=".30"/><text x="546" y="176" font-size="12.5" fill="#1b1916">评论召回</text><text x="546" y="191" font-size="10.5" fill="#8b8172">第二个内容场</text><path d="M532,178 C518,178 518,195 506,195" fill="none" stroke="#8b8172" stroke-opacity=".55" marker-end="url(#ar)"/><rect x="532" y="212" width="236" height="44" rx="7" fill="#6b5a2e" fill-opacity=".07" stroke="#6b5a2e" stroke-opacity=".30"/><text x="546" y="232" font-size="12.5" fill="#1b1916">账号与资料审核</text><text x="546" y="247" font-size="10.5" fill="#8b8172">主体级信号</text><path d="M532,234 C518,234 518,210 506,210" fill="none" stroke="#8b8172" stroke-opacity=".55" marker-end="url(#ar)"/><rect x="296" y="120" width="208" height="150" rx="12" fill="#a3321f" fill-opacity=".06" stroke="#a3321f" stroke-opacity=".45"/><text x="400" y="152" font-size="16" font-weight="600" fill="#1b1916" text-anchor="middle">人审队列</text><text x="400" y="176" font-size="11.5" fill="#4a443b" text-anchor="middle">产能上限 = 每天可审条数</text><text x="400" y="196" font-size="11.5" fill="#8b8172" text-anchor="middle">所有通道的终点</text><line x1="322" y1="212" x2="478" y2="212" stroke="#ddd3bf"/><text x="400" y="232" font-size="11" fill="#8b8172" text-anchor="middle">进审量 × 单条成本</text><text x="400" y="250" font-size="11" fill="#8b8172" text-anchor="middle">= 人力预算</text><line x1="400" y1="270" x2="400" y2="312" stroke="#8b8172" marker-end="url(#ar)"/><rect x="300" y="316" width="200" height="44" rx="7" fill="#fcfaf4" stroke="#ddd3bf"/><text x="400" y="336" font-size="12.5" fill="#1b1916" text-anchor="middle">处置 / 限流 / 删除</text><text x="400" y="352" font-size="10.5" fill="#8b8172" text-anchor="middle">按 Policy 分档</text><line x1="400" y1="360" x2="400" y2="392" stroke="#8b8172" marker-end="url(#ar)"/><rect x="290" y="396" width="220" height="46" rx="7" fill="none" stroke="#a3321f" stroke-opacity=".45" stroke-dasharray="4 3"/><text x="400" y="416" font-size="12.5" fill="#a3321f" text-anchor="middle">申诉 · 唯一能证伪判定本身</text><text x="400" y="432" font-size="10.5" fill="#8b8172" text-anchor="middle">它判的不是内容，是判断</text></svg><figcaption><span class="fig-num">图 2</span>所有通道都汇入同一个瓶颈：人审产能。平台侧信号偏“筛选”，用户侧信号偏“发现”，两者的优化目标不同，不能用同一套指标考核。</figcaption></figure>
+<h2 id="s13"><span class="sec-num">13</span>三件不随模型变化的事</h2>
+<p><strong>模型会换、阈值会调、标签体系会重写，但有三件事稳定：成本口径、阈值的性质、人审作为真值来源。</strong></p>
+<p><strong>每条通道都要有自己的成本收益口径。</strong> 机审扫描、VV 召回、举报、评论、账号，进审量、命中率、时效、误伤率各不相同。混在一个"总进审量"里考核，结果一定是低成本通道挤掉高价值通道。</p>
+<p><strong>阈值不是常数。</strong> 人力预算、风险水位、对抗强度都在变。固定阈值迟早会被利用：要么被内容生产者摸清规律绕过，要么被内部指标博弈掉。阈值应该是随约束浮动的结果，不是拍下来的数字。</p>
+<p><strong>人审是全链路唯一的真值来源。</strong> 机审准不准、规则合不合理、召回有没有漏，最终都要靠人审判定来校准。人审量下降本身不是治理进步的标志；如果人审量下降的同时申诉率上升、双通道一致率下降，说明度量能力也在被削掉，问题会在几个月后以"模型悄悄失准"的形式出现。</p>
+<p>监控指标要成组看：违规曝光率告诉你影响面，抽查漏放率告诉你覆盖，举报率告诉你用户感受，申诉成功率告诉你误伤。只报其中一个，必然失衡。</p>
+<p>如果要从零搭这套东西，不要从模型开始。先定 Policy 与标签体系，它决定什么叫"有问题"；再定人力预算，它决定每天能审多少条；然后才是通道优先级与阈值。跳过前两步直接调模型，返工是迟早的事。</p>
+<h2 id="s14"><span class="sec-num">14</span>决策清单与待确认事项</h2>
+<p><strong>要决策的五件事。</strong></p>
+<div class="table-wrap"><table><thead><tr><th>#</th><th>决策</th><th>依据</th><th>不做的代价</th></tr></thead><tbody><tr><td>1</td><td>标签粒度定到能直接对照 Policy</td><td>第 03 节：粗标签无法支撑人审判定</td><td>审核员反复回查，一致率上不去</td></tr><tr><td>2</td><td>把人审产能写成预算，阈值由调度器算</td><td>第 01、04 节：三个数不能同时变好</td><td>各通道各自加人，预算失控</td></tr><tr><td>3</td><td>通道按"误判代价落在谁身上"分级</td><td>第 03 节：安全类前置、质量类后置</td><td>该前置的没前置，漏放不可逆</td></tr><tr><td>4</td><td>指标四件套成组上报</td><td>第 02、13 节：单指标必失衡</td><td>数字变好、水位不变</td></tr><tr><td>5</td><td>留探索预算与随机抽检</td><td>第 05 节：低风险区永远无真值</td><td>模型静默失准，几个月后才发现</td></tr></tbody></table></div>
+<p><strong>待确认的三件事。</strong></p>
+<p>1. 示意值替换：100 万投稿、5 万应处置、500 条/人日等设定需换成目标平台的真实口径，结论方向不变，具体阈值必须重算。 2. 外部口径核对：KuaiMod 的标签数与队列阈值、YouTube VVR 的统计窗口，引用前需按最新版本复核。 3. 缺公开对照的环节：账号关系识别、评论链路的具体阈值与误伤率，本文只给机制，没有可比数据。</p>
+    <p class="foot">说明：文中除标注来源的公开数据外，100 万投稿、5 万问题内容、10 万人审等数字均为便于推演的示意值，不对应任何真实平台的实际业务量。文中隐去公司内部政策代码、系统名与团队名。</p>
+  </article>
+</main>
+<script>
+(function(){
+  var bar=document.getElementById('progress');
+  var links=[].slice.call(document.querySelectorAll('.toc a'));
+  var heads=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1));});
+  function onScroll(){
+    var h=document.documentElement;
+    var max=h.scrollHeight-h.clientHeight;
+    bar.style.width=(max>0?(h.scrollTop/max*100):0)+'%';
+    var cur=0;
+    for(var i=0;i<heads.length;i++){
+      if(heads[i] && heads[i].getBoundingClientRect().top<=120) cur=i;
+    }
+    links.forEach(function(a,i){a.classList.toggle('active',i===cur);});
+  }
+  document.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll);
+  onScroll();
+})();
+</script>
+</body>
+</html>

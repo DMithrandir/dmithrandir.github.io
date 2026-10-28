@@ -42,10 +42,11 @@ description: "从一条投稿往下拆：信号怎么来、规则怎么定、谁
 
 {%- endif %}
 
-## 三种速览
+## 四种速览
 
-正文太长的场合，可以先看这三个：
+正文太长的场合，可以先看这四个：
 
 - [一页纸（PDF）]({{ '/assets/governance/framework-onepager.pdf' | relative_url }})——A4 单页，可直接打印或转发。
 - [顶层设计（交互）]({{ '/assets/governance/framework-map.html' | relative_url }})——五个分支、六十余节点，可展开三级。
 - [思维导图]({{ '/assets/governance/framework-mindmap.html' | relative_url }})——四百余节点，用来查模块、案例与指标口径。
+- [内容审核链路（单页版）]({{ '/assets/governance/moderation-pipeline.html' | relative_url }})——一条内容从投稿到处置：十个判定、一份成本账，汇报体。
