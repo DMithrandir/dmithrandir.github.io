@@ -643,8 +643,9 @@ p {
 .post-content {
   min-width: 0;
   font-size: 1.02rem;
-  line-height: 2;
+  line-height: 1.9;
   color: var(--ink-soft);
+  overflow-wrap: break-word;
 }
 
 .post-content > p:first-child {
@@ -658,8 +659,8 @@ p {
   line-height: 1.35;
   letter-spacing: 0.01em;
   color: var(--ink);
-  margin: 2.6em 0 0.85em;
-  padding-top: 1.15em;
+  margin: 2.2em 0 0.8em;
+  padding-top: 1em;
   border-top: 1px solid var(--rule);
 }
 
@@ -671,15 +672,28 @@ p {
 
 .post-content h3 {
   font-family: var(--sans);
-  font-size: 0.99rem;
+  font-size: 1.08rem;
   font-weight: 650;
   letter-spacing: 0.01em;
   color: var(--ink);
-  margin: 2.1em 0 0.6em;
+  margin: 1.9em 0 0.55em;
 }
 
 .post-content p {
-  margin: 1.15em 0;
+  margin: 1.1em 0;
+}
+
+/* 公式：宽公式允许横向滚动，不撑破版心 */
+.post-content p:has(.MathJax_CHTML) {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.post-content mjx-container,
+.post-content .MathJax_CHTML {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .post-content strong {
@@ -741,7 +755,7 @@ p {
 .post-content table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   line-height: 1.7;
   margin: 0;
 }
@@ -761,7 +775,7 @@ p {
 }
 
 .post-content td {
-  padding: 11px 12px;
+  padding: 12px 14px;
   border-bottom: 1px solid var(--rule);
   vertical-align: top;
 }
@@ -875,17 +889,22 @@ p {
 .post-figure img {
   display: block;
   width: 100%;
-  min-width: 620px;
+  min-width: 0;
   height: auto;
   margin: 0;
   border-radius: 3px;
 }
 
+/* 只有套了横向滚动容器的图，才在窄屏保持原尺寸（图里文字多，缩了看不清） */
+.post-figure-scroll img {
+  min-width: 620px;
+}
+
 .post-figure figcaption {
   margin-top: 14px;
   font-family: var(--mono);
-  font-size: 11px;
-  line-height: 1.75;
+  font-size: 12px;
+  line-height: 1.7;
   letter-spacing: 0.01em;
   color: var(--muted);
 }
@@ -1621,14 +1640,18 @@ p {
 
   .post-content {
     font-size: 1rem;
-    line-height: 1.95;
+    line-height: 1.9;
+  }
+
+  .post-content h2 {
+    font-size: 1.35rem;
   }
 
   .post-content table {
     font-size: 0.8rem;
   }
 
-  .post-figure img {
+  .post-figure-scroll img {
     min-width: 560px;
   }
 
