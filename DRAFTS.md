@@ -2,16 +2,9 @@
 
 这里的东西**不会发布**。GitHub Pages 构建时不带 `--drafts`，所以这些文件只存在于仓库里，方便你慢慢改。
 
+> 2026-11-02：**治理系列整组下架重写**。旧版 15 篇、3 篇治理草稿和配套附件已移出本仓库，`/governance/` 只留一个「重写中」占位。
+
 ## 现在有什么
-
-### 系列「治理的机制」`/governance/`
-
-| 篇 | 文件 | 状态 | 要补什么 |
-|---|---|---|---|
-| 01 | `_posts/2026-10-25-edgecase-framework.md` | **已发布** | 已挂进系列（series: governance, part 1） |
-| 02 | `_drafts/governance-02-policy-cascading.md` | 骨架 | 补齐实验口径（样本量/显著性）、人力折算口径；删组织名 |
-| 03 | `_drafts/governance-03-knowledge-system.md` | 骨架 | 补齐废弃窗口、仲裁机制；删内部系统名 |
-| 04 | `_drafts/governance-04-evaluation.md` | 骨架（需重写 70%） | 去掉求职语境，只留「内容理解 → 评测维度」的方法部分 |
 
 ### 系列「AI Harness」`/series/ai-harness/`
 
@@ -28,8 +21,8 @@
 
 1. 改内容（骨架里的「待补 / 待确认」是清单）
 2. 把文件从 `_drafts/` 移到 `_posts/`，文件名加日期：`2026-11-02-xxx.md`
-3. front matter 补 `date`（发布日），`permalink` 保持 `/governance/xxx/` 或 `/harness/xxx/`（不要和 `/harness/` 本身重合）
-4. `git add -A && git commit -m "新增：xxx" && git push`
+3. front matter 补 `date`（发布日）；`permalink` 保持 `/系列目录/英文短名/`，不要和系列落地页本身重合
+4. 用 `写作\发布.ps1` 发布（或手动 `git add -A && git commit -m "新增：xxx" && git push`）
 
 发布后会自动出现在系列目录里（系列页用 `where: series` 动态生成，不用手动维护列表）。
 

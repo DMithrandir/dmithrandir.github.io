@@ -54,4 +54,4 @@ excerpt: "CoT 四要素、三票投票、Edge 升级——这些机制可以直�
 ## 素材
 
 - 已发布：`/edgecase-framework/`（判定机制本体）
-- 系列：`/governance/`
+- 系列：内容治理（重写中）
