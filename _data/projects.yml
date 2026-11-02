@@ -25,11 +25,3 @@
   tags: [知识工程, SSOT, 审核标准]
   link: ""
   featured: true
-
-- title: 端侧 AI 语音应用
-  role: 独立开发
-  period: "2026"
-  summary: gap 期从协议到端侧全链路自研，验证「一个人也能闭环」：协议、端侧推理、交互与上架。
-  tags: [端侧 AI, 全栈, 独立产品]
-  link: ""
-  featured: false
