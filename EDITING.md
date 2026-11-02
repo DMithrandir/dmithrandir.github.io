@@ -96,6 +96,17 @@ docker run --rm -p 4000:4000 -v ${PWD}:/srv/jekyll jekyll/jekyll jekyll serve --
 
 ## 5. 发布
 
+改已发布文章的完整流程（体检 → 提交 → 推送 → 等构建 → 验线上 → 回滚）在
+[`../写作/改文章流程.md`](../写作/改文章流程.md)，脚本都在 `../写作/`。
+
+```powershell
+cd "C:\Users\desha\Desktop\找工作\_publish_pages\写作"
+.\检查.ps1                      # 只读；红就停
+.\发布.ps1 -Message "改：xxx"     # 体检 + 提交 + 推送 + 等构建 + 验线上
+```
+
+不想用脚本，还是老办法：
+
 ```powershell
 cd "C:\Users\desha\Desktop\找工作\_publish_pages\dmithrandir.github.io"
 git add -A
