@@ -1,8 +1,8 @@
 ---
 layout: page
-title: "内容治理的机制"
+title: "审核链路"
 permalink: /governance/
-eyebrow: "SERIES · 从内容产生到处置"
+eyebrow: "REVIEW PIPELINE · 从内容产生到处置"
 description: "三个入口、两次处置、一条并行的质检线；中外平台把这套流程做成了相似的骨架。"
 ---
 
