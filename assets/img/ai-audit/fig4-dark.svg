@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400" role="img" aria-label="风险等级与处置档位的对应关系" style="font-family:'Source Han Serif SC','Noto Serif CJK SC','Songti SC',SimSun,serif">
+      <rect width="800" height="400" fill="#191411"/>
+      <text x="34" y="30" font-size="10.5" letter-spacing="1.4" fill="#9d9385">风险等级 × 处置档位</text>
+      <text x="766" y="30" font-size="10.5" fill="#9d9385" text-anchor="end">● 默认　◐ 有条件 / 需复核　○ 不适用</text>
+
+      <text x="150" y="66" font-size="10" fill="#9d9385" text-anchor="middle">放行</text>
+      <text x="266" y="66" font-size="10" fill="#9d9385" text-anchor="middle">提示标签</text>
+      <text x="382" y="66" font-size="10" fill="#9d9385" text-anchor="middle">受限分发（TTL）</text>
+      <text x="498" y="66" font-size="10" fill="#9d9385" text-anchor="middle">人审</text>
+      <text x="614" y="66" font-size="10" fill="#9d9385" text-anchor="middle">封禁</text>
+
+      <g font-size="10.5">
+        <line x1="90" y1="80" x2="750" y2="80" stroke="#3a332b"/>
+        <text x="34" y="112" font-size="12" font-weight="600" fill="#f1eadc">P0 违法</text>
+        <text x="34" y="128" font-size="9.5" fill="#9d9385">严格过滤</text>
+        <text x="150" y="116" fill="#9d9385" text-anchor="middle">○</text>
+        <text x="266" y="116" fill="#9d9385" text-anchor="middle">○</text>
+        <text x="382" y="116" fill="#9d9385" text-anchor="middle">○</text>
+        <text x="498" y="116" fill="#cfc5b4" text-anchor="middle">◐</text>
+        <text x="614" y="116" fill="#d97056" text-anchor="middle" font-size="13">●</text>
+
+        <line x1="90" y1="146" x2="750" y2="146" stroke="#2a241d"/>
+        <text x="34" y="178" font-size="12" font-weight="600" fill="#f1eadc">P1 高危</text>
+        <text x="34" y="194" font-size="9.5" fill="#9d9385">快速转正式</text>
+        <text x="150" y="182" fill="#9d9385" text-anchor="middle">○</text>
+        <text x="266" y="182" fill="#9d9385" text-anchor="middle">○</text>
+        <text x="382" y="182" fill="#d97056" text-anchor="middle" font-size="13">◐</text>
+        <text x="498" y="182" fill="#d97056" text-anchor="middle" font-size="13">●</text>
+        <text x="614" y="182" fill="#cfc5b4" text-anchor="middle">◐</text>
+
+        <line x1="90" y1="212" x2="750" y2="212" stroke="#2a241d"/>
+        <text x="34" y="244" font-size="12" font-weight="600" fill="#f1eadc">P2 违规</text>
+        <text x="34" y="260" font-size="9.5" fill="#9d9385">误伤可恢复</text>
+        <text x="150" y="248" fill="#9d9385" text-anchor="middle">○</text>
+        <text x="266" y="248" fill="#9d9385" text-anchor="middle">○</text>
+        <text x="382" y="248" fill="#d97056" text-anchor="middle" font-size="13">●</text>
+        <text x="498" y="248" fill="#cfc5b4" text-anchor="middle">◐</text>
+        <text x="614" y="248" fill="#cfc5b4" text-anchor="middle">◐</text>
+
+        <line x1="90" y1="278" x2="750" y2="278" stroke="#2a241d"/>
+        <text x="34" y="310" font-size="12" font-weight="600" fill="#f1eadc">P3 边界</text>
+        <text x="34" y="326" font-size="9.5" fill="#9d9385">最适用限流</text>
+        <text x="150" y="314" fill="#cfc5b4" text-anchor="middle">◐</text>
+        <text x="266" y="314" fill="#d97056" text-anchor="middle" font-size="13">●</text>
+        <text x="382" y="314" fill="#d97056" text-anchor="middle" font-size="13">●</text>
+        <text x="498" y="314" fill="#cfc5b4" text-anchor="middle">◐</text>
+        <text x="614" y="314" fill="#9d9385" text-anchor="middle">○</text>
+      </g>
+
+      <rect x="90" y="344" width="660" height="42" rx="5" fill="#c2ab77" fill-opacity=".05" stroke="#c2ab77" stroke-opacity=".25"/>
+      <text x="104" y="362" font-size="10.5" fill="#f1eadc">受限分发 = 不进公域推荐 · 仅粉丝可见 · TTL 24 h · 到期默认回人审（不是默认放行）</text>
+      <text x="104" y="378" font-size="10" fill="#9d9385">它是一档「可回收的暂不判决」，前提是有到期时间与责任人；否则灰区会变成没人清理的死水</text>
+    </svg>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400" role="img" aria-label="三级漏斗的流量、时延与成本" style="font-family:'Source Han Serif SC','Noto Serif CJK SC','Songti SC',SimSun,serif">
+      <rect width="800" height="400" fill="#191411"/>
+      <text x="34" y="32" font-size="10.5" letter-spacing="1.4" fill="#9d9385">流量占比 · 时延红线 · 成本单价</text>
+      <text x="766" y="32" font-size="10.5" fill="#9d9385" text-anchor="end">窄的不是机会，是预算</text>
+
+      <g>
+        <text x="34" y="72" font-size="12.5" font-weight="600" fill="#f1eadc">L1 极速快筛</text>
+        <text x="34" y="90" font-size="10" fill="#9d9385">判别式小模型 + 黑白名单</text>
+        <rect x="200" y="62" width="480" height="38" rx="4" fill="#86aeb8" fill-opacity=".16" stroke="#86aeb8" stroke-opacity=".34"/>
+        <text x="668" y="86" font-size="11.5" fill="#86aeb8" text-anchor="end">100%</text>
+        <text x="700" y="78" font-size="11.5" fill="#f1eadc">P99 &lt; 50 ms</text>
+        <text x="700" y="94" font-size="10" fill="#9d9385">成本 1×</text>
+      </g>
+      <g>
+        <text x="34" y="152" font-size="12.5" font-weight="600" fill="#f1eadc">L2 动态采样</text>
+        <text x="34" y="170" font-size="10" fill="#9d9385">分类 + 时序定位</text>
+        <rect x="200" y="142" width="106" height="38" rx="4" fill="#86aeb8" fill-opacity=".26" stroke="#86aeb8" stroke-opacity=".42"/>
+        <text x="314" y="166" font-size="11.5" fill="#86aeb8">15–25%</text>
+        <text x="700" y="158" font-size="11.5" fill="#f1eadc">0.5–1.5 s</text>
+        <text x="700" y="174" font-size="10" fill="#9d9385">成本 ≈10×</text>
+      </g>
+      <g>
+        <text x="34" y="232" font-size="12.5" font-weight="600" fill="#f1eadc">L3 Agent 编排</text>
+        <text x="34" y="250" font-size="10" fill="#9d9385">状态机 + 判据节点</text>
+        <rect x="200" y="222" width="24" height="38" rx="3" fill="#d97056" fill-opacity=".55" stroke="#d97056"/>
+        <text x="232" y="246" font-size="11.5" fill="#d97056">≤ 5%</text>
+        <text x="700" y="238" font-size="11.5" fill="#f1eadc">5–10 s</text>
+        <text x="700" y="254" font-size="10" fill="#9d9385">成本 50–100×</text>
+      </g>
+
+      <line x1="200" y1="300" x2="680" y2="300" stroke="#3a332b"/>
+      <line x1="200" y1="300" x2="200" y2="306" stroke="#3a332b"/>
+      <line x1="320" y1="300" x2="320" y2="306" stroke="#3a332b"/>
+      <line x1="440" y1="300" x2="440" y2="306" stroke="#3a332b"/>
+      <line x1="560" y1="300" x2="560" y2="306" stroke="#3a332b"/>
+      <line x1="680" y1="300" x2="680" y2="306" stroke="#3a332b"/>
+      <text x="200" y="320" font-size="10" fill="#9d9385" text-anchor="middle">0</text>
+      <text x="320" y="320" font-size="10" fill="#9d9385" text-anchor="middle">25%</text>
+      <text x="440" y="320" font-size="10" fill="#9d9385" text-anchor="middle">50%</text>
+      <text x="560" y="320" font-size="10" fill="#9d9385" text-anchor="middle">75%</text>
+      <text x="680" y="320" font-size="10" fill="#9d9385" text-anchor="middle">100%</text>
+      <text x="200" y="340" font-size="10.5" fill="#9d9385">条宽按流量占比线性绘制</text>
+
+      <text x="34" y="372" font-size="11" fill="#cfc5b4">5% 不是目标，是倒推出来的上限：单案成本 × 日处理量 = 可承受预算。先算钱，再定闸门。</text>
+    </svg>

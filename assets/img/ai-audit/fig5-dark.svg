@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 430" width="800" height="430" role="img" aria-label="三类生产故障与各自的防御面" style="font-family:'Source Han Serif SC','Noto Serif CJK SC','Songti SC',SimSun,serif">
+      <rect width="800" height="430" fill="#191411"/>
+      <text x="34" y="30" font-size="10.5" letter-spacing="1.4" fill="#9d9385">三类故障 · 三个防御面</text>
+      <text x="766" y="30" font-size="10.5" fill="#9d9385" text-anchor="end">共性是：都不体现在准确率上</text>
+
+      <g>
+        <rect x="34" y="48" width="232" height="224" rx="6" fill="#201a15" stroke="#3a332b"/>
+        <rect x="34" y="48" width="232" height="3" fill="#d97056"/>
+        <text x="52" y="76" font-size="12.5" font-weight="600" fill="#f1eadc">模型证据幻觉</text>
+        <text x="52" y="98" font-size="10.5" fill="#9d9385">现象：理由是自洽的，</text>
+        <text x="52" y="114" font-size="10.5" fill="#9d9385">工具返回值里没有这一项</text>
+        <line x1="52" y1="128" x2="248" y2="128" stroke="#2a241d"/>
+        <text x="52" y="150" font-size="10.5" fill="#d97056">防御 · 引注指针强校验</text>
+        <text x="52" y="170" font-size="10" fill="#cfc5b4">每条论据必须指到</text>
+        <text x="52" y="186" font-size="10" fill="#cfc5b4">上游工具的字段 ID</text>
+        <rect x="52" y="200" width="196" height="24" rx="3" fill="#191411" stroke="#3a332b"/>
+        <text x="60" y="216" font-size="9.5" fill="#cfc5b4" font-family="'Cascadia Mono',Consolas,monospace">"evidence_ref": "…box_3"</text>
+        <text x="52" y="244" font-size="10" fill="#9d9385">指不到 → 拦截 / 转人审</text>
+        <text x="52" y="260" font-size="9.5" fill="#9d9385">告警看：证据引用率</text>
+      </g>
+
+      <g>
+        <rect x="284" y="48" width="232" height="224" rx="6" fill="#201a15" stroke="#3a332b"/>
+        <rect x="284" y="48" width="232" height="3" fill="#86aeb8"/>
+        <text x="302" y="76" font-size="12.5" font-weight="600" fill="#f1eadc">策略与工具级联漂移</text>
+        <text x="302" y="98" font-size="10.5" fill="#9d9385">现象：ASR 换版 / 政策改口径，</text>
+        <text x="302" y="114" font-size="10.5" fill="#9d9385">次日某条分支误伤翻倍</text>
+        <line x1="302" y1="128" x2="498" y2="128" stroke="#2a241d"/>
+        <text x="302" y="150" font-size="10.5" fill="#86aeb8">防御 · 路径级回归 + 影子</text>
+        <text x="302" y="170" font-size="10" fill="#cfc5b4">判错且已修正的 case</text>
+        <text x="302" y="186" font-size="10" fill="#cfc5b4">按状态机路径归档</text>
+        <rect x="302" y="200" width="196" height="24" rx="3" fill="#191411" stroke="#3a332b"/>
+        <text x="310" y="216" font-size="9.5" fill="#cfc5b4">路径分布偏移率 · 工具异常率</text>
+        <text x="302" y="244" font-size="10" fill="#9d9385">改版前后必须跑同一组路径</text>
+        <text x="302" y="260" font-size="9.5" fill="#9d9385">告警看：分支转化率突降</text>
+      </g>
+
+      <g>
+        <rect x="534" y="48" width="232" height="224" rx="6" fill="#201a15" stroke="#3a332b"/>
+        <rect x="534" y="48" width="232" height="3" fill="#c2ab77"/>
+        <text x="552" y="76" font-size="12.5" font-weight="600" fill="#f1eadc">算力雪崩</text>
+        <text x="552" y="98" font-size="10.5" fill="#9d9385">现象：批量「存疑但不违规」</text>
+        <text x="552" y="114" font-size="10.5" fill="#9d9385">打满 L3，人审被冲垮</text>
+        <line x1="552" y1="128" x2="748" y2="128" stroke="#2a241d"/>
+        <text x="552" y="150" font-size="10.5" fill="#c2ab77">防御 · 读写分离 + 削峰</text>
+        <text x="552" y="170" font-size="10" fill="#cfc5b4">Agent 只出建议工单</text>
+        <text x="552" y="186" font-size="10" fill="#cfc5b4">执行器带速率限制</text>
+        <rect x="552" y="200" width="196" height="24" rx="3" fill="#191411" stroke="#3a332b"/>
+        <text x="560" y="216" font-size="9.5" fill="#cfc5b4">L2→L3 转化率 · 队列深度</text>
+        <text x="552" y="244" font-size="10" fill="#9d9385">洪峰时分支持久化排队</text>
+        <text x="552" y="260" font-size="9.5" fill="#9d9385">告警看：人审积压斜率</text>
+      </g>
+
+      <text x="34" y="304" font-size="10.5" fill="#9d9385">Trace 七字段（缺一项就无法定位到某一跳）</text>
+      <g font-size="9.5" fill="#cfc5b4">
+        <rect x="34" y="314" width="172" height="26" rx="3" fill="#201a15" stroke="#3a332b"/><text x="44" y="331">Trace_ID</text>
+        <rect x="214" y="314" width="172" height="26" rx="3" fill="#201a15" stroke="#3a332b"/><text x="224" y="331">状态路径序列</text>
+        <rect x="394" y="314" width="196" height="26" rx="3" fill="#201a15" stroke="#3a332b"/><text x="404" y="331">算子入参出参 · 耗时</text>
+        <rect x="598" y="314" width="168" height="26" rx="3" fill="#201a15" stroke="#3a332b"/><text x="608" y="331">Policy_Version_ID</text>
+        <rect x="34" y="346" width="172" height="26" rx="3" fill="#201a15" stroke="#3a332b"/><text x="44" y="363">Prompt / 底座版本</text>
+        <rect x="214" y="346" width="222" height="26" rx="3" fill="#201a15" stroke="#3a332b"/><text x="224" y="363">证据指针（evidence_ref）</text>
+        <rect x="444" y="346" width="322" height="26" rx="3" fill="#201a15" stroke="#3a332b"/><text x="454" y="363">最终定级 + 降级原因码</text>
+      </g>
+      <text x="34" y="400" font-size="11" fill="#cfc5b4">准确率看不见这三类故障，只有日志能看见：指针看幻觉，路径分布看漂移，转化率与队列深度看雪崩。</text>
+    </svg>

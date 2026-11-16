@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500" role="img" aria-label="状态机主干：三路并行取证、一个判据节点、三个出口" style="font-family:'Source Han Serif SC','Noto Serif CJK SC','Songti SC',SimSun,serif">
+      <rect width="800" height="500" fill="#191411"/>
+      <defs>
+        <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#9d9385"/></marker>
+        <marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#d97056"/></marker>
+      </defs>
+
+      <rect x="270" y="26" width="260" height="56" rx="7" fill="#d97056" fill-opacity=".06" stroke="#d97056" stroke-opacity=".42"/>
+      <text x="400" y="50" font-size="13" font-weight="600" fill="#f1eadc" text-anchor="middle">L2 触发：疑似导流</text>
+      <text x="400" y="69" font-size="10.5" fill="#9d9385" text-anchor="middle">命中银行卡 / 二维码特征</text>
+
+      <path d="M400,82 L400,100 M170,100 L630,100 M170,100 L170,116 M400,100 L400,116 M630,100 L630,116" fill="none" stroke="#9d9385" stroke-opacity=".7"/>
+      <path d="M170,116 L170,124" stroke="#9d9385" marker-end="url(#ag)"/>
+      <path d="M400,116 L400,124" stroke="#9d9385" marker-end="url(#ag)"/>
+      <path d="M630,116 L630,124" stroke="#9d9385" marker-end="url(#ag)"/>
+
+      <rect x="70" y="128" width="200" height="76" rx="6" fill="#86aeb8" fill-opacity=".06" stroke="#86aeb8" stroke-opacity=".32"/>
+      <text x="84" y="150" font-size="12" font-weight="600" fill="#f1eadc">① 政策检索</text>
+      <text x="84" y="169" font-size="10.5" fill="#9d9385">《导流治理规范》v4.2</text>
+      <text x="84" y="185" font-size="10.5" fill="#9d9385">＋ 反诈科普豁免条款</text>
+
+      <rect x="300" y="128" width="200" height="76" rx="6" fill="#86aeb8" fill-opacity=".06" stroke="#86aeb8" stroke-opacity=".32"/>
+      <text x="314" y="150" font-size="12" font-weight="600" fill="#f1eadc">② 多模态取证</text>
+      <text x="314" y="169" font-size="10.5" fill="#9d9385">多语种 ASR · 卡号校验</text>
+      <text x="314" y="185" font-size="10.5" fill="#9d9385">· 二维码沙箱解析</text>
+
+      <rect x="530" y="128" width="200" height="76" rx="6" fill="#86aeb8" fill-opacity=".06" stroke="#86aeb8" stroke-opacity=".32"/>
+      <text x="544" y="150" font-size="12" font-weight="600" fill="#f1eadc">③ 上下文拉取</text>
+      <text x="544" y="169" font-size="10.5" fill="#9d9385">政务认证 · 近 30 天</text>
+      <text x="544" y="185" font-size="10.5" fill="#9d9385">同系列判罚记录</text>
+
+      <path d="M170,204 L170,226 M400,204 L400,226 M630,204 L630,226 M170,226 L630,226" fill="none" stroke="#9d9385" stroke-opacity=".7"/>
+      <path d="M400,226 L400,244" stroke="#9d9385" marker-end="url(#ag)"/>
+      <text x="404" y="240" font-size="9.5" fill="#9d9385">汇聚</text>
+
+      <rect x="250" y="250" width="300" height="66" rx="7" fill="#86aeb8" fill-opacity=".1" stroke="#86aeb8" stroke-opacity=".48"/>
+      <text x="400" y="275" font-size="13" font-weight="600" fill="#f1eadc" text-anchor="middle">判据节点（LLM Evaluator）</text>
+      <text x="400" y="295" font-size="10.5" fill="#cfc5b4" text-anchor="middle">按豁免条款必填字段，检查证据槽位是否齐备</text>
+
+      <path d="M400,316 L400,344 M180,344 L620,344 M180,344 L180,368 M400,344 L400,368 M620,344 L620,368" fill="none" stroke="#9d9385" stroke-opacity=".7"/>
+      <path d="M180,368 L180,374" stroke="#9d9385" marker-end="url(#ag)"/>
+      <path d="M400,368 L400,374" stroke="#d97056" marker-end="url(#aa)"/>
+      <path d="M620,368 L620,374" stroke="#9d9385" marker-end="url(#ag)"/>
+
+      <rect x="80" y="378" width="200" height="52" rx="6" fill="#86aeb8" fill-opacity=".05" stroke="#86aeb8" stroke-opacity=".3"/>
+      <text x="180" y="399" font-size="11.5" font-weight="600" fill="#86aeb8" text-anchor="middle">放行 + 反诈提示标签</text>
+      <text x="180" y="417" font-size="10" fill="#9d9385" text-anchor="middle">豁免成立，自动挂载</text>
+
+      <rect x="300" y="378" width="200" height="52" rx="6" fill="none" stroke="#d97056" stroke-opacity=".55" stroke-dasharray="4 3"/>
+      <text x="400" y="399" font-size="11.5" font-weight="600" fill="#d97056" text-anchor="middle">定向补证（回跳 ≤ 1）</text>
+      <text x="400" y="417" font-size="10" fill="#9d9385" text-anchor="middle">槽位缺失或置信度过低</text>
+
+      <rect x="520" y="378" width="200" height="52" rx="6" fill="#c2ab77" fill-opacity=".06" stroke="#c2ab77" stroke-opacity=".34"/>
+      <text x="620" y="399" font-size="11.5" font-weight="600" fill="#c2ab77" text-anchor="middle">转人审 · 结构化工单</text>
+      <text x="620" y="417" font-size="10" fill="#9d9385" text-anchor="middle">冲突或补证后仍存疑</text>
+
+      <rect x="590" y="246" width="180" height="96" rx="6" fill="#201a15" stroke="#3a332b"/>
+      <text x="604" y="268" font-size="11" font-weight="600" fill="#f1eadc">四道预算卡</text>
+      <text x="604" y="288" font-size="10.5" fill="#9d9385">Token 上限</text>
+      <text x="604" y="304" font-size="10.5" fill="#9d9385">步数 ≤ 5</text>
+      <text x="604" y="320" font-size="10.5" fill="#9d9385">工具并发 · 墙钟</text>
+      <path d="M590,294 L556,294" stroke="#d97056" stroke-opacity=".6" stroke-dasharray="3 3" marker-end="url(#aa)"/>
+      <text x="604" y="336" font-size="9.5" fill="#d97056">任一触顶 → 人审</text>
+
+      <text x="34" y="466" font-size="11" fill="#cfc5b4">主干决定路径，判据节点只决定档位；预算卡把「不可控」变成「可中止」。每一跳都是可命名的状态，才谈得上重放。</text>
+      <text x="34" y="484" font-size="10.5" fill="#9d9385">注：图中政策版本、认证标签与工具清单为结构示意，不对应任一平台的真实配置。</text>
+    </svg>
