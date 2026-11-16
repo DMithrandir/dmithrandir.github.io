@@ -26,3 +26,11 @@
   link: ""
   featured: true
 
+- title: 噪声采样器实验台
+  role: 实现与验证
+  period: "2026"
+  summary: 把八篇复盘里那个「盲注 ≡ 方差匹配」的对照做成纯前端实验台：二维双峰目标、四组转移、约束噪声的拒绝采样、全历史 τ 估计，外加一套 node 断言。
+  tags: [MCMC, Canvas, 可复现实验]
+  link: /mcmc/lab/
+  featured: false
+

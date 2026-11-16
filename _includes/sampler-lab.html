@@ -1,0 +1,46 @@
+{%- assign lab_id = include.id | default: "lab" -%}
+{%- assign lab_mode = include.mode | default: "matched" -%}
+<figure class="lab{% if include.compact %} lab-compact{% endif %}" data-lab="{{ lab_id }}" data-mode="{{ lab_mode }}">
+  <div class="lab-head">
+    <span class="lab-kicker">交互实验台</span>
+    <span class="lab-hint">二维双峰目标 · 同一组基础跳跃 · 看接受率与 τ 怎么动</span>
+  </div>
+
+  <div class="lab-stage">
+    <canvas class="lab-plot" role="img"
+      aria-label="二维双峰高斯目标上的采样轨迹：朴素 MH（虚线）、盲注噪声与对照组链的当前路径，起点在左侧峰外"></canvas>
+  </div>
+
+  <div class="lab-legend" data-stats></div>
+
+  <div class="lab-controls">
+    <div class="lab-ctl">
+      <label class="lab-ctl-label" for="{{ lab_id }}-noise">盲注噪声 σ<sub>noise</sub></label>
+      <input class="lab-range" id="{{ lab_id }}-noise" type="range" min="0" max="2" step="0.05" value="1"
+        data-ctl="noise" aria-label="盲注噪声的标准差">
+      <output class="lab-ctl-out" data-out="noise">1.00</output>
+    </div>
+
+    <div class="lab-modes" role="radiogroup" aria-label="对照模式">
+      <label><input type="radio" name="lab-mode-{{ lab_id }}" value="blind"> 仅盲注</label>
+      <label><input type="radio" name="lab-mode-{{ lab_id }}" value="matched"> 方差匹配对照</label>
+      <label><input type="radio" name="lab-mode-{{ lab_id }}" value="constrained"> 等步长约束对照</label>
+    </div>
+
+    <div class="lab-actions">
+      <button class="lab-btn" type="button" data-act="toggle">暂停</button>
+      <button class="lab-btn" type="button" data-act="reset">重置</button>
+    </div>
+  </div>
+
+  <div class="lab-chart-wrap">
+    <canvas class="lab-chart" role="img" aria-label="自相关时间 τ 随迭代步数变化的曲线"></canvas>
+  </div>
+
+  <figcaption class="lab-foot">
+    目标 0.5N((−2,0), 0.75²) + 0.5N((2,0), 0.75²)，基础随机游走 σ=1。盲注链与对照组共用同一组基础跳跃 s（公共随机数），
+    所以差异只来自噪声那一项。约束组的 n 按 <em>|n|² − 2n·s ≤ −2σ²A(x)</em> 拒绝采样，接受检验不做 Hastings 校正——与第 4 篇的 D 组一致。
+  </figcaption>
+</figure>
+<script src="{{ '/assets/js/sampler-lab-core.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+<script src="{{ '/assets/js/sampler-lab.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

@@ -2082,3 +2082,299 @@ mjx-container[display="true"] {
   color: var(--muted);
   font-size: 0.85rem;
 }
+
+/* ==========================================================================
+   交互实验台：/mcmc/lab/ 与第 3、4 篇内嵌（sampler-lab.js 负责绘制）
+   ========================================================================== */
+.lab {
+  --lab-plain: #9a8f7f;
+  --lab-blind: #a83a2c;
+  --lab-matched: #3f6b66;
+  --lab-constrained: #8a6d3b;
+  margin: 2.4em 0;
+  padding: 16px 16px 14px;
+  border: 1px solid var(--rule);
+  background: var(--paper-2);
+}
+
+[data-theme="dark"] .lab {
+  --lab-plain: #8a8073;
+  --lab-blind: #e0705f;
+  --lab-matched: #7fb3ae;
+  --lab-constrained: #c8a76a;
+}
+
+.lab-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin-bottom: 12px;
+}
+
+.lab-kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+
+.lab-hint {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.lab-stage {
+  position: relative;
+}
+
+.lab-plot {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 12 / 7;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.lab-compact .lab-plot {
+  aspect-ratio: 12 / 6;
+}
+
+.lab-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin-top: 10px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.lab-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chip-dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.chip-name {
+  color: var(--ink-soft);
+}
+
+.chip-nums {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+}
+
+.chip-nums b {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.lab-chip-meta .chip-name {
+  color: var(--muted);
+}
+
+.lab-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+
+.lab-ctl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 250px;
+  min-width: 210px;
+}
+
+.lab-ctl-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.lab-range {
+  flex: 1 1 auto;
+  min-width: 80px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+
+.lab-ctl-out {
+  min-width: 3em;
+  text-align: right;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink);
+}
+
+.lab-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.lab-modes label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px;
+  border: 1px solid var(--rule);
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+}
+
+.lab-modes label:hover {
+  border-color: var(--rule-strong);
+}
+
+.lab-modes input {
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.lab-modes label:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+.lab-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.lab-btn {
+  padding: 5px 12px;
+  border: 1px solid var(--rule-strong);
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease;
+}
+
+.lab-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.lab-chart-wrap {
+  margin-top: 12px;
+}
+
+.lab-chart {
+  display: block;
+  width: 100%;
+  height: 132px;
+}
+
+.lab-compact .lab-chart {
+  height: 108px;
+}
+
+.lab-foot {
+  margin-top: 10px;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.lab-foot em {
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 0.95em;
+}
+
+.lab input:focus-visible,
+.lab button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  .lab {
+    padding: 12px 12px 10px;
+    margin: 1.8em 0;
+  }
+
+  .lab-plot {
+    aspect-ratio: 10 / 7;
+  }
+
+  .lab-ctl {
+    flex-basis: 100%;
+  }
+
+  .lab-actions {
+    margin-left: 0;
+  }
+
+  .lab-foot {
+    font-size: 0.74rem;
+  }
+}
+
+/* 首页 01 栏里的行内链接（系列篇数 + 实验台入口） */
+.pillar p a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule-strong);
+  transition: color 0.16s ease, border-color 0.16s ease;
+}
+
+.pillar p a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* 正文里的卡片（/mcmc/ 的两个入口）：沿用 .card，压掉正文的标题 / 段落边距 */
+.post-content a.card {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-content a.card:hover {
+  background: var(--paper-2);
+}
+
+.post-content .card > .card-title {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: 0;
+  color: var(--ink);
+  margin: 0;
+}
+
+.post-content .card > .card-desc {
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.post-content .card > .card-meta {
+  margin: 0;
+}

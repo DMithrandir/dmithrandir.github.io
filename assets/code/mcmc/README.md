@@ -20,6 +20,13 @@ cd rnsafety && python experiments_reverse.py   # 第 7 篇：反向噪声的定�
 
 `rnsafety` 的测试：`cd rnsafety && python -m pytest -q`（38 项）。
 
+网页版那个交互实验台的数值内核不在 Python 里，而在 `assets/js/sampler-lab-core.js`；它的校验脚本是 `lab_core_check.js`，
+只用 Node（无依赖）：
+
+```bash
+node assets/code/mcmc/lab_core_check.js   # 15 项断言，失败非零退出
+```
+
 ## 文件
 
 | 文件 | 内容 | 对应文章 |
@@ -28,6 +35,9 @@ cd rnsafety && python experiments_reverse.py   # 第 7 篇：反向噪声的定�
 | `experiments.py` | E1 四组对照（A/B/C/D）、E3 噪声扫描、机制相关性 | 05 |
 | `matched_step_control.py` | 关键对照：用与约束组等步长的朴素 MH 复跑首达问题 | 04–06 |
 | `results.json` | `experiments.py` 的输出（接受率、τ、KL 曲线、扫描结果） | 05 |
+| `../../js/sampler-lab-core.js` | 实验台的数值内核：二维双峰目标、四组转移、$A(x)$ 的 8×8 求积、在线 τ | 03–04、实验台 |
+| `../../js/sampler-lab.js` | 实验台的 Canvas 绘制与控件 | 实验台 |
+| `lab_core_check.js` | 上面那个内核的校验（node，15 项断言） | 实验台 |
 | `experiments_llm_scaling.py` | 盲选择对照、尾部指数三区域、覆盖率/选择分解 | 08 |
 | `llm_scaling_results.json` | 上面这个脚本的输出 | 08 |
 | `rnsafety/` | 反向噪声审计工具（四路监控 + 证书 + 命令行）与其定理验证 | 07 |

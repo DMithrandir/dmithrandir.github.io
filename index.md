@@ -45,7 +45,7 @@ cta_subscribe: "订阅 RSS"
   <div class="pillar">
     <p class="pillar-num">02 研究 · {{ track_notes.size }} 篇</p>
     <h3><a href="{{ '/research/' | relative_url }}">研究笔记</a></h3>
-    <p>一条线一个专题。MCMC 与噪声注入已收 8 篇：从相对熵不等式讲到四组对照实验，再反过来做成审计工具。</p>
+    <p>一条线一个专题。MCMC 与噪声注入已收 8 篇：从相对熵不等式讲到四组对照实验，再反过来做成审计工具；外加一个可以拖的<a href="{{ '/mcmc/lab/' | relative_url }}">交互实验台</a>。</p>
   </div>
   <div class="pillar">
     <p class="pillar-num">03 工程 · {{ track_eng.size }} 篇</p>

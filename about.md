@@ -28,6 +28,13 @@ description: "一个关于审核策略、判定机制、知识系统与 Agentic 
       <p>政策下发与培训、模糊地带判据、审核知识系统；后期把直播治理里的灰度判定做成一套可运营的机制，并纳入日常抽检流程。</p>
     </div>
   </li>
+  <li>
+    <span class="timeline-year">2011 – 2026</span>
+    <div class="timeline-body">
+      <h3>研究线 · 注入噪声与 MCMC 收敛</h3>
+      <p>读到一条反直觉的结论（Kosko 组的 N-MCMC：往提议里加噪声能让链更快到目标），2020 年写成毕业论文；2026 年重算重跑，把三处错误和一处用错的词逐条写下来，做成 <a href="{{ '/mcmc/' | relative_url }}">八篇复盘</a>、一个<a href="{{ '/mcmc/lab/' | relative_url }}">交互实验台</a>和一份 2020 年之后的<a href="{{ '/mcmc/frontier/' | relative_url }}">采样器地图</a>。</p>
+    </div>
+  </li>
 </ul>
 
 ## 现在
