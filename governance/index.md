@@ -95,10 +95,10 @@ TikTok 把处置拆成三层：移除、年龄限制、不进 For You 推荐；�
   <li class="series-index-item">
     <a href="{{ '/governance/12-appeal/' | relative_url }}">
       <span class="si-num">12</span>
-      <span class="si-title">误伤、漏放与申诉：三套水位怎么一起看</span>
+      <span class="si-title">误伤、漏放与申诉：不可能三角与联合口径设计</span>
       <span class="si-arrow" aria-hidden="true">→</span>
     </a>
-    <p class="si-desc">误伤、漏放、申诉是三张表、三个分母、三种时间窗；平时各看各的，合起来才是判定质量。</p>
+    <p class="si-desc">误伤、漏放、申诉是同一套判定在三个截面的投影；判定能力不变时，单点优化任何一个，另外两个必然以隐蔽的代价反噬。</p>
   </li>
 </ul>
 
