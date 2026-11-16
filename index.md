@@ -1,8 +1,8 @@
 ---
 layout: home
-title: "审核策略与系统笔记"
+title: "AI 治理与系统笔记"
 eyebrow: "TRUST & SAFETY · REVIEW STRATEGY"
-hero_title: "审核策略、判定机制与 Agentic 审核"
+hero_title: "AI 内容治理、模型评测与工程笔记"
 hero_lead: ""
 cta_primary: "读文章"
 cta_secondary: "看项目"
