@@ -11,6 +11,8 @@ hero_meta:
     value: "审核策略 · 判定机制 · 知识系统"
   - label: "更新"
     value: "不定期，长文为主"
+  - label: "研究笔记"
+    value: '<a href="/mcmc/">MCMC</a> · <a href="/harness/">AI Harness</a>'
   - label: "订阅"
     value: "RSS"
 posts_title: "最近更新"
@@ -51,5 +53,3 @@ cta_subscribe: "订阅 RSS"
     <p>先审、召回、举报；处置、申诉、质检。看整条链路，不是单点。</p>
   </div>
 </section>
-
-<p class="block-foot">研究笔记：<a href="{{ '/mcmc/' | relative_url }}">噪声、不等式与采样器</a>　·　<a href="{{ '/series/ai-harness/' | relative_url }}">AI Harness</a></p>
