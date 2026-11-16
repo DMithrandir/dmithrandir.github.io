@@ -2,7 +2,7 @@
 layout: page
 title: "噪声、不等式与采样器"
 permalink: /mcmc/
-eyebrow: "SERIES · 2020 → 2026"
+eyebrow: "专题 01 · MCMC · 2011 → 2026"
 description: "给马尔可夫链的提议注入零均值噪声，一条不等式说它让提议离目标更近——但它量的是「提议」，不是「链」。"
 ---
 
@@ -51,3 +51,6 @@ description: "给马尔可夫链的提议注入零均值噪声，一条不等式
 不是"选择"。
 
 > 系列中所有对原论文的批评，都同时适用于我自己的那份毕业论文。这也是它值得写下来的原因。
+---
+
+<p><a class="back-link" href="{{ '/research/' | relative_url }}"><span aria-hidden="true">←</span> 回研究笔记</a></p>

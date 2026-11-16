@@ -10,7 +10,7 @@
     <nav class="nav" aria-label="主导航">
       <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} class="is-active" aria-current="page"{% endif %}>首页</a>
       <a href="{{ '/trust-and-safety/' | relative_url }}"{% if page.url contains '/trust-and-safety' or page.url contains '/governance' or page.categories contains '治理框架' %} class="is-active" aria-current="page"{% endif %}>审核策略</a>
-      <a href="{{ '/mcmc/' | relative_url }}"{% if page.url contains '/mcmc' or page.series == 'noise-mcmc' %} class="is-active" aria-current="page"{% endif %}>研究笔记</a>
+      <a href="{{ '/research/' | relative_url }}"{% if page.url contains '/research' or page.url contains '/mcmc' or page.series == 'noise-mcmc' %} class="is-active" aria-current="page"{% endif %}>研究笔记</a>
       <a href="{{ '/series/ai-harness/' | relative_url }}"{% if page.url contains '/series/ai-harness' or page.series == 'ai-harness' %} class="is-active" aria-current="page"{% endif %}>AI 工程</a>
       <a class="is-opt{% if page.url contains '/blog' or page.url contains '/archive' %} is-active{% endif %}" href="{{ '/blog/' | relative_url }}"{% if page.url contains '/blog' or page.url contains '/archive' %} aria-current="page"{% endif %}>文章</a>
       <a href="{{ '/about/' | relative_url }}"{% if page.url contains '/about' %} class="is-active" aria-current="page"{% endif %}>关于</a>

@@ -8,7 +8,7 @@ hero_meta:
   - label: "更新"
     value: "不定期，长文为主"
   - label: "三条线"
-    value: '<a href="/trust-and-safety/">审核策略</a> · <a href="/mcmc/">研究笔记</a> · <a href="/series/ai-harness/">AI 工程</a>'
+    value: '<a href="/trust-and-safety/">审核策略</a> · <a href="/research/">研究笔记</a> · <a href="/series/ai-harness/">AI 工程</a>'
   - label: "订阅"
     value: "RSS"
 posts_title: "最近更新"
@@ -44,8 +44,8 @@ cta_subscribe: "订阅 RSS"
   </div>
   <div class="pillar">
     <p class="pillar-num">02 研究 · {{ track_notes.size }} 篇</p>
-    <h3><a href="{{ '/mcmc/' | relative_url }}">研究笔记</a></h3>
-    <p>噪声、不等式与采样器：从一条相对熵不等式讲到对照实验，再把它反过来做成审计工具。</p>
+    <h3><a href="{{ '/research/' | relative_url }}">研究笔记</a></h3>
+    <p>一条线一个专题。MCMC 与噪声注入已收 8 篇：从相对熵不等式讲到四组对照实验，再反过来做成审计工具。</p>
   </div>
   <div class="pillar">
     <p class="pillar-num">03 工程 · {{ track_eng.size }} 篇</p>
