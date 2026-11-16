@@ -3,42 +3,38 @@ layout: list
 title: 文章
 permalink: /blog/
 eyebrow: "WRITING"
-description: "治理机制、人机协同、评测与标注。写下来的，都是做过的。"
+description: "审核策略、研究笔记、AI 工程三条线。写下来的，都是做过的。"
 ---
-{% include section-head.html title="从这里开始" sub="START HERE" link="/trust-and-safety/" link_label="入口页" %}
+{%- assign track_policy = site.posts | where_exp: "p", "p.categories contains '治理框架'" -%}
+{%- assign track_notes = site.posts | where_exp: "p", "p.categories contains '研究笔记'" -%}
+{%- assign track_eng = site.posts | where_exp: "p", "p.categories contains '工程笔记'" -%}
+
+{% include section-head.html title="三条线" sub="START HERE" link="/archive/" link_label="按年份看" %}
 
 <ol class="post-index">
   <li class="post-row" style="--i: 0">
-    <a class="post-row-link" href="{{ '/governance/' | relative_url }}">
+    <a class="post-row-link" href="{{ '/trust-and-safety/' | relative_url }}">
       <span class="row-num">01</span>
-      <span class="row-title">审核链路：三个入口、两次处置、一条并行的质检线</span>
+      <span class="row-title">审核策略 · {{ track_policy.size }} 篇</span>
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>
-    <p class="row-excerpt">先审、召回、举报汇进同一个判定队列；处置、申诉、质检怎么接。</p>
+    <p class="row-excerpt">审核链路 → 灰度判定 → 知识系统 → Agentic 审核；从四篇总纲进，再决定读哪篇。</p>
   </li>
   <li class="post-row" style="--i: 1">
-    <a class="post-row-link" href="{{ '/edgecase-framework/' | relative_url }}">
+    <a class="post-row-link" href="{{ '/mcmc/' | relative_url }}">
       <span class="row-num">02</span>
-      <span class="row-title">EdgeCase Framework：把模糊地带变成可复制的判定机制</span>
+      <span class="row-title">研究笔记 · {{ track_notes.size }} 篇</span>
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>
-    <p class="row-excerpt">双层判定、三段决策、9 类归因、三票多数决；把「判不了」从感觉变成统计。</p>
+    <p class="row-excerpt">噪声、不等式与采样器：一条相对熵不等式，八篇从定理到实验，再到审计工具。</p>
   </li>
   <li class="post-row" style="--i: 2">
-    <a class="post-row-link" href="{{ '/governance/11-ssot/' | relative_url }}">
+    <a class="post-row-link" href="{{ '/series/ai-harness/' | relative_url }}">
       <span class="row-num">03</span>
-      <span class="row-title">知识系统（SSOT）：规则、判例和知识怎么不各说各话</span>
+      <span class="row-title">AI 工程 · {{ track_eng.size }} 篇</span>
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>
-    <p class="row-excerpt">同一条规则住在文档、提示词、检索库、判例和代码里；SSOT 解决哪一份算数。</p>
-  </li>
-  <li class="post-row" style="--i: 3">
-    <a class="post-row-link" href="{{ '/governance/ai-agent-audit/' | relative_url }}">
-      <span class="row-num">04</span>
-      <span class="row-title">Agentic 审核：把黑盒单次推理，改造成受限的状态机流水线</span>
-      <span class="row-arrow" aria-hidden="true">→</span>
-    </a>
-    <p class="row-excerpt">三级漏斗、四项预算、五条强制出口；Agent 不是替代漏斗，是漏斗末端的过滤器。</p>
+    <p class="row-excerpt">模型之外的那一层：上下文、工具、评测、失败形态；自己搭、自己测、自己踩坑。</p>
   </li>
 </ol>
 

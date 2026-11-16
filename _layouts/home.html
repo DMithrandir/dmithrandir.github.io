@@ -31,7 +31,7 @@ layout: default
   {{ content }}
 
   {%- if site.posts.size > 0 %}
-  {%- assign latest = site.posts | where_exp: "p", "p.categories contains '治理框架'" -%}
+  {%- assign latest = site.posts -%}
   <section class="block">
     {% include section-head.html title=page.posts_title sub=page.posts_sub link="/blog/" link_label=page.posts_more %}
     <ol class="post-index">

@@ -11,8 +11,8 @@ hero_meta:
     value: "审核策略 · 判定机制 · 知识系统"
   - label: "更新"
     value: "不定期，长文为主"
-  - label: "研究笔记"
-    value: '<a href="/mcmc/">MCMC</a> · <a href="/harness/">AI Harness</a>'
+  - label: "三条线"
+    value: '<a href="/trust-and-safety/">审核策略</a> · <a href="/mcmc/">研究笔记</a> · <a href="/series/ai-harness/">AI 工程</a>'
   - label: "订阅"
     value: "RSS"
 posts_title: "最近更新"
@@ -36,20 +36,24 @@ cta_title: "想讨论审核策略、知识系统或 Agentic 审核，GitHub 上�
 cta_subscribe: "订阅 RSS"
 ---
 
-<section class="pillars" aria-label="最近在写">
+{%- assign track_policy = site.posts | where_exp: "p", "p.categories contains '治理框架'" -%}
+{%- assign track_notes = site.posts | where_exp: "p", "p.categories contains '研究笔记'" -%}
+{%- assign track_eng = site.posts | where_exp: "p", "p.categories contains '工程笔记'" -%}
+
+<section class="pillars" aria-label="三条主线">
   <div class="pillar">
-    <p class="pillar-num">入口</p>
-    <h3><a href="{{ '/trust-and-safety/' | relative_url }}">审核策略：四篇先读</a></h3>
-    <p>审核链路 → 判定 → 知识 → Agentic；先看这一页，再决定读哪篇。</p>
+    <p class="pillar-num">01 治理 · {{ track_policy.size }} 篇</p>
+    <h3><a href="{{ '/trust-and-safety/' | relative_url }}">审核策略</a></h3>
+    <p>审核链路、灰度判定、知识系统、Agentic 审核；一篇总纲带三篇长文，按链路 → 判定 → 知识 → Agentic 读。</p>
   </div>
   <div class="pillar">
-    <p class="pillar-num">长文</p>
-    <h3><a href="{{ '/edgecase-framework/' | relative_url }}">灰度案例判定框架</a></h3>
-    <p>模糊案例，怎么进入一个可归因寻找解法的流程。</p>
+    <p class="pillar-num">02 研究 · {{ track_notes.size }} 篇</p>
+    <h3><a href="{{ '/mcmc/' | relative_url }}">研究笔记</a></h3>
+    <p>噪声、不等式与采样器：从一条相对熵不等式讲到对照实验，再把它反过来做成审计工具。</p>
   </div>
   <div class="pillar">
-    <p class="pillar-num">系列</p>
-    <h3><a href="{{ '/governance/' | relative_url }}">审核链路：三个入口、两次处置</a></h3>
-    <p>先审、召回、举报；处置、申诉、质检。看整条链路，不是单点。</p>
+    <p class="pillar-num">03 工程 · {{ track_eng.size }} 篇</p>
+    <h3><a href="{{ '/series/ai-harness/' | relative_url }}">AI 工程</a></h3>
+    <p>模型之外的那一层：上下文、工具、评测与失败形态；自己搭、自己测、自己踩坑。</p>
   </div>
 </section>

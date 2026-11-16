@@ -1561,6 +1561,11 @@ p {
     font-size: 13px;
   }
 
+  /* 窄屏放不下 7 项：「文章」「项目」让步（首页 CTA、页脚、关于页仍可进入） */
+  .nav a.is-opt {
+    display: none;
+  }
+
   .hero {
     padding: 64px 0 48px;
   }
