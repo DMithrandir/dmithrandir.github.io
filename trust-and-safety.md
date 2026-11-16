@@ -53,7 +53,7 @@ wide: true
 
 ## 延伸阅读
 
-- [误伤、漏放与申诉：内容治理的「不可能三角」与联合口径设计]({{ '/governance/12-appeal/' | relative_url }}) —— JD 职责 2 / 4 的专文。
+- [误伤、漏放与申诉：内容治理的「不可能三角」与联合口径设计]({{ '/governance/12-appeal/' | relative_url }}) —— 误伤、漏放、申诉的专文。
 - [AI Harness：从「使用 AI」到「驾驭 AI」]({{ '/harness/' | relative_url }}) —— AI 工程背景，不是审核主文。
 
 ## 公开版说明
