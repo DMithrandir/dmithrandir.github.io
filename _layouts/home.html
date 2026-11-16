@@ -7,10 +7,12 @@ layout: default
       {%- if page.eyebrow %}<p class="eyebrow">{{ page.eyebrow }}</p>{% endif -%}
       <h1 class="hero-title">{{ page.hero_title | default: site.title }}</h1>
       {%- if page.hero_lead %}<p class="hero-lead">{{ page.hero_lead }}</p>{% endif -%}
+      {%- if page.cta_primary or page.cta_secondary %}
       <p class="hero-cta">
         <a class="btn" href="{{ '/blog/' | relative_url }}">{{ page.cta_primary | default: "读文章" }}</a>
         <a class="btn btn-ghost" href="{{ '/projects/' | relative_url }}">{{ page.cta_secondary | default: "看项目" }}</a>
       </p>
+      {%- endif %}
     </div>
     {%- if page.hero_meta -%}
     <aside class="hero-side" aria-label="站点信息">
