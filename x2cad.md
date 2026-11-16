@@ -2,7 +2,7 @@
 layout: page
 title: "X2CAD：几何内核与白盒验证台"
 permalink: /x2cad/
-eyebrow: "PROJECT · GEOMETRY KERNEL"
+eyebrow: "专题 02 · 几何内核 · 2026 →"
 description: "一个个人维护的 CAD 几何内核与算子级白盒验证台：预言机先行、变异自审、指针式实体引用。"
 ---
 
@@ -53,3 +53,8 @@ Tier 3 的外部对拍（Shapely / OCCT）还没有接入，本机缺依赖；�
 
 - 仓库：[github.com/DMithrandir/x2CAD](https://github.com/DMithrandir/x2CAD)
 - 设计文档与决策记录：[docs/plans](https://github.com/DMithrandir/x2CAD/blob/main/docs/plans/2026-08-20-x2cad-kernel-design.md) 与 [docs/adr](https://github.com/DMithrandir/x2CAD/tree/main/docs/adr)
+
+---
+
+<p><a class="back-link" href="{{ '/research/' | relative_url }}"><span aria-hidden="true">←</span> 回研究笔记</a></p>
+

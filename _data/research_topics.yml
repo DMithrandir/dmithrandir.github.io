@@ -19,3 +19,18 @@
     - 噪声注入
     - 方差匹配
     - 可复现
+
+- index: "02"
+  key: x2cad
+  title: "X2CAD：几何内核与白盒验证台"
+  url: "/x2cad/"
+  years: "2026 →"
+  meta: "项目页 · 持续更新"
+  blurb: >-
+    一个以预言机先于内核为原则的 CAD 几何内核：N1/N2 叶子算子、算子级 conformance 验证台、
+    变异自审与 EntityRef 引用契约。当前 232 例测试全绿，39 条用例通过，变异捕获率 9/9。
+  tags:
+    - 几何内核
+    - NURBS
+    - 验证台
+    - CAD
