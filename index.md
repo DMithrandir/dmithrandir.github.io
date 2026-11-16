@@ -2,7 +2,6 @@
 layout: home
 title: "AI 治理与系统笔记"
 hero_title: "AI 内容治理、模型评测与工程笔记"
-hero_lead: ""
 hero_meta:
   - label: "主题"
     value: "审核策略 · 判定机制 · 知识系统"
