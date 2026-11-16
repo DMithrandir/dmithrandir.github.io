@@ -92,6 +92,14 @@ TikTok 把处置拆成三层：移除、年龄限制、不进 For You 推荐；�
     </a>
     <p class="si-desc">同一条规则在文档、提示词、检索库、判例和代码里各存一份，版本一岔，判定依据就说不清。</p>
   </li>
+  <li class="series-index-item">
+    <a href="{{ '/governance/12-appeal/' | relative_url }}">
+      <span class="si-num">12</span>
+      <span class="si-title">误伤、漏放与申诉：三套水位怎么一起看</span>
+      <span class="si-arrow" aria-hidden="true">→</span>
+    </a>
+    <p class="si-desc">误伤、漏放、申诉是三张表、三个分母、三种时间窗；平时各看各的，合起来才是判定质量。</p>
+  </li>
 </ul>
 
 <p>
