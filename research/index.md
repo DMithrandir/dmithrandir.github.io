@@ -8,12 +8,6 @@ description: "一条线一个专题：自己定问题、自己跑实验、自己
 
 {%- assign topics = site.data.research_topics -%}
 
-<p>
-每条线一个专题页：目录、导读与背景收在专题里，文章本身仍在
-<a href="{{ '/blog/' | relative_url }}">文章列表</a>与归档中。加新专题时只需在
-<code>_data/research_topics.yml</code> 里加一块，再建一个专题页。
-</p>
-
 <div class="cards">
   {%- for t in topics %}
   <a class="card" href="{{ t.url | relative_url }}">
