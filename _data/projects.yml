@@ -25,3 +25,11 @@
   tags: [知识工程, SSOT, 审核标准]
   link: ""
   featured: true
+
+- title: X2CAD
+  role: 独立开发
+  period: "2026 – 至今"
+  summary: 以预言机先于内核为原则的 CAD 几何内核与算子级白盒验证台：NURBS 叶子算子、39 条 conformance 用例、变异自审 9/9、EntityRef 引用契约。
+  tags: [几何内核, NURBS, 验证台, CAD]
+  link: /x2cad/
+
