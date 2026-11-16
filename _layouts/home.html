@@ -31,10 +31,11 @@ layout: default
   {{ content }}
 
   {%- if site.posts.size > 0 %}
+  {%- assign latest = site.posts | where_exp: "p", "p.categories contains '治理框架'" -%}
   <section class="block">
     {% include section-head.html title=page.posts_title sub=page.posts_sub link="/blog/" link_label=page.posts_more %}
     <ol class="post-index">
-      {%- for post in site.posts limit: 5 %}
+      {%- for post in latest limit: 5 %}
         {% include post-row.html post=post index=forloop.index excerpt=true %}
       {%- endfor %}
     </ol>
