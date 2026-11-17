@@ -15,15 +15,16 @@ AI 与 CAD 交叉领域的瓶颈，已经从“能不能生成几何”转到“
 - **曲线算子**：B 样条 / NURBS 求值、各阶导数、全局插值（参数化 + 节点平均 + 残差检查）。
 - **节点操作**：Boehm 节点插入（单次 / 重复，含 NURBS）、按参数分割、Bézier 升阶。
 - **微分几何与 2D**：自适应 Gauss 弧长、单位切矢、曲率；两线段夹角处的相切圆弧。
-- **验证台**：SC001–SC008 静态检查、39 条 conformance 用例、9 个变异注入（捕获率 9/9）、Tier 4 扰动平面。
-- **退化语料**：五族 15 条，每条绑定一个可执行用例。
+- **2D 求交**：线段-线段求交（浮点无损转有理数判定；横截、端点接触、共线重叠三分类）。
+- **验证台**：SC001–SC008 静态检查、47 条 conformance 用例、14 个变异注入（捕获率 14/14）、Tier 4 扰动平面。
+- **退化语料**：五族 17 条，每条绑定一个可执行用例。
 - **EntityRef v0.2**：确定性 id、tombstone 拒绝，以及 1-to-N / N-to-1 谱系（split / merge，序号或参数寻址）。
 
 | 项 | 现状 |
 |---|---|
-| oracle 测试 | 232 例 |
-| conformance | 39 cases / 39 checks |
-| 变异自审 | 9/9 = 100% |
+| oracle 测试 | 251 例 |
+| conformance | 47 cases / 47 checks |
+| 变异自审 | 14/14 = 100% |
 | 静态检查 | 0 findings |
 
 证据文件（`verify/evidence/report.json`、`verify/audit/mutation_report.json`）随代码一起提交，记录每一批代码当时通过的内容。
@@ -36,7 +37,7 @@ AI 与 CAD 交叉领域的瓶颈，已经从“能不能生成几何”转到“
 git clone https://github.com/DMithrandir/x2CAD.git
 cd x2CAD
 
-python -m pytest          # 232 例 oracle 测试
+python -m pytest          # 251 例 oracle 测试
 python -m verify          # 静态检查 + 覆盖率 + conformance
 python -m verify.mutation # 变异注入与捕获率
 ```
@@ -47,7 +48,7 @@ python -m verify.mutation # 变异注入与捕获率
 
 Tier 3 的外部对拍（Shapely / OCCT）还没有接入，本机缺依赖；规范里已经写死接入口径：Shapely 只对折线，曲线层用解析构造加区间算术。Tier 5 的过程化重放要等 P1 的 sketch/extrude 链。B-Rep 拓扑变异按 ADR-0001 走规格先行与人工审查，不交给模型直接写。
 
-下一步是 P1：2D 约束求解加 2D 曲线布尔，用 Boehm 分割与曲线求交拼出最小闭环。三维曲线/曲面求交（CCI / SSI）排在后面。
+P1 已经开工：A1 线段求交落地，下一步是 A2 直线-Bézier 求交与 A3 Bézier-Bézier 求交，再拼 2D 约束求解与布尔装配。三维曲线/曲面求交（CCI / SSI）排在后面。
 
 ## 链接
 
