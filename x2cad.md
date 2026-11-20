@@ -29,6 +29,8 @@ AI 与 CAD 交叉领域的瓶颈，已经从“能不能生成几何”转到“
 
 证据文件（`verify/evidence/report.json`、`verify/audit/mutation_report.json`）随代码一起提交，记录每一批代码当时通过的内容。
 
+<p><a class="btn" href="{{ '/x2cad/roadmap/' | relative_url }}">查看可视化路线图 →</a></p>
+
 ## 怎么跑
 
 纯 Python，无第三方运行时依赖：
@@ -54,7 +56,7 @@ P1 已经开工：解析闭式求交三通道完成，线段×Bézier（Sturm �
 
 - 仓库：[github.com/DMithrandir/x2CAD](https://github.com/DMithrandir/x2CAD)
 - 阶段 review：[2026-11-20-stage-review.md](https://github.com/DMithrandir/x2CAD/blob/main/docs/reviews/2026-11-20-stage-review.md)
-- 可视化路线图：[roadmap.html](https://github.com/DMithrandir/x2CAD/blob/main/docs/roadmap.html)
+- 可视化路线图：[/x2cad/roadmap/]({{ '/x2cad/roadmap/' | relative_url }})（[源码](https://github.com/DMithrandir/x2CAD/blob/main/docs/roadmap.html)）
 - 设计文档与决策记录：[docs/plans](https://github.com/DMithrandir/x2CAD/blob/main/docs/plans/2026-08-20-x2cad-kernel-design.md) 与 [docs/adr](https://github.com/DMithrandir/x2CAD/tree/main/docs/adr)
 
 ---

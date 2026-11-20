@@ -1,0 +1,398 @@
+---
+layout: null
+permalink: /x2cad/roadmap/
+title: "X2CAD 开发路线图"
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X2CAD · 开发路线图 — Oracle-First CAD Kernel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f5efe3;
+  --paper-2:#efe7d6;
+  --paper-3:#e9dfc9;
+  --ink:#211d18;
+  --ink-soft:#4a443b;
+  --muted:#8a8172;
+  --seal:#b23a2a;
+  --seal-deep:#8f2b1e;
+  --blue:#2f5d7c;
+  --line:#c9bda4;
+  --line-soft:#dcd2bc;
+  --display:"Noto Serif SC","Source Han Serif SC","Songti SC","SimSun",serif;
+  --mono:"IBM Plex Mono","JetBrains Mono","Cascadia Code",Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--display);
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+/* 制图网格底纹 */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(var(--line-soft) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
+  background-size:56px 56px;
+  opacity:.28;
+}
+/* 纸张颗粒 */
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.40 0 0 0 0 0.32 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.sheet{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:48px 40px 80px}
+/* 图框 */
+.frame{border:2px solid var(--ink);outline:1px solid var(--ink);outline-offset:5px;padding:44px 48px 56px;background:linear-gradient(160deg,rgba(255,255,255,.35),rgba(255,255,255,0) 40%)}
+.mono{font-family:var(--mono)}
+.backbar{margin:0 0 22px;font-size:12.5px;letter-spacing:.04em}
+.backbar a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:1px}
+.backbar a:hover{color:var(--seal);border-color:var(--seal)}
+/* ===== 页眉 ===== */
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:28px}
+.brand .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.32em;color:var(--seal);text-transform:uppercase;margin-bottom:10px}
+.brand h1{font-size:clamp(34px,5vw,54px);font-weight:900;letter-spacing:.02em;line-height:1.15}
+.brand h1 .x{color:var(--seal)}
+.brand .sub{margin-top:12px;font-size:15px;color:var(--ink-soft);max-width:560px}
+.brand .sub em{font-style:normal;border-bottom:2px solid var(--seal);padding-bottom:1px}
+/* 图签（title block） */
+.titleblock{border:1.5px solid var(--ink);min-width:270px;font-family:var(--mono);font-size:12px;background:var(--paper-2)}
+.titleblock .tb-head{background:var(--ink);color:var(--paper);padding:6px 12px;letter-spacing:.22em;font-size:11px}
+.titleblock table{border-collapse:collapse;width:100%}
+.titleblock td{border:1px solid var(--line);padding:5px 12px}
+.titleblock td.k{color:var(--muted);width:74px;border-left:none}
+.titleblock td.v{font-weight:600}
+.titleblock tr:last-child td{border-bottom:none}
+.stamp-done{display:inline-block;color:var(--seal);border:2px solid var(--seal);border-radius:4px;padding:0 8px;font-weight:600;transform:rotate(-3deg);letter-spacing:.12em}
+/* ===== 证据条 ===== */
+.evidence{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1.5px solid var(--ink);margin:32px 0 8px;background:var(--paper-2)}
+.ev{padding:18px 20px;border-right:1px solid var(--line)}
+.ev:last-child{border-right:none}
+.ev .num{font-family:var(--mono);font-size:clamp(24px,3vw,34px);font-weight:600;color:var(--ink);line-height:1.1}
+.ev .num small{font-size:.5em;color:var(--muted);font-weight:400}
+.ev .lbl{font-size:12.5px;color:var(--ink-soft);margin-top:6px;letter-spacing:.06em}
+.ev.hot .num{color:var(--seal)}
+.evidence-note{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-bottom:44px;letter-spacing:.04em}
+/* ===== 分节标题 ===== */
+.sec{display:flex;align-items:baseline;gap:16px;margin:56px 0 24px}
+.sec .no{font-family:var(--mono);color:var(--seal);font-size:13px;letter-spacing:.2em}
+.sec h2{font-size:24px;font-weight:900;letter-spacing:.04em}
+.sec .rule{flex:1;height:1px;background:var(--ink);opacity:.35;transform:translateY(-4px)}
+.sec .en{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.24em;text-transform:uppercase}
+/* ===== 时间线 ===== */
+.timeline{position:relative;padding-left:0}
+.phase{display:grid;grid-template-columns:150px 34px 1fr;gap:0;margin-bottom:26px;opacity:0;transform:translateY(18px);animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards}
+.phase:nth-child(1){animation-delay:.05s}.phase:nth-child(2){animation-delay:.12s}
+.phase:nth-child(3){animation-delay:.19s}.phase:nth-child(4){animation-delay:.26s}
+.phase:nth-child(5){animation-delay:.33s}.phase:nth-child(6){animation-delay:.40s}
+.phase:nth-child(7){animation-delay:.47s}.phase:nth-child(8){animation-delay:.54s}
+@keyframes rise{to{opacity:1;transform:none}}
+.ph-id{padding-top:20px;text-align:right;padding-right:18px}
+.ph-id .tag{font-family:var(--mono);font-weight:600;font-size:15px;letter-spacing:.06em}
+.ph-id .date{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:3px}
+/* 脊柱与节点 */
+.ph-rail{position:relative;display:flex;justify-content:center}
+.ph-rail::before{content:"";position:absolute;top:0;bottom:-26px;width:2px;background:var(--ink);opacity:.55}
+.phase:last-child .ph-rail::before{bottom:0}
+.node{position:relative;z-index:1;width:16px;height:16px;margin-top:24px;border:2.5px solid var(--ink);background:var(--paper);transform:rotate(45deg)}
+.phase.done .node{background:var(--seal);border-color:var(--seal-deep)}
+.phase.active .node{background:var(--paper);border-color:var(--seal);animation:pulse 2.2s ease-in-out infinite}
+.phase.future .node{border-style:dashed;border-color:var(--muted);background:transparent}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(178,58,42,.35)}50%{box-shadow:0 0 0 9px rgba(178,58,42,0)}}
+/* 卡片 */
+.ph-card{border:1.5px solid var(--ink);background:rgba(255,255,255,.42);padding:20px 24px 18px;margin-left:20px;transition:transform .25s ease,box-shadow .25s ease;position:relative}
+.ph-card:hover{transform:translateX(4px);box-shadow:-6px 6px 0 rgba(33,29,24,.12)}
+.ph-card::before{content:"";position:absolute;left:-1.5px;top:14px;bottom:14px;width:4px;background:var(--ink)}
+.phase.done .ph-card::before{background:var(--seal)}
+.phase.active .ph-card{border-color:var(--seal);background:rgba(255,255,255,.6)}
+.phase.active .ph-card::before{background:var(--seal)}
+.phase.future .ph-card{border-style:dashed;border-color:var(--muted);background:transparent}
+.phase.future .ph-card::before{background:var(--muted)}
+.ph-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ph-head h3{font-size:19px;font-weight:900;letter-spacing:.03em}
+.status{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;padding:2px 9px;border-radius:3px;white-space:nowrap}
+.status.done{color:var(--seal);border:1.5px solid var(--seal);transform:rotate(-2deg);font-weight:600}
+.status.active{color:#fff;background:var(--seal);font-weight:600}
+.status.planned{color:var(--blue);border:1.5px solid var(--blue)}
+.status.future{color:var(--muted);border:1.5px dashed var(--muted)}
+.ph-desc{font-size:14px;color:var(--ink-soft);margin-top:8px}
+.gate{margin-top:12px;font-family:var(--mono);font-size:12px;color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:10px;display:flex;gap:8px;align-items:baseline}
+.gate .gk{color:var(--seal);letter-spacing:.14em;font-size:10.5px;white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.chip{font-family:var(--mono);font-size:11px;border:1px solid var(--line);background:var(--paper-2);padding:2px 9px;color:var(--ink-soft);letter-spacing:.02em}
+.chip.ok{border-color:var(--seal);color:var(--seal-deep)}
+.chip.ok::before{content:"✓ ";font-weight:600}
+.chip.next{border-color:var(--blue);color:var(--blue)}
+.chip.next::before{content:"→ "}
+/* P1 子矩阵 */
+.submatrix{margin-top:16px;border:1px solid var(--line);background:var(--paper-2)}
+.submatrix .sm-head{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--muted);padding:7px 14px;border-bottom:1px solid var(--line);text-transform:uppercase}
+.sm-row{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--line-soft);font-size:13.5px}
+.sm-row:last-child{border-bottom:none}
+.sm-row .idx{font-family:var(--mono);color:var(--muted);font-size:12px}
+.sm-row .st{font-family:var(--mono);font-size:11px;letter-spacing:.08em}
+.sm-row.ok .st{color:var(--seal)}
+.sm-row.ok .st::before{content:"● "}
+.sm-row.todo .st{color:var(--blue)}
+.sm-row.todo .st::before{content:"○ "}
+.sm-row.todo{opacity:.85}
+/* ===== 四支柱 ===== */
+.pillars{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.pillar{border:1.5px solid var(--ink);padding:22px 24px;background:rgba(255,255,255,.4);position:relative}
+.pillar .p-no{position:absolute;top:-13px;left:18px;background:var(--paper);padding:0 10px;font-family:var(--mono);font-size:12px;color:var(--seal);letter-spacing:.2em}
+.pillar h3{font-size:17px;font-weight:900;margin-bottom:8px}
+.pillar p{font-size:13.5px;color:var(--ink-soft)}
+.pillar .p-meta{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+/* ===== 非目标 ===== */
+.nongoals{border:1.5px solid var(--ink);background:var(--paper-2);padding:24px 28px}
+.nongoals ul{list-style:none;columns:2;column-gap:40px}
+.nongoals li{font-size:13.5px;color:var(--ink-soft);padding:7px 0 7px 26px;position:relative;break-inside:avoid;border-bottom:1px dotted var(--line)}
+.nongoals li::before{content:"✕";position:absolute;left:2px;color:var(--seal);font-family:var(--mono);font-size:12px}
+/* ===== 田野笔记 ===== */
+.notes{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.note{border-left:3px solid var(--seal);background:rgba(255,255,255,.4);padding:14px 18px;font-size:13px;color:var(--ink-soft)}
+.note b{color:var(--ink);font-weight:700}
+.note .n-tag{font-family:var(--mono);font-size:10.5px;color:var(--seal);letter-spacing:.16em;display:block;margin-bottom:5px}
+/* ===== 页脚 ===== */
+footer{margin-top:60px;border-top:2px solid var(--ink);padding-top:20px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--muted)}
+footer a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--line)}
+footer a:hover{color:var(--seal);border-color:var(--seal)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin:6px 0 30px;font-family:var(--mono);font-size:11.5px;color:var(--ink-soft)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.lg{width:11px;height:11px;transform:rotate(45deg);display:inline-block;border:2px solid var(--ink)}
+.lg.done{background:var(--seal);border-color:var(--seal-deep)}
+.lg.active{border-color:var(--seal)}
+.lg.planned{border-color:var(--blue)}
+.lg.future{border-style:dashed;border-color:var(--muted)}
+@media (max-width:860px){
+  .sheet{padding:24px 14px 60px}
+  .frame{padding:26px 20px 36px}
+  .evidence{grid-template-columns:repeat(2,1fr)}
+  .ev{border-bottom:1px solid var(--line)}
+  .phase{grid-template-columns:86px 26px 1fr}
+  .ph-id .tag{font-size:12.5px}
+  .pillars,.notes{grid-template-columns:1fr}
+  .nongoals ul{columns:1}
+  header{flex-direction:column}
+}
+@media print{
+  body::before,body::after{display:none}
+  .phase{opacity:1;transform:none;animation:none}
+}
+</style>
+</head>
+<body>
+<div class="sheet">
+<div class="frame">
+<p class="backbar mono"><a href="https://dmithrandir.github.io/x2cad/">← 返回 X2CAD 项目页</a></p>
+
+<header>
+  <div class="brand">
+    <div class="eyebrow">Development Roadmap · 依赖驱动 · 规格先行</div>
+    <h1><span class="x">X2</span>CAD 开发路线图</h1>
+    <p class="sub">Oracle-First CAD 内核与算子级白盒验证台。不重写 OCCT，补齐开源 CAD 缺失的<em>判据层 + 最小可证明内核切片</em>：预言机先于内核，退化语料、四层证据、变异自审与实体引用契约是可复用的公开基础设施。</p>
+  </div>
+  <div class="titleblock" aria-label="图签">
+    <div class="tb-head">TITLE BLOCK · 图签</div>
+    <table>
+      <tr><td class="k">图号</td><td class="v">X2CAD-RM-001</td></tr>
+      <tr><td class="k">版本</td><td class="v">v0.4 · 2026-11-20</td></tr>
+      <tr><td class="k">阶段</td><td class="v">P1 · 2D 垂直切片</td></tr>
+      <tr><td class="k">门禁</td><td class="v"><span class="stamp-done">PASS</span></td></tr>
+      <tr><td class="k">仓库</td><td class="v">DMithrandir/x2CAD</td></tr>
+    </table>
+  </div>
+</header>
+
+<!-- 证据条 -->
+<div class="evidence" role="list" aria-label="当前验证证据">
+  <div class="ev hot" role="listitem"><div class="num">311</div><div class="lbl">oracle 测试全绿</div></div>
+  <div class="ev" role="listitem"><div class="num">74<small>/74</small></div><div class="lbl">conformance 用例</div></div>
+  <div class="ev hot" role="listitem"><div class="num">24<small>/24</small></div><div class="lbl">变异捕获率 100%</div></div>
+  <div class="ev" role="listitem"><div class="num">0</div><div class="lbl">静态检查 findings</div></div>
+  <div class="ev" role="listitem"><div class="num">12<small> 算子</small></div><div class="lbl">四件套齐全 · 17 条退化语料</div></div>
+</div>
+<div class="evidence-note">// 证据随代码提交：verify/evidence/report.json · verify/audit/mutation_report.json · 复跑：python -m pytest / python -m verify / python -m verify.mutation</div>
+
+<!-- 路线图 -->
+<div class="sec"><span class="no">§1</span><h2>阶段路线</h2><span class="rule"></span><span class="en">Dependency-Driven Phases</span></div>
+<div class="legend">
+  <span><i class="lg done"></i>已完成</span>
+  <span><i class="lg active"></i>进行中</span>
+  <span><i class="lg planned"></i>待启动</span>
+  <span><i class="lg future"></i>远期</span>
+</div>
+
+<div class="timeline">
+
+  <div class="phase done">
+    <div class="ph-id"><div class="tag">N1</div><div class="date">2026-08</div></div>
+    <div class="ph-rail"><div class="node"></div></div>
+    <div class="ph-card">
+      <div class="ph-head"><h3>曲线基础算子</h3><span class="status done">DONE</span></div>
+      <p class="ph-desc">B 样条 / NURBS 求值、各阶解析导数（方法 A/B 双实现互拍）、全局插值。占内核功能面积 ~5%，却是唯一能被强预言机完全裁决的纯数学基座。</p>
+      <div class="gate"><span class="gk">GATE</span><span>四路 oracle 全绿 · 单位分解 / 圆不变量 / 有限差分 / 往返恢复</span></div>
+      <div class="chips"><span class="chip ok">curve_eval</span><span class="chip ok">surface_eval</span><span class="chip ok">curve_interpolation</span></div>
+    </div>
+  </div>
+
+  <div class="phase done">
+    <div class="ph-id"><div class="tag">P0</div><div class="date">2026-11-09</div></div>
+    <div class="ph-rail"><div class="node"></div></div>
+    <div class="ph-card">
+      <div class="ph-head"><h3>白盒验证台 + 变异自审</h3><span class="status done">DONE</span></div>
+      <p class="ph-desc">先审计裁判，再信任裁判。精确谓词（浮点滤波 + Fraction 回退）、容差上下文、SC001–SC008 静态检查、conformance 用例、Tier 4 扰动平面；对验证台自身注入变异，捕获率必须 100%。</p>
+      <div class="gate"><span class="gk">GATE</span><span>静态 0 findings · 覆盖率 0 缺口 · conformance 0 失败 · 变异 24/24</span></div>
+      <div class="chips"><span class="chip ok">predicates</span><span class="chip ok">tolerance</span><span class="chip ok">static_check</span><span class="chip ok">mutation</span></div>
+    </div>
+  </div>
+
+  <div class="phase done">
+    <div class="ph-id"><div class="tag">#2</div><div class="date">2026-11-16</div></div>
+    <div class="ph-rail"><div class="node"></div></div>
+    <div class="ph-card">
+      <div class="ph-head"><h3>EntityRef 引用契约 v0.2</h3><span class="status done">DONE</span></div>
+      <p class="ph-desc">布尔动工前冻结引用规则：确定性 id 重放、tombstone 显式拒绝、split/merge 谱系（1-to-N / N-to-1，序号或参数寻址，右连续口径）。边界（ADR-0004）：承诺确定性重放与单步派生寻址，<b>不承诺参数化 TNP</b>。</p>
+      <div class="gate"><span class="gk">GATE</span><span>重放两遍 id 逐位一致 · tombstone 100% 报错 · 谱系可解析可序列化</span></div>
+      <div class="chips"><span class="chip ok">entity_ref</span><span class="chip ok">DerivedRef</span><span class="chip">ADR-0003 / 0004</span></div>
+    </div>
+  </div>
+
+  <div class="phase done">
+    <div class="ph-id"><div class="tag">N2</div><div class="date">2026-11-09</div></div>
+    <div class="ph-rail"><div class="node"></div></div>
+    <div class="ph-card">
+      <div class="ph-head"><h3>节点操作与曲线微分几何</h3><span class="status done">DONE</span></div>
+      <p class="ph-desc">Boehm 节点插入（单次/重复，含 NURBS）、按参数分割、Bézier 升阶、自适应 Gauss 弧长、单位切矢、曲率、2D 相切圆角。为参数域求交打断提供无损几何操作。</p>
+      <div class="gate"><span class="gk">GATE</span><span>插入前后几何轨迹误差 &lt; 1e-12 · 公式抄错由预言机裁决（分母反例已固化）</span></div>
+      <div class="chips"><span class="chip ok">knot_insertion</span><span class="chip ok">curve_split</span><span class="chip ok">degree_elevation</span><span class="chip ok">curve_geometry</span><span class="chip ok">fillet_2d</span></div>
+    </div>
+  </div>
+
+  <div class="phase active">
+    <div class="ph-id"><div class="tag">P1</div><div class="date">2026-11-18 →</div></div>
+    <div class="ph-rail"><div class="node"></div></div>
+    <div class="ph-card">
+      <div class="ph-head"><h3>2D 垂直切片</h3><span class="status active">IN PROGRESS</span></div>
+      <p class="ph-desc">二维是唯一能由个人把「所有算子与拓扑装配都做对」的完整闭环。解析闭式通道收口后，多项式通道已开启（线段×Bézier 落地），正向 Bézier×Bézier 与约束求解推进。</p>
+      <div class="submatrix">
+        <div class="sm-head">求交矩阵 · analytic-primitives + 多项式通道</div>
+        <div class="sm-row ok"><span class="idx">#1</span><span>Segment × Segment — 有理数行列式，共线重叠 / 端点接触 / 零长分类</span><span class="st">已落地</span></div>
+        <div class="sm-row ok"><span class="idx">#2</span><span>Segment × Circle/Arc — 判别式精确判号，弧段向量叉积过滤，切点单列</span><span class="st">已落地</span></div>
+        <div class="sm-row ok"><span class="idx">#3</span><span>Circle × Circle — 根轴法，外离/外切/相交/内切/内含/重合六分类</span><span class="st">已落地</span></div>
+        <div class="sm-row ok"><span class="idx">A2</span><span>Segment × Bézier — Sturm 根隔离 + Yun 重数判相切，端点根精确剥离，认证区间输出</span><span class="st">已落地</span></div>
+        <div class="sm-row todo"><span class="idx">A3</span><span>Bézier × Bézier — 细分 + 包围盒隔离 + Newton 精修</span><span class="st">下一步</span></div>
+        <div class="sm-row todo"><span class="idx">B</span><span>约束求解器 — 最小闭包 LM + SVD 或封装 libslvs；验收含分支手性不翻转</span><span class="st">待做</span></div>
+        <div class="sm-row todo"><span class="idx">C</span><span>2D 布尔装配 + sketch.json 重放 — 交点事件带来源与参数，拒绝容差聚类</span><span class="st">待做</span></div>
+      </div>
+      <div class="gate"><span class="gk">GATE</span><span>约束残差 &lt; 1e-10 且分支不翻转 · 多边形层对拍 Shapely（仅折线）· 曲线层合成解析解</span></div>
+    </div>
+  </div>
+
+  <div class="phase future">
+    <div class="ph-id"><div class="tag">P2</div><div class="date">planned</div></div>
+    <div class="ph-rail"><div class="node"></div></div>
+    <div class="ph-card">
+      <div class="ph-head"><h3>3D 网格 B-Rep</h3><span class="status planned">PLANNED</span></div>
+      <p class="ph-desc">三角网格 B-Rep：精确谓词布尔（交线解析 → 三角剖分 → 分类）、水密/流形修复、质量属性。拓扑变异走 ADR-0001 通道：规格先行 + 人工审查，或封装 manifold3d / OCCT。</p>
+      <div class="gate"><span class="gk">GATE</span><span>与 manifold3d 差分对拍体积一致 · Tier 4 默认域 100% / 边界域 ≥ 95%</span></div>
+    </div>
+  </div>
+
+  <div class="phase future">
+    <div class="ph-id"><div class="tag">#5</div><div class="date">future</div></div>
+    <div class="ph-rail"><div class="node"></div></div>
+    <div class="ph-card">
+      <div class="ph-head"><h3>曲线求交 CCI → 曲面求交 SSI</h3><span class="status future">FUTURE</span></div>
+      <p class="ph-desc">从纯数学叶子跨入三维拓扑连通判定的终极门槛：区间隔离 → Bézier Clipping / 区间牛顿 → Boehm 插入 → 区间分类 → 装配，全链路白盒对拍。相切奇异点与分支拓扑按年级规划。</p>
+      <div class="gate"><span class="gk">GATE</span><span>横截 / 相切 / 重合三类用例 · 相切点不丢不重 · 每一步可独立对拍</span></div>
+    </div>
+  </div>
+
+  <div class="phase future">
+    <div class="ph-id"><div class="tag">P4</div><div class="date">endgame</div></div>
+    <div class="ph-rail"><div class="node"></div></div>
+    <div class="ph-card">
+      <div class="ph-head"><h3>内核公共 API + STEP</h3><span class="status future">FUTURE</span></div>
+      <p class="ph-desc">算子库装配为公共 API（只暴露通过验证台的算子）；STEP AP203/214 读写与往返稳定性。参数化 TNP（特征历史锚点 + 邻接签名）另立 ADR，不在 P1 承诺。</p>
+      <div class="gate"><span class="gk">GATE</span><span>STEP 往返质量属性漂移 &lt; 容差 · API 冻结走 HITL 闸门</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 四支柱 -->
+<div class="sec"><span class="no">§2</span><h2>方法论四支柱</h2><span class="rule"></span><span class="en">The 4-Pillar Methodology</span></div>
+<div class="pillars">
+  <div class="pillar"><span class="p-no">PILLAR 01</span>
+    <h3>预言机先于内核 + 变异自审</h3>
+    <p>算子代码未动，黄金预测集先行。对验证台自身注入符号翻转、分母取错、守卫删除等变异，捕获率 100% 才允许准入。存活变异先查测试写虚，再查实现。</p>
+    <div class="p-meta">mutation kill rate = 24/24 · .pyc 复用坑已固化为回归断言</div>
+  </div>
+  <div class="pillar"><span class="p-no">PILLAR 02</span>
+    <h3>四层证据链</h3>
+    <p>Tier 1 代数不变量 · Tier 2 解析真值 · Tier 3 外部多路对拍 · Tier 4 退化扰动平面。拒绝单一 assert_near；容差由用例自己声明。</p>
+    <div class="p-meta">Tier 3 未启用（缺 shapely/manifold3d，口径已写死：Shapely 只对折线）· Tier 5 重放待 P1</div>
+  </div>
+  <div class="pillar"><span class="p-no">PILLAR 03</span>
+    <h3>退化五族语料库</h3>
+    <p>T 相切 · C 重合 · S sliver · I 自交/非流形 · N 数值抵消。每条带触发信号、修复模式与最小可执行用例，零死链，可被流水线按触发词检索。</p>
+    <div class="p-meta">degeneracy/index.json · 17 条 · 语料资产 &gt; 算法代码</div>
+  </div>
+  <div class="pillar"><span class="p-no">PILLAR 04</span>
+    <h3>EntityRef 引用契约</h3>
+    <p>确定性重放 + tombstone 显式失效 + split/merge 派生谱系。精确判定与容差语义分工明确：谓词回答符号，容差回答「算不算同一件事」，两者不可互替。</p>
+    <div class="p-meta">v0.2 · ADR-0004：确定性重放 ≠ 拓扑持久命名（TNP）</div>
+  </div>
+</div>
+
+<!-- 非目标 -->
+<div class="sec"><span class="no">§3</span><h2>明确的非目标</h2><span class="rule"></span><span class="en">Explicit Non-Goals</span></div>
+<div class="nongoals">
+  <ul>
+    <li>不训练端到端 Text/Image-to-CAD 大模型，只做底层几何验证器</li>
+    <li>不复刻 OCCT 全量工业长尾；未建证据链前不堆 3D 特判</li>
+    <li>不把容差当全局魔法常量；ToleranceContext 显式传递</li>
+    <li>P1 不自研符号图分解约束求解器（局部 LM + SVD 或 libslvs）</li>
+    <li>不追 3D 变半径圆角 / 顶点混合、偏移抽壳自交裁剪</li>
+    <li>不做直接建模（推拉面 + 删面自愈）</li>
+    <li>不做 STEP 脏几何修复（Shape Healing）</li>
+    <li>不做 GPU 隐式场 / SDF 路线</li>
+  </ul>
+</div>
+
+<!-- 田野笔记 -->
+<div class="sec"><span class="no">§4</span><h2>田野笔记 · 预言机抓到的真事故</h2><span class="rule"></span><span class="en">Field Notes</span></div>
+<div class="notes">
+  <div class="note"><span class="n-tag">2026-11-09 · ORACLE</span><b>Boehm 分母抄错</b>：α 分母按记忆写成 U[i+p+1]−U[i]，几何不变性 oracle 当场判红。正确分母 U[i+p]−U[i] 已固化为解析反例与变异项。</div>
+  <div class="note"><span class="n-tag">2026-11-09 / 11-18 · MUTATION</span><b>两次存活变异</b>：守卫被绕过后落入下游兜底异常，测试只匹配宽泛消息仍然通过。断言收紧到守卫自己的消息后被杀——先怀疑测试写虚。</div>
+  <div class="note"><span class="n-tag">2026-11-09 · RUNTIME</span><b>.pyc 复用坑</b>：等长变异同秒恢复，CPython (mtime,size) 校验复用变异后字节码——磁盘已恢复、行为仍坏。禁用字节码写入 + 清除 .pyc 已成硬纪律。</div>
+  <div class="note"><span class="n-tag">2026-11-20 · STATIC + AUDIT</span><b>SC005 首次实战拦截</b>跨算子私有 import；变异审计证明 h²&lt;0 防御守卫是不可达死代码（分类已在有理数上保证 h²≥0）——删除并注释推导。</div>
+  <div class="note"><span class="n-tag">2026-11-20 · A2 AUDIT</span><b>不可观察的 gcd 快路径</b>：线段×Bézier 里「曲线恰过线段端点」的 gcd 识别，变异审计证明跳过后行为完全等价（触界由闭包接受、变号由细化收敛）——按死代码纪律删除。另一存活变异暴露 miss 测试没覆盖 rmin&gt;d² 早退，补「有根但 s 全在线段外」变体后捕获。</div>
+</div>
+
+<footer>
+  <div>
+    X2CAD-RM-001 · v0.4 · 2026-11-20<br>
+    决策记录：ADR-0001 范围纪律 / 0002 P0 验证台 / 0003 派生谱系 / 0004 确定性 ≠ TNP
+  </div>
+  <div>
+    <a href="https://github.com/DMithrandir/x2CAD" target="_blank" rel="noopener">github.com/DMithrandir/x2CAD</a><br>
+    <a href="https://dmithrandir.github.io/x2cad/" target="_blank" rel="noopener">dmithrandir.github.io/x2cad</a>
+  </div>
+</footer>
+
+</div>
+</div>
+</body>
+</html>
