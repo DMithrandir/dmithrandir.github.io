@@ -15,16 +15,16 @@ AI 与 CAD 交叉领域的瓶颈，已经从“能不能生成几何”转到“
 - **曲线算子**：B 样条 / NURBS 求值、各阶导数、全局插值（参数化 + 节点平均 + 残差检查）。
 - **节点操作**：Boehm 节点插入（单次 / 重复，含 NURBS）、按参数分割、Bézier 升阶。
 - **微分几何与 2D**：自适应 Gauss 弧长、单位切矢、曲率；两线段夹角处的相切圆弧。
-- **2D 求交**：解析闭式通道完成——线段×线段（精确有理数判定；横截、端点接触、共线重叠三分类）、线段×圆弧（判别式精确判号，切点单列）、圆×圆（根轴法，外离/外切/相交/内切/内含/重合六分类），弧段过滤统一用向量叉积，并给出跨算子链的精确坐标 `point_exact`。
-- **验证台**：SC001–SC008 静态检查、65 条 conformance 用例、21 个变异注入（捕获率 21/21）、Tier 4 扰动平面。
+- **2D 求交**：解析闭式通道（线段×线段、线段×圆弧、圆×圆）+ 多项式通道开启（线段×Bézier：Sturm 根隔离、重数判相切、认证区间），判定全部精确、坐标浮点可认证。
+- **验证台**：SC001–SC008 静态检查、74 条 conformance 用例、24 个变异注入（捕获率 24/24）、Tier 4 扰动平面。
 - **退化语料**：五族 17 条，每条绑定一个可执行用例。
 - **EntityRef v0.2**：确定性 id、tombstone 拒绝，以及 1-to-N / N-to-1 谱系（split / merge，序号或参数寻址）。
 
 | 项 | 现状 |
 |---|---|
-| oracle 测试 | 289 例 |
-| conformance | 65 cases / 65 checks |
-| 变异自审 | 21/21 = 100% |
+| oracle 测试 | 311 例 |
+| conformance | 74 cases / 74 checks |
+| 变异自审 | 24/24 = 100% |
 | 静态检查 | 0 findings |
 
 证据文件（`verify/evidence/report.json`、`verify/audit/mutation_report.json`）随代码一起提交，记录每一批代码当时通过的内容。
@@ -37,7 +37,7 @@ AI 与 CAD 交叉领域的瓶颈，已经从“能不能生成几何”转到“
 git clone https://github.com/DMithrandir/x2CAD.git
 cd x2CAD
 
-python -m pytest          # 289 例 oracle 测试
+python -m pytest          # 311 例 oracle 测试
 python -m verify          # 静态检查 + 覆盖率 + conformance
 python -m verify.mutation # 变异注入与捕获率
 ```
@@ -50,10 +50,11 @@ Tier 3 的外部对拍（Shapely / OCCT）还没有接入，本机缺依赖；�
 
 P1 已经开工：解析闭式求交通道完成（线段×线段、线段×圆弧、圆×圆），全部精确判号，并补上跨算子链的精确坐标契约。变异审计还抓到一个有价值的发现：原写的防御性守卫是不可达死代码，静态检查器也在真实开发中拦下了跨算子私有 import。下一步是直线-Bézier 与 Bézier-Bézier 求交，再拼 2D 约束求解与布尔装配。三维曲线/曲面求交（CCI / SSI）排在后面。
 
-## 链接
+P1 已经开工：解析闭式求交三通道完成，线段×Bézier（Sturm 根隔离 + 重数判相切）也已落地。变异审计连出两个有价值的发现：不可达死代码守卫（数学上不可能触发，删除）与不可观察的 gcd 快路径（行为完全等价，删除）——「看起来更精确的代码」若不改变可观察行为就是噪声；静态检查器也在真实开发中拦下了跨算子私有 import。下一步是 Bézier×Bézier 求交收官多项式通道，再拼 2D 约束求解与布尔装配。三维曲线/曲面求交（CCI / SSI）排在后面。
 
 - 仓库：[github.com/DMithrandir/x2CAD](https://github.com/DMithrandir/x2CAD)
 - 阶段 review：[2026-11-20-stage-review.md](https://github.com/DMithrandir/x2CAD/blob/main/docs/reviews/2026-11-20-stage-review.md)
+- 可视化路线图：[roadmap.html](https://github.com/DMithrandir/x2CAD/blob/main/docs/roadmap.html)
 - 设计文档与决策记录：[docs/plans](https://github.com/DMithrandir/x2CAD/blob/main/docs/plans/2026-08-20-x2cad-kernel-design.md) 与 [docs/adr](https://github.com/DMithrandir/x2CAD/tree/main/docs/adr)
 
 ---
