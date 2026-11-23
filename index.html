@@ -1,0 +1,434 @@
+---
+layout: null
+---
+<!doctype html>
+<!-- 设计 B（深色工作台向）· kind software · deal: hero centred / palette lunar-grey-bronze（第三张，brief 要两种不同设计）/
+     pairing manrope / nav-cards / footer-columns / close-word / surface-pairs / buttons solid / mark arc /
+     moments counter-rolls(#numbers) + iris-opens(#projects) / effect: hero 窗口 painterly-landscape（唯一 effect）/
+     主行动：读最新一篇（nav·hero·close） -->
+<html lang="zh-CN" data-type="software" data-radius="soft" data-ground="painting" data-buttons="solid" data-motion>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>灰度 · 个人工作学习记录</title>
+<meta name="description" content="深色工作台版的灰度博客：">
+<meta property="og:type" content="website">
+<meta property="og:title" content="灰度 · AI 治理与系统笔记">
+<meta property="og:description" content="研究笔记、AI 工程等">
+<meta property="og:image" content="share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/b/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#111111">
+<link rel="canonical" href="https://dmithrandir.github.io/">
+<meta name="site-kind" content="software">
+<meta name="page-type" content="software">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..700&family=JetBrains+Mono:wght@400..500&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/b/system.css">
+<link rel="stylesheet" href="assets/b/ui/cards.css">
+<link rel="stylesheet" href="assets/b/motion/motion.css">
+<link rel="stylesheet" href="assets/b/backgrounds/backgrounds.css">
+<link rel="stylesheet" href="assets/b/layout/layout.css">
+<link rel="stylesheet" href="assets/b/icons/icon.css">
+<style>
+:root {
+  --p-bg: #111111; --p-surface: #1c1c1c; --p-ink: #f2f2f2; --p-muted: #8f8f8f;
+  --p-accent: #a08672; --p-accent-ink: #111111; --p-action: #a08672; --p-action-ink: #111111;
+  --p-inv-bg: #f2f2f2; --p-inv-surface: #e0e0e0; --p-inv-ink: #111111; --p-inv-muted: #5c5c5c;
+  --p-inv-accent: #a08672; --p-inv-accent-ink: #111111; --p-inv-action: #a08672; --p-inv-action-ink: #111111;
+  --font-display: "Manrope", system-ui, sans-serif;
+  --font-text: "Manrope", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --display-weight: 500;
+  --display-tracking: -0.035em;
+  --display-tracking-xl: -0.045em;
+  --ly-scale: 0.97;
+}
+/* zh-CN 适配：拉丁面之后补中文字形（报告记录；不改动发牌 :root 的其余行） */
+:root { --font-display: "Manrope", "Noto Sans SC", system-ui, sans-serif; --font-text: "Manrope", "Noto Sans SC", system-ui, sans-serif; }
+</style>
+<link rel="stylesheet" href="assets/b/ui/base.css">
+<link rel="stylesheet" href="assets/b/ui/doc/fragment.css">
+<link rel="stylesheet" href="assets/b/ui/stat/fragment.css">
+<script>document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-enter-done'),700)</script>
+<script src="assets/b/backgrounds/backgrounds.js"></script>
+<script>document.documentElement.classList.add('mo-js');setTimeout(()=>document.documentElement.classList.add('mo-safe'),2500)</script>
+<link rel="modulepreload" href="assets/b/moments/moments.js"><link rel="modulepreload" href="assets/b/moments/lib.js"><link rel="modulepreload" href="assets/b/moments/counter-rolls/moment.js"><link rel="modulepreload" href="assets/b/moments/iris-opens/moment.js">
+<style>
+/* ── hero 窗口的画框：painterly-landscape 的 CSS 兜底（demo 配方，WebGL 失败/静止时的画面） ── */
+.hero__window { background:
+  radial-gradient(120% 60% at 70% 118%, #6f7f3a 0 40%, transparent 41%),
+  radial-gradient(90% 50% at 10% 108%, #57703f 0 42%, transparent 43%),
+  radial-gradient(80% 40% at 60% 92%, #9fb2c4 0 40%, transparent 41%),
+  linear-gradient(#5f93cc, #a9c7e4 70%, #c8d6dd); }
+.d-win--dark .d-win__body { grid-template-columns: 250px 1fr; min-height: 420px; }
+.d-win--dark .d-win__bar b { color: #eceef0; font-weight: 500; } .d-win--dark .d-win__bar .sp { flex: 1; }
+/* ── hero 阅读窗口（客户端屏幕，手绘 d-*） ── */
+.d-win { background: #17191c; color: #eceef0; border-radius: 12px; overflow: hidden; font: 400 14px/1.4 var(--font-text);
+         box-shadow: 0 0 0 1px rgb(255 255 255 / .08), 0 30px 70px -30px rgb(0 0 0 / .8); text-align: left; }
+.d-win__bar { display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 14px; border-bottom: 1px solid rgb(255 255 255 / .07); font-size: 13px; color: #9aa0a6; }
+.d-win__dots { display: flex; gap: 6px; } .d-win__dots i { width: 10px; height: 10px; border-radius: 50%; background: #3a3e43; }
+.inbox { border-right: 1px solid rgb(255 255 255 / .07); padding: 10px; display: grid; align-content: start; gap: 2px; }
+.inbox .q { height: 34px; margin-bottom: 6px; border-radius: 9px; background: rgb(255 255 255 / .06); display: flex; align-items: center; padding: 0 10px; color: #7d8389; font-size: 13px; }
+.inbox .t { display: grid; grid-template-columns: 30px 1fr auto; gap: 1px 10px; padding: 9px 8px; border-radius: 9px; font-size: 13px; }
+.inbox .t.is-on { background: rgb(255 255 255 / .07); }
+.inbox .t i { grid-row: 1 / span 2; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font: 600 13px/1 var(--font-text); font-style: normal; color: #17191c; }
+.inbox .t b { font-weight: 500; color: #eceef0; } .inbox .t time { color: #7d8389; font-size: 13px; }
+.inbox .t span { grid-column: 2 / -1; color: #8d9399; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.convo { display: grid; min-width: 0; align-content: start; }
+.hero__window .d-chat { padding: 14px 18px; gap: 8px; }
+.d-chat { display: grid; gap: 10px; align-content: start; padding: 18px; font-size: 14px; }
+.d-msg { max-width: 78%; padding: 10px 14px; border-radius: 16px; background: rgb(255 255 255 / .07); line-height: 1.45; }
+.d-msg--me { justify-self: end; background: #f2f2f0; color: #121314; border-bottom-right-radius: 6px; }
+.d-msg--bot { border-bottom-left-radius: 6px; background: #22262b; color: #e9ecee; }
+.d-msg small { display: block; margin-top: 4px; font-size: 13px; opacity: .6; }
+.d-msg mark { background: transparent; color: var(--p-accent); font-weight: 500; }
+.d-tool { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #9aa0a6; }
+.d-tool::before { content: ""; width: 14px; height: 14px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; }
+.acts { display: flex; gap: 8px; } .acts span { height: 30px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; font-size: 13px; font-weight: 500; background: #f2f2f0; color: #17191c; }
+.acts span + span { background: rgb(255 255 255 / .08); color: #e9ecee; }
+@media (max-width: 639px) { .hero__window .d-win__bar .sp ~ span { display: none; } .d-win--dark .d-win__body { grid-template-columns: 1fr; } .inbox { display: none; } }
+/* ── nav-cards 的三张手绘线卡 ── */
+.menu-card .panel { --p-h: 200px; background:
+  radial-gradient(80% 70% at 20% 0%, color-mix(in oklab, var(--p-surface) 80%, white), transparent 70%),
+  var(--p-bg); }
+.menu-card .d-card { background: #1c1c1c; color: #eceef0; border-radius: 12px; padding: 14px 16px; font: 400 14px/1.4 var(--font-text); text-align: left;
+          box-shadow: 0 0 0 1px rgb(255 255 255 / .08), 0 18px 44px -20px rgb(0 0 0 / .8); }
+.menu-card .d-card h5 { margin: 0 0 4px; font: 600 14px/1.3 var(--font-text); }
+.menu-card .d-card__row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.menu-card .d-note__line { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 13px; color: #aeb3b8; border-top: 1px solid rgb(255 255 255 / .07); }
+.menu-card .d-note__line:first-of-type { border-top: 0; }
+.menu-card .d-note__line i { width: 18px; height: 18px; border-radius: 50%; flex: none; display: grid; place-items: center; background: rgb(255 255 255 / .08); color: #d8cfc6; font-style: normal; font-size: 13px; font-weight: 700; }
+.menu-card .d-note__line b { font-weight: 500; color: #eceef0; }
+/* ── 数字行（counter-rolls 宿主） ── */
+#numbers .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-6); }
+#numbers .stat p.t-stat { margin: 0 0 var(--s-2); }
+@media (max-width: 1023px) { #numbers .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* ── tabs 屏幕 ── */
+#lines .frame--split { --ratio: 0px; min-height: 520px; }
+/* 手绘深色卡（tabs 屏幕与目录卡共用） */
+.d-card--dark { background: #1c1c1c; color: #eceef0; border-radius: 12px; padding: 16px 18px; font: 400 14px/1.5 var(--font-text); text-align: left;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / .08), 0 18px 44px -20px rgb(0 0 0 / .8); }
+.d-card--dark h5 { margin: 0 0 6px; font: 600 15px/1.3 var(--font-text); }
+.d-card--dark .d-card__row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.d-card--dark .d-tag { height: 22px; padding: 0 10px; border-radius: 99px; display: inline-flex; align-items: center; font-size: 13px; background: rgb(255 255 255 / .08); color: #d8cfc6; }
+.d-card--dark .d-note__line { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 13px; color: #aeb3b8; border-top: 1px solid rgb(255 255 255 / .07); }
+.d-card--dark .d-note__line:first-of-type { border-top: 0; }
+.d-card--dark .d-note__line i { width: 18px; height: 18px; border-radius: 50%; flex: none; display: grid; place-items: center; background: rgb(255 255 255 / .08); color: #d8cfc6; font-style: normal; font-size: 12px; font-weight: 700; }
+.d-card--dark .d-note__line b { font-weight: 500; color: #eceef0; }
+/* ── 最近更新 ── */
+#latest .rows > li { padding-block: var(--s-5); }
+#latest .rows a.rows__name { color: var(--ink); }
+/* ── iris 面板（基色深面板，反相带内） ── */
+#contact .close__word { line-height: 1.06; }
+#projects .mo-panel { background: #111111; border-radius: var(--r-lg); padding: var(--s-7); }
+#projects .p-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-2) var(--s-5); padding-block: var(--s-4); border-bottom: 1px solid rgb(255 255 255 / .12); }
+#projects .p-row:last-child { border-bottom: 0; }
+#projects .p-row h3 { margin: 0; font: 500 var(--t-card)/1.3 var(--font-text); color: #f2f2f2; }
+#projects .p-row p { grid-column: 1; margin: 0; color: #b8b8b8; font-size: var(--t-small); }
+#projects .p-row .tag { grid-row: 1; grid-column: 2; align-self: start; height: 22px; padding: 0 10px; border-radius: 99px; display: inline-flex; align-items: center; font-size: 13px; background: rgb(255 255 255 / .08); color: #d8cfc6; white-space: nowrap; }
+/* 手机端节奏 */
+@media (max-width: 639px) {
+  #numbers .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-5); }
+  #projects .mo-panel { padding: var(--s-5); }
+  #lines .frame--split { min-height: 440px; }
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav__bar">
+    <a class="skip-link" href="#top">跳到正文</a>
+    <a class="nav__logo" href="#top"><span class="mark" data-mark="arc" aria-hidden="true"></span>灰度</a>
+    <nav class="nav__links" aria-label="主导航">
+      <div class="nav__item">
+        <a class="nav__link" href="#lines">三条线 <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="nav__menu">
+          <div class="wrap grid">
+            <a class="menu-card span-4" href="#lines">
+              <div class="panel"><div class="stage stage--fade-br"><div class="at-corner">
+                <div class="d-card" aria-hidden="true">
+                  <div class="d-card__row"><h5>审核策略</h5><span>4 篇</span></div>
+                  <div class="d-note__line"><i>✓</i><span>判定链路与灰区案例</span></div>
+                  <div class="d-note__line"><i>✓</i><span>知识系统 · Agentic 审核</span></div>
+                </div>
+              </div></div></div>
+              <span class="t-card">审核策略</span>
+              <span>怎么判定，口径怎么立</span>
+            </a>
+            <a class="menu-card span-4" href="#lines">
+              <div class="panel"><div class="stage stage--fade-br"><div class="at-corner">
+                <div class="d-card" aria-hidden="true">
+                  <div class="d-card__row"><h5>研究笔记</h5><span>8 篇</span></div>
+                  <div class="d-note__line"><i>✓</i><span>噪声与 MCMC，逐条复核</span></div>
+                  <div class="d-note__line"><i>✓</i><span>配一个可拖的实验台</span></div>
+                </div>
+              </div></div></div>
+              <span class="t-card">研究笔记</span>
+              <span>六年前的论文，重算重跑</span>
+            </a>
+            <a class="menu-card span-4" href="#lines">
+              <div class="panel"><div class="stage stage--fade-br"><div class="at-corner">
+                <div class="d-card" aria-hidden="true">
+                  <div class="d-card__row"><h5>AI 工程</h5><span>1 篇</span></div>
+                  <div class="d-note__line"><i>✓</i><span>上下文、工具、评测</span></div>
+                  <div class="d-note__line"><i>✓</i><span>失败形态，自己踩坑</span></div>
+                </div>
+              </div></div></div>
+              <span class="t-card">AI 工程</span>
+              <span>模型之外的那一层</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="nav__item"><a class="nav__link" href="#latest">最近更新</a></div>
+      <div class="nav__item"><a class="nav__link" href="#projects">项目</a></div>
+      <div class="nav__item"><a class="nav__link" href="#faq">问答</a></div>
+    </nav>
+    <div class="nav__actions">
+      <a class="btn btn--primary" href="#latest">读最新一篇</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-label="菜单"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO centred：胶囊 + 居中标题 + 阅读窗口升起（app-frame 在 hero 内） -->
+  <section class="hero hero--centred" data-enter aria-labelledby="hero-h">
+    <div class="wrap"><div class="hero-text">
+      <div class="hero__c">
+        <a class="pill" href="#latest"><span>新篇 · AI Agent 审核架构</span><span class="muted">2026-11-16</span></a>
+        <h1 id="hero-h" aria-label="AI 治理与系统笔记"><span class="ly-mark" aria-hidden="true"></span> AI 治理与系统笔记</h1>
+        <p class="hero__lead">日常工作与学习记录</p>
+        <div class="btn-row"><a class="btn btn--primary" href="#latest">读最新一篇</a><a class="btn btn--secondary" href="https://dmithrandir.github.io/feed.xml">订阅 RSS</a></div>
+      </div>
+      <div class="hero__window" data-fx="painterly-landscape" data-fx-seed="7" role="img" aria-label="灰度的阅读窗口：文章列表在左，打开的文章在右，关键句被划记">
+        <div class="ly-piece d-win d-win--dark" aria-hidden="true">
+          <div class="d-win__bar"><span class="d-win__dots"><i></i><i></i><i></i></span><span><b>灰度</b> · /governance/ai-agent-audit/</span><span class="sp"></span><span>长文 · 三条线</span></div>
+          <div class="d-win__body">
+            <div class="inbox">
+              <div class="q">搜标题、系列或口径</div>
+              <div class="t is-on"><i style="background:#c9a284">治</i><b>AI Agent 审核架构</b><time>11-16</time><span>受限状态机 · 只接 5% 灰区</span></div>
+              <div class="t"><i style="background:#9db3a4">研</i><b>08 · 多采样何时帮倒忙</b><time>10-26</time><span>同一个不等式，换了坐标</span></div>
+              <div class="t"><i style="background:#a9b8cc">工</i><b>Harness Engineering</b><time>10-25</time><span>模型之外的那一层</span></div>
+            </div>
+            <div class="convo">
+              <div class="d-chat" data-ly-steps="900">
+                <div class="d-msg d-msg--me">单靠模型一次性看图，误封率高，还查不出隐蔽违规。<small>00 · 两个方向都撞墙</small></div>
+                <div class="d-tool" data-step>把 Agent 锁进确定性取证流水线：预设路径、按步查证</div>
+                <div class="d-msg d-msg--bot" data-step>跑题、超时或成本触顶，系统立即熔断，证据链打包交人工。Agent 只接<mark>漏斗末端那 5%</mark>：拿不准，且判错不可逆。<small>机制 · 受限状态机</small></div>
+                <div class="acts" data-step><span>读全文</span><span>看目录</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- #numbers counter-rolls（moment 1）：真实数字 -->
+  <section class="section" id="numbers" aria-labelledby="numbers-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="numbers-h">写了些什么 <span class="muted">截至 2026 年 11 月。</span></h2>
+      </div>
+      <div class="grid" data-moment="counter-rolls" style="margin-top:var(--s-7);">
+                <div class="stat span-3"><p class="t-stat">13</p><p class="t-small muted">篇长文，写完就发</p></div>
+        <div class="stat span-3"><p class="t-stat">4</p><p class="t-small muted">年多平台内容安全与治理实践</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- #lines tabs-tour：三条线 -->
+  <section class="section" id="lines" aria-labelledby="lines-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <div class="span-5">
+          <div class="section-head">
+            <h2 id="lines-h">速览</h2>
+            <p class="t-lead">点一条线，看它在读什么。</p>
+          </div>
+          <div class="tabs" role="tablist" aria-label="内容线">
+                        <button class="tab is-on" role="tab" id="tab-1" aria-selected="true" aria-controls="panel-1 screen-1">审核策略</button>
+            <button class="tab" role="tab" id="tab-2" aria-selected="false" aria-controls="panel-2 screen-2">研究笔记</button>
+            <button class="tab" role="tab" id="tab-3" aria-selected="false" aria-controls="panel-3 screen-3">AI 工程</button>
+          </div>
+          <div class="tab-panels">
+                        <div id="panel-1" role="tabpanel" aria-labelledby="tab-1">
+              <p>判定链路、灰区案例、知识系统、Agentic 审核。总纲一篇，长文三篇，按链路 → 判定 → 知识 → Agentic 读。</p>
+              <p><a class="link" href="https://dmithrandir.github.io/trust-and-safety/">看审核策略的 4 篇</a></p>
+            </div>
+            <div id="panel-2" role="tabpanel" aria-labelledby="tab-2" hidden>
+              <p>MCMC 与噪声注入：从相对熵不等式讲到四组对照实验，再反过来做成审计工具。八篇已收尾，配一个可拖的交互实验台。</p>
+              <p><a class="link" href="https://dmithrandir.github.io/research/">看研究笔记的 8 篇</a></p>
+            </div>
+            <div id="panel-3" role="tabpanel" aria-labelledby="tab-3" hidden>
+              <p>模型之外的那一层：上下文、工具、评测与失败形态。三本实证账，11 个生产级 harness 的源码解剖，四条工程准则。</p>
+              <p><a class="link" href="https://dmithrandir.github.io/series/ai-harness/">看 AI 工程系列</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="frame frame--split span-6 start-7">
+          <div class="stage stage--fade-br">
+            <div id="screen-1" class="at-rise fit to-edge" style="--fit-max:440px; --ay:56px;">
+              <div class="ui ui-doc" data-ui="doc">
+                <article class="ui-doc__page">
+                  <div class="ui-doc__label">治理框架 · 2026-11-02</div>
+                  <div class="ui-doc__title">SSOT 与迭代流程</div>
+                  <div class="ui-doc__text">同一条内容，审核员、策略和客服引用了三份都算有效的文件。SSOT 要收窄的是<mark class="ui-doc__mark is-on">「哪一份能被修改」</mark>。</div>
+                  <div class="ui-doc__text">迭代流程要保证改完之后视图不散：<mark class="ui-doc__mark" data-kind="口径" data-msg="判定口径 v3 已并入知识库" data-where="knowledge/判定口径.md">旧口径自动指向新版本</mark>。</div>
+                  <div class="ui-doc__text">以谁为准，不再靠问人。</div>
+                </article>
+                <aside class="ui-doc__note ui-panel is-on" aria-live="polite">
+                  <div class="ui-doc__kind"><span class="ui-doc__dot"></span><span data-doc-kind>冲突</span></div>
+                  <div class="ui-doc__msg" data-doc-msg>三份文件都算有效，判定依据说不清。</div>
+                  <div class="ui-doc__where" data-doc-where>一次申诉 · 第 11 篇</div>
+                </aside>
+              </div>
+            </div>
+            <div id="screen-2" class="at-rise fit to-edge" style="--fit-max:440px; --ay:56px;" hidden>
+              <div class="ui ui-panel ui-stat" data-ui="stat" data-from="3" data-to="4" data-suffix=" 处">
+                <div class="ui-stat__head">
+                  <div class="ui-stat__top">
+                    <span class="ui-stat__label">六年复盘 · 抓出的错误</span>
+                    <span class="ui-stat__range">2020 → 2026<svg class="ui-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="m4.5 6.5 3.5 3.5 3.5-3.5"/></svg></span>
+                  </div>
+                  <div class="ui-stat__line">
+                    <span class="ui-stat__num" data-stat-num>4 处</span>
+                    <span class="ui-chip ui-chip--plain ui-stat__delta"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 9.5v-7M3 5.5l3-3 3 3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>1 处</span>
+                    <span class="ui-stat__sub">第 07 篇复核时新增</span>
+                  </div>
+                </div>
+                <div class="ui-stat__chart">
+                  <svg class="ui-stat__svg" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+                    <path class="ui-stat__grid" d="M0 30.5H400M0 60.5H400M0 90.5H400"/>
+                    <g class="ui-stat__bars"><rect rx="3" x="0.00" y="49.04" width="21.14" height="70.96"/><rect rx="3" x="29.14" y="40.86" width="21.14" height="79.14"/><rect rx="3" x="58.29" y="44.95" width="21.14" height="75.05"/><rect rx="3" x="87.43" y="36.76" width="21.14" height="83.24"/><rect rx="3" x="116.57" y="42.22" width="21.14" height="77.78"/><rect rx="3" x="145.71" y="34.04" width="21.14" height="85.96"/><rect rx="3" x="174.86" y="38.13" width="21.14" height="81.87"/><rect rx="3" x="204.00" y="29.94" width="21.14" height="90.06"/><rect rx="3" x="233.14" y="35.40" width="21.14" height="84.60"/><rect rx="3" x="262.29" y="25.85" width="21.14" height="94.15"/><rect rx="3" x="291.43" y="31.31" width="21.14" height="88.69"/><rect rx="3" x="320.57" y="23.12" width="21.14" height="96.88"/><rect rx="3" x="349.71" y="27.21" width="21.14" height="92.79"/><rect rx="3" x="378.86" y="16.30" width="21.14" height="103.70"/></g>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div id="screen-3" class="at-rise fit" style="--fit-max:400px; --ay:40px;" hidden>
+              <div class="d-card d-card--dark" aria-hidden="true">
+                <div class="d-card__row"><h5>Harness Engineering</h5><span class="d-tag">工程笔记</span></div>
+                <div class="d-note__line"><i>1</i><span><b>三本实证账</b> · 质量 / 可维护性 / 技术债务</span></div>
+                <div class="d-note__line"><i>2</i><span><b>11 个</b>生产级 harness 源码解剖</span></div>
+                <div class="d-note__line"><i>3</i><span><b>7 个</b>正交子系统 D1–D7</span></div>
+                <div class="d-note__line"><i>4</i><span><b>4 条</b>能进主干的工程准则</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- #latest surface 带：最近更新（左列表，右目录卡） -->
+  <section class="section ground-surface" id="latest" aria-labelledby="latest-h">
+    <div class="wrap">
+      <div class="section-head section-head--row">
+        <h2 id="latest-h">最近更新</h2>
+        <a class="link" href="https://dmithrandir.github.io/blog/">全部文章</a>
+      </div>
+      <div class="grid grid--top">
+        <ul class="rows span-6">
+                    <li><a class="rows__name" href="https://dmithrandir.github.io/governance/ai-agent-audit/">AI Agent 审核架构：把黑盒单次推理，改造成受限的状态机流水线</a><span class="rows__value">治理 · 11-16</span></li>
+          <li><a class="rows__name" href="https://dmithrandir.github.io/governance/12-appeal/">误伤、漏放与申诉：内容治理的「不可能三角」与联合口径设计</a><span class="rows__value">治理 · 11-16</span></li>
+          <li><a class="rows__name" href="https://dmithrandir.github.io/governance/11-ssot/">SSOT 与迭代流程：规则、判例和知识怎么不各说各话</a><span class="rows__value">治理 · 11-02</span></li>
+          <li><a class="rows__name" href="https://dmithrandir.github.io/mcmc/08-test-time-scaling/">08 · 多采样什么时候帮倒忙</a><span class="rows__value">研究 · 10-26</span></li>
+          <li><a class="rows__name" href="https://dmithrandir.github.io/mcmc/07-reverse-noise/">07 · 反向噪声：把否掉的那一支做成监控</a><span class="rows__value">研究 · 10-26</span></li>
+        </ul>
+        <div class="span-6 start-7" role="img" aria-label="三条线的目录：审核策略 4 篇、研究笔记 8 篇、AI 工程 1 篇">
+          <div class="d-card--dark">
+            <div class="d-card__row"><h5>目录 · 13 篇</h5><span class="d-tag">RSS 全文</span></div>
+            <div class="d-note__line"><i>✓</i><span><b>审核策略</b> · 4 篇 · 最新 11-16</span></div>
+            <div class="d-note__line"><i>✓</i><span><b>研究笔记</b> · 8 篇 · 最新 10-26</span></div>
+            <div class="d-note__line"><i>✓</i><span><b>AI 工程</b> · 1 篇 · 10-25</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- #projects 反相浅带 + iris-opens（moment 2）：内嵌基色面板 -->
+  <section class="section ground-inverse" id="projects" data-moment="iris-opens" data-moment-opts='{"from": "base"}' aria-labelledby="projects-h">
+    <div class="wrap">
+      <div class="section-head section-head--row">
+        <h2 id="projects-h">三个机制设计 <span class="muted">都在真实业务里跑过。</span></h2>
+        <a class="link" href="https://dmithrandir.github.io/projects/">全部项目</a>
+      </div>
+      <div class="mo-panel">
+                <div class="p-row">
+          <h3>灰度案例判定框架</h3>
+          <span class="tag">机制设计 · 2025</span>
+          <p>把「判不了的案例」从感觉变成统计：双层判定、三段决策、9 类归因编码，两个模型加一位人工三票多数决。</p>
+        </div>
+        <div class="p-row">
+          <h3>政策级联与培训自动化</h3>
+          <span class="tag">流程设计 · 2022 – 2025</span>
+          <p>多市场政策下发与培训走同一条流水线：政策拆成可执行判据，判据进知识库，知识库驱动培训与抽检。</p>
+        </div>
+        <div class="p-row">
+          <h3>审核知识系统（单一事实来源）</h3>
+          <span class="tag">系统设计 · 2023 – 2025</span>
+          <p>散落在文档、群聊与口头约定里的判定口径，收敛成唯一可检索的事实来源；改完全站视图不散。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- #faq -->
+  <section class="section" id="faq" aria-labelledby="faq-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <div class="span-5">
+          <h2 id="faq-h">问答</h2>
+          <p class="t-lead">常被问到的五件事。</p>
+          <p><a class="link" href="https://github.com/DMithrandir">在 GitHub 上找我</a></p>
+        </div>
+        <div class="faq span-6 start-7">
+                    <div class="faq__item"><h3>多久更新一篇？</h3><p>不定期。长文为主，一篇常常写几个月；写完就发，RSS 第一时间可读。</p></div>
+          <div class="faq__item"><h3>除了 RSS 还有别的订阅方式吗？</h3><p>目前只有 RSS，全文输出，任意阅读器可订。</p></div>
+          <div class="faq__item"><h3>文章和代码可以转载吗？</h3><p>可以。站点内容按 MIT 许可发布，注明出处和日期。</p></div>
+          <div class="faq__item"><h3>「灰度」指的是什么？</h3><p>审核里最难的那些灰区案例：判不了、判错代价高。这个博客写的就是怎么把它们变成机制。</p></div>
+          <div class="faq__item"><h3>内容代表任职机构吗？</h3><p>不代表。基于个人实践，与任职机构无关。</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer closing" id="contact" style="--hm: 2" aria-labelledby="close-h">
+  <div class="wrap">
+    <div class="closing__cta close--word">
+      <div class="section-head--split">
+        <div><h2 id="close-h">从最新一篇读起</h2><p class="t-lead">不定期，长文为主，RSS 全文输出。</p></div>
+        <a class="btn btn--primary" href="#latest">读最新一篇</a>
+      </div>
+      <p class="close__word" aria-hidden="true">灰度</p>
+    </div>
+    <div class="closing__links">
+      <div class="grid">
+        <div class="span-4 stack-4">
+          <a class="nav__logo" href="#top"><span class="mark" data-mark="arc" aria-hidden="true"></span>灰度</a>
+          <p class="footer__lede">AI 内容治理、模型评测与工程笔记。</p>
+        </div>
+        <div class="span-2 footer__col"><h3>三条线</h3><ul><li><a href="https://dmithrandir.github.io/trust-and-safety/">审核策略</a></li><li><a href="https://dmithrandir.github.io/research/">研究笔记</a></li><li><a href="https://dmithrandir.github.io/series/ai-harness/">AI 工程</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>站内</h3><ul><li><a href="#latest">最近更新</a></li><li><a href="#projects">项目</a></li><li><a href="#faq">问答</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>找到我</h3><ul><li><a href="https://github.com/DMithrandir">GitHub</a></li><li><a href="https://dmithrandir.github.io/feed.xml">RSS</a></li><li><a href="https://dmithrandir.github.io/archive/">归档</a></li></ul></div>
+      </div>
+      <div class="footer__legal">
+        <span>© 2026 灰度 · 内容基于个人实践，与任职机构无关</span>
+        <div class="socials"></div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="assets/b/system.js"></script>
+<script type="module" src="assets/b/motion/motion.js"></script>
+<script type="module" src="assets/b/layout/layout.js"></script>
+</body>
+</html>
