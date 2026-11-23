@@ -1,19 +1,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f8f4ea">
+  <meta name="theme-color" content="#111111">
   <script>
     (function () {
       try {
         var saved = localStorage.getItem('theme');
-        var mode = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        var mode = 'dark'; /* 方案 B 深色单主题 */
         document.documentElement.setAttribute('data-theme', mode);
       } catch (e) {}
     })();
   </script>
   {%- seo -%}
-  <link rel="preload" href="{{ '/assets/fonts/instrument-serif-latin-400.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  <link rel="stylesheet" href="{{ '/assets/css/theme-b.css' | relative_url }}?v={{ site.time | date: '%s' }}">
   {%- if page.math %}
   <script>
     window.MathJax = {

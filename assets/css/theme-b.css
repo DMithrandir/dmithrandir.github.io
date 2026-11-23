@@ -1,0 +1,71 @@
+/* ==========================================================================
+   灰度 · 方案 B 深色工作台主题（子页面同步覆盖层）
+   加载于 style.css 之后：把设计变量换成 B 的 lunar-grey-bronze ＋ Manrope，
+   并补少量组件细节。保留原类名与结构，可整体移除回滚。
+   ========================================================================== */
+
+:root,
+[data-theme="dark"],
+[data-theme="light"] {
+  --paper: #111111;
+  --paper-translucent: rgba(17, 17, 17, 0.92);
+  --paper-2: #1c1c1c;
+  --ink: #f2f2f2;
+  --ink-soft: #c7c7c7;
+  --muted: #8f8f8f;
+  --rule: rgba(242, 242, 242, 0.12);
+  --rule-strong: rgba(242, 242, 242, 0.32);
+  --accent: #a08672;
+  --accent-soft: rgba(160, 134, 114, 0.15);
+  --shadow: none;
+
+  --display: "Manrope", "Noto Sans SC", system-ui, sans-serif;
+  --sans: "Manrope", "Noto Sans SC", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+html { background: #111111; }
+body { background: #111111; color: #c7c7c7; }
+
+/* 标题：Manrope 半粗，紧字距（B 的显示语言） */
+h1, h2, h3, h4 { font-weight: 600; letter-spacing: -0.01em; }
+.post-title, .brand-name, .hero h1 { font-weight: 700; letter-spacing: -0.02em; }
+
+/* 品牌印章：青铜底＋深墨字（B 的 accent-ink），圆角 */
+.brand-seal { color: #111111; border-radius: 6px; font-weight: 700; }
+.brand-name { letter-spacing: 0; }
+
+/* 选区／焦点：青铜底深墨字 */
+::selection { background: #a08672; color: #111111; }
+
+/* B 为深色单主题：隐藏深浅切换 */
+.theme-toggle { display: none !important; }
+
+/* 页眉：深色不透明感（保留 sticky） */
+.site-header { background: rgba(17, 17, 17, 0.92); border-bottom: 1px solid rgba(242,242,242,0.12); }
+.nav a { color: #c7c7c7; }
+.nav a:hover { color: #a08672; }
+.nav a.is-active { color: #f2f2f2; border-bottom-color: #a08672; }
+
+/* 正文链接：青铜 */
+.post-content a { color: #a08672; }
+.post-content a:hover { color: #b89c88; }
+
+/* 代码／表格／引用：深表面（变量已驱动，这里兜底硬编码处） */
+.post-content code { background: #1c1c1c; color: #e6e6e6; }
+.post-content pre { background: #1c1c1c; border-color: rgba(242,242,242,0.12); }
+.post-content pre code { color: #e6e6e6; }
+.post-content blockquote { border-left-color: #a08672; background: rgba(160,134,114,0.08); }
+.post-content table th { background: #1c1c1c; }
+.post-content table td, .post-content table th { border-color: rgba(242,242,242,0.12); }
+
+/* 数学公式：浅色墨，深底可读 */
+.post-content mjx-container, .post-content .MathJax_CHTML, .MathJax_Display { color: #f2f2f2; }
+
+/*  eyebrow / 进度条 / 页脚链接：青铜（变量已驱动，兜底） */
+.eyebrow { color: #a08672; }
+.progress i { background: #a08672; }
+.footer-links a:hover { color: #a08672; }
+
+/* 卡片/列表行 hover 微亮 */
+.post-row-link:hover, .project-card:hover { background: rgba(242,242,242,0.03); }
