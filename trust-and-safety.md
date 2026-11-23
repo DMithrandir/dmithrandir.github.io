@@ -43,8 +43,8 @@ wide: true
 
   <a class="card" href="{{ '/governance/ai-agent-audit/' | relative_url }}">
     <span class="card-index">04</span>
-    <h3 class="card-title">Agentic 审核：把黑盒单次推理，改造成受限的状态机流水线</h3>
-    <p class="card-desc">三级漏斗、四项预算、五条强制出口；Agent 不是替代漏斗，是漏斗末端的过滤器。</p>
+    <h3 class="card-title">Agentic 审核：把取证做成流程，把判定留给人</h3>
+    <p class="card-desc">一条 47 秒的视频判错了，错在输入集合。三级漏斗、四项预算、五条出口；Agent 只接拿不准且判错不可逆的那 5%。</p>
     <p class="card-meta"><span>AI 审核</span><span class="dot">·</span><span>2026</span></p>
     <ul class="card-tags"><li>Agent</li><li>状态机</li><li>编排</li></ul>
     <span class="card-arrow" aria-hidden="true">→</span>
@@ -53,8 +53,8 @@ wide: true
 
 ## 延伸阅读
 
-- [误伤、漏放与申诉：内容治理的「不可能三角」与联合口径设计]({{ '/governance/12-appeal/' | relative_url }}) —— 误伤、漏放、申诉的专文。
-- [AI Harness：从「使用 AI」到「驾驭 AI」]({{ '/harness/' | relative_url }}) —— AI 工程背景，不是审核主文。
+- [误伤、漏放与申诉：内容治理的「不可能三角」与联合口径设计]({{ '/governance/12-appeal/' | relative_url }}) ：误伤、漏放、申诉的专文。
+- [AI Harness：从「使用 AI」到「驾驭 AI」]({{ '/harness/' | relative_url }}) ：AI 工程背景，不是审核主文。
 
 ## 公开版说明
 
