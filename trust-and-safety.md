@@ -43,8 +43,8 @@ wide: true
 
   <a class="card" href="{{ '/governance/ai-agent-audit/' | relative_url }}">
     <span class="card-index">04</span>
-    <h3 class="card-title">Agentic 审核：把取证做成流程，把判定留给人</h3>
-    <p class="card-desc">一条 47 秒的视频判错了，错在输入集合。三级漏斗、四项预算、五条出口；Agent 只接拿不准且判错不可逆的那 5%。</p>
+    <h3 class="card-title">Agentic 审核系统构造：从输入完备性到受限状态机</h3>
+    <p class="card-desc">判错的不是模型，是输入集合。三级漏斗、四道熔断预算、五条强制出口：把取证拆成受限状态机，把判定收敛成一个判据节点。</p>
     <p class="card-meta"><span>AI 审核</span><span class="dot">·</span><span>2026</span></p>
     <ul class="card-tags"><li>Agent</li><li>状态机</li><li>编排</li></ul>
     <span class="card-arrow" aria-hidden="true">→</span>
