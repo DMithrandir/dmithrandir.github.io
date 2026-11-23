@@ -21,6 +21,16 @@ excerpt: "单次判定是一个函数，取证是一条流程。Agent 只接漏�
 
 **问题出在输入集合，不在模型能力。**
 
+<figure class="post-figure">
+  <div class="post-figure-scroll">
+    <a href="{{ '/assets/img/ai-audit/fig1-light.svg' | relative_url }}" target="_blank" rel="noopener">
+      <img class="fig-light" src="{{ '/assets/img/ai-audit/fig1-light.svg' | relative_url }}" alt="图 1 单次判定的输入窗口与四类盲区" width="800" height="470" loading="lazy">
+      <img class="fig-dark" src="{{ '/assets/img/ai-audit/fig1-dark.svg' | relative_url }}" alt="图 1 单次判定的输入窗口与四类盲区" width="800" height="470" loading="lazy">
+    </a>
+  </div>
+  <figcaption>图 1 · 单次判定只看到均匀 8 帧加标题。四类必要条件分别在时间轴、像素精度、账号上下文和政策版本里。换流程不是换模型，是换输入。</figcaption>
+</figure>
+
 绝大多数内容单次判定就能判对。把它们也塞进流程，账单按九倍算，准确率不动。这篇要回答的是：哪一段流量值得走流程，流程长什么样，走完怎么知道它判对了。
 
 ## 01 · 哪些内容需要走流程
