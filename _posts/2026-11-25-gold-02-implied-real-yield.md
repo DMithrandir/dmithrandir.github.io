@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "02 · 黄金隐含的实际利率，和一场符号之争"
-date: 2026-11-25 01:45:00 +0800
+date: 2026-11-25 00:45:00 +0800
 categories: 研究笔记
 tags: [黄金, 实际利率, TIPS, 回归, 制度断裂, 央行购金]
 series: gold-macro

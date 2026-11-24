@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "01 · 债务的流动性，点燃了黄金的哪一头"
-date: 2026-11-25 01:30:00 +0800
+date: 2026-11-25 00:30:00 +0800
 categories: 研究笔记
 tags: [黄金, 宏观, 流动性, 央行购金, 实际利率]
 series: gold-macro
