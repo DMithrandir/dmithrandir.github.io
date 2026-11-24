@@ -1539,6 +1539,55 @@ p {
   }
 }
 
+/* 专题卡片（研究笔记这类「一条线一个专题」的列表页）：
+   宽屏 3 列 / 中屏 2 列 / 窄屏 1 列；某一行只剩一张时让它铺满整行，
+   不留半格空位。放在上一条 .cards 规则之后，靠次序覆盖它。 */
+.cards--topics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.cards--topics > .card {
+  min-width: 0;
+}
+
+/* 卡片高度由栅格拉平，标签沉到底部，避免长短不一时底部留白难看 */
+.cards--topics .card-tags {
+  margin-top: auto;
+}
+
+@media (min-width: 1081px) {
+  .cards--topics > .card:last-child:nth-child(3n + 1) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 1080px) {
+  .cards--topics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cards--topics > .card:last-child:nth-child(2n + 1) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 680px) {
+  .cards--topics {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cards--topics > .card:last-child:nth-child(2n + 1) {
+    grid-column: auto;
+  }
+}
+
+/* 宽版页面里，卡片可以铺满，但正文段落仍收到可读行长 */
+.page .post-content .prose {
+  max-width: 62ch;
+  margin-top: 40px;
+}
+
 @media (max-width: 760px) {
   body {
     font-size: 16px;

@@ -4,11 +4,12 @@ title: "研究笔记"
 permalink: /research/
 eyebrow: "RESEARCH · 研究笔记"
 description: "一条线一个专题：自己定问题、自己跑实验、自己写复盘。这里放的是过程与证伪，不是结论合集。"
+wide: true
 ---
 
 {%- assign topics = site.data.research_topics -%}
 
-<div class="cards">
+<div class="cards cards--topics">
   {%- for t in topics %}
   <a class="card" href="{{ t.url | relative_url }}">
     <span class="card-index">{{ t.index }}</span>
@@ -25,6 +26,8 @@ description: "一条线一个专题：自己定问题、自己跑实验、自己
   {%- endfor %}
 </div>
 
+<div class="prose" markdown="1">
+
 ## 怎么读
 
 - **从结论开始**：每个专题页开头都有「导读」，标明哪几篇是结论、哪几篇是推导。
@@ -35,3 +38,6 @@ description: "一条线一个专题：自己定问题、自己跑实验、自己
 
 同一套做法会往三个方向长：更长的采样与加速实验（噪声、步长、批量）、评测与口径（怎么判断"变好了"）、
 以及把研究结论压进可复现的工程实现。每个方向上线时开一个专题，编号顺延。
+
+</div>
+
