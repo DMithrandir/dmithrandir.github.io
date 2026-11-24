@@ -41,7 +41,7 @@ description: "一个关于审核策略、判定机制、知识系统与 Agentic 
 
 开放 **审核策略 / 内容安全 / AI 治理 / 评测与标注质量** 方向的机会；也欢迎交流方法、论文与工程实现。
 
-- 审核策略（四篇先读）：[入口页]({{ '/trust-and-safety/' | relative_url }})
+- 审核策略（五篇先读）：[入口页]({{ '/trust-and-safety/' | relative_url }})
 - GitHub：[@DMithrandir](https://github.com/DMithrandir)
 - 项目：[项目]({{ '/projects/' | relative_url }})
 - 订阅：[RSS]({{ '/feed.xml' | relative_url }})

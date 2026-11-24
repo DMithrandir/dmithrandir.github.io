@@ -3,15 +3,15 @@ layout: page
 title: "审核策略"
 permalink: /trust-and-safety/
 eyebrow: "TRUST & SAFETY · REVIEW STRATEGY"
-description: "四篇长文：审核链路、模糊案例判定、知识系统、Agentic 审核。公开版：只谈机制，不含公司内部数据。"
+description: "五篇长文：审核链路、模糊案例判定、知识系统、Agentic 审核、审标一体。公开版：只谈机制，不含公司内部数据。"
 wide: true
 ---
 
 <p class="post-lead">
-在某头部短视频与直播平台做了四年多 T&amp;S：政策下发与培训、模糊地带判据、审核知识系统；后期把直播治理里的灰度判定做成一套可运营的机制。这里挑出四篇，按「链路 → 判定 → 知识 → Agentic」排；每一篇都只谈机制，不含公司内部数据。
+在某头部短视频与直播平台做了四年多 T&amp;S：政策下发与培训、模糊地带判据、审核知识系统；后期把直播治理里的灰度判定做成一套可运营的机制。这里挑出五篇，按「链路 → 判定 → 知识 → Agentic → 审标一体」排；每一篇都只谈机制，不含公司内部数据。
 </p>
 
-## 四篇先读
+## 五篇先读
 
 <div class="cards">
   <a class="card" href="{{ '/governance/' | relative_url }}">
@@ -47,6 +47,15 @@ wide: true
     <p class="card-desc">判错的不是模型，是输入集合。三级漏斗、四道熔断预算、五条强制出口：把取证拆成受限状态机，把判定收敛成一个判据节点。</p>
     <p class="card-meta"><span>AI 审核</span><span class="dot">·</span><span>2026</span></p>
     <ul class="card-tags"><li>Agent</li><li>状态机</li><li>编排</li></ul>
+    <span class="card-arrow" aria-hidden="true">→</span>
+  </a>
+
+  <a class="card" href="{{ '/governance/audit-annotation/' | relative_url }}">
+    <span class="card-index">05</span>
+    <h3 class="card-title">审核标注一体化：从「为结果审核」到「为模型训练」</h3>
+    <p class="card-desc">三个演进阶段、三层作业分工：审核从给结论到给原因，再到审核即标注；人的位置从兜底转向给模型生产训练信号。</p>
+    <p class="card-meta"><span>组织与机制</span><span class="dot">·</span><span>2026</span></p>
+    <ul class="card-tags"><li>审标一体</li><li>标注质量</li><li>组织</li></ul>
     <span class="card-arrow" aria-hidden="true">→</span>
   </a>
 </div>
