@@ -1,9 +1,9 @@
 ---
 layout: page
-title: "评测这把尺子：怎么造、怎么校、怎么坏"
+title: "评测这把尺子"
 permalink: /eval/
 eyebrow: "专题 · 模型评测 · 2026 →"
-description: "五篇：从审核系统的旧账讲到 2026 年的榜单信任危机、指标口径、Rubrics-as-Rewards，以及把专家嵌进系统时的结算与信任基建。"
+description: "模型评测五篇：从审核系统的旧账讲到 2026 年的榜单信任危机、指标口径、Rubrics-as-Rewards，以及把专家嵌进系统时的结算与信任基建。"
 ---
 
 {%- assign parts = site.posts | where: "series", "ai-eval" | sort: "series_part" -%}

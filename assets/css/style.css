@@ -1734,6 +1734,29 @@ p {
   }
 }
 
+/* 导航 7 项（首页 / 审核策略 / 评测 / 研究笔记 / AI 工程 / 文章 / 关于）：
+   ≤600px 时整条导航换到第二行，宁可多占一行高度，也不让链接在栏里折字。 */
+@media (max-width: 600px) {
+  .header-inner {
+    height: auto;
+    min-height: 62px;
+    flex-wrap: wrap;
+    padding-block: 9px;
+    row-gap: 2px;
+  }
+
+  .nav {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 14px;
+  }
+
+  .nav a {
+    white-space: nowrap;
+  }
+}
+
 /* ---------- 打印 ---------- */
 @media print {
   .site-header,
