@@ -12,7 +12,29 @@
 | 加/改项目 | `_data/projects.yml` |
 | 加文章 | `_posts/` 新建 `YYYY-MM-DD-英文短名.md` |
 | 改站名 | `_config.yml` 的 `title` / `tagline` / `description` |
-| 改导航文字 | `_includes/header.html` 里的四个 `<a>` |
+| 改导航文字 | `_includes/header.html`（**全站共享顶栏**，见下方说明） |
+
+## 0.5 全站共享顶栏（首页与子页面同一份）
+
+顶栏只有一份结构：`_includes/header.html`。首页 `index.html` 和所有子页面布局都 include 它，
+改一处全站生效。配套关系：
+
+| 文件 | 作用 |
+|---|---|
+| `_includes/header.html` | 顶栏结构唯一来源（导航、下拉三卡、主按钮、手机抽屉） |
+| `assets/css/topbar.css` | 子页面顶栏样式（首页样式的抽取，规则都带 `header.nav` 前缀） |
+| `assets/js/topbar.js` | 子页面顶栏行为（手机抽屉/展开，与首页 `assets/b/system.js` 的 `nav()` 同源） |
+| 首页 `assets/b/system.css` 导航段＋页内 menu-card 覆盖 | 首页顶栏样式 |
+
+**同步契约**：改顶栏样式时，`topbar.css` 与首页那两处（`system.css` 导航段、`index.html` 页内
+menu-card/d-card 覆盖）要一起改；改行为时 `topbar.js` 与 `system.js` 的 `nav()` 一起改。
+字体两侧必须加载同样的 Noto Sans SC 字重（当前 400;500;600;700），否则中文 glyph 会落到不同字面。
+
+首页工作台（`blog-redesign/b/`）里 `header.html` 是这份 include 的发布源快照：
+`build.mjs` 用它渲染本地预览，`publish.mjs` 发布时把它写回仓库这里。直接改仓库这份后，
+记得同步回工作台快照（或跑一次首页发布，成功后会自动同步回快照）。
+
+「读最新一篇」按钮的目标是手工策展的，与首页 hero 主行动一致；换最新一篇时两处一起改。
 
 ## 1. 首页文案地图（全部在 `index.md` 顶部）
 

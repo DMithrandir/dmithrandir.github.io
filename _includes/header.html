@@ -1,24 +1,64 @@
-<header class="site-header">
-  <div class="wrap header-inner">
-    <a class="brand" href="{{ '/' | relative_url }}" aria-label="回到首页">
-      <span class="brand-seal" aria-hidden="true">灰</span>
-      <span class="brand-text">
-        <span class="brand-name">{{ site.title }}</span>
-        <span class="brand-sub">{{ site.tagline | default: 'Grey Area · AI 治理与系统笔记' }}</span>
-      </span>
-    </a>
-    <nav class="nav" aria-label="主导航">
-      <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} class="is-active" aria-current="page"{% endif %}>首页</a>
-      <a href="{{ '/trust-and-safety/' | relative_url }}"{% if page.url contains '/trust-and-safety' or page.url contains '/governance' or page.categories contains '治理框架' %} class="is-active" aria-current="page"{% endif %}>审核策略</a>
-      <a href="{{ '/eval/' | relative_url }}"{% if page.url contains '/eval' or page.series == 'ai-eval' %} class="is-active" aria-current="page"{% endif %}>评测</a>
-      <a href="{{ '/research/' | relative_url }}"{% if page.url contains '/research' or page.url contains '/mcmc' or page.url contains '/gold' or page.series == 'noise-mcmc' or page.series == 'gold-macro' %} class="is-active" aria-current="page"{% endif %}>研究笔记</a>
-      <a href="{{ '/series/ai-harness/' | relative_url }}"{% if page.url contains '/series/ai-harness' or page.series == 'ai-harness' %} class="is-active" aria-current="page"{% endif %}>AI 工程</a>
-      <a class="is-opt{% if page.url contains '/blog' or page.url contains '/archive' %} is-active{% endif %}" href="{{ '/blog/' | relative_url }}"{% if page.url contains '/blog' or page.url contains '/archive' %} aria-current="page"{% endif %}>文章</a>
-      <a href="{{ '/about/' | relative_url }}"{% if page.url contains '/about' %} class="is-active" aria-current="page"{% endif %}>关于</a>
-      <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深浅色模式" title="切换深浅色模式">
-        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4.1"/><path d="M12 2.6v2.5M12 18.9v2.5M4.4 12H1.9M22.1 12h-2.5M6.4 6.4 4.6 4.6M19.4 19.4l-1.8-1.8M17.6 6.4l1.8-1.8M4.6 19.4l1.8-1.8"/></svg>
-        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 14.8A8.3 8.3 0 0 1 9.2 3.8a8.6 8.6 0 1 0 11 11Z"/></svg>
-      </button>
+{%- comment -%}
+  全站统一顶栏（唯一结构来源）。首页 index.html 与所有 Jekyll 子页面共用本 include。
+  ─ 样式：首页走 assets/b/system.css 导航段 ＋ cards.css panel/stage ＋ 页内 menu-card 覆盖；
+    子页面走 assets/css/topbar.css（前两者的 header.nav 作用域抽取，改顶栏样式时两处同步）。
+  ─ 行为：首页 assets/b/system.js 的 nav()；子页面 assets/js/topbar.js（同源抽取）。
+  ─ 工作台：blog-redesign/b/header.html 是本文件的发布源快照（build.mjs 用它做预览，
+    publish.mjs 发布时写入这里）。直接改本文件后请同步回快照。
+  ─ 「读最新一篇」与首页 hero 的主行动保持一致（手工策展，改首页时一起改）。
+{%- endcomment -%}
+<header class="nav">
+  <div class="wrap nav__bar">
+    <a class="skip-link" href="{% if page.url == '/' %}#top{% else %}#main{% endif %}">跳到正文</a>
+    <a class="nav__logo" href="{% if page.url == '/' %}#top{% else %}{{ '/' | relative_url }}{% endif %}"><span class="mark" data-mark="arc" aria-hidden="true"></span>灰度</a>
+    <nav class="nav__links" aria-label="主导航">
+      <div class="nav__item">
+        <a class="nav__link" href="{{ '/blog/' | relative_url }}"{% if page.url contains '/blog' or page.layout == 'post' or page.url contains '/trust-and-safety' or page.url contains '/governance' or page.url contains '/eval' or page.url contains '/research' or page.url contains '/mcmc' or page.url contains '/gold' or page.url contains '/series' or page.url contains '/x2cad' %} aria-current="page"{% endif %}>文章 <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="nav__menu">
+          <div class="wrap grid">
+            <a class="menu-card span-4" href="{{ '/trust-and-safety/' | relative_url }}">
+              <div class="panel"><div class="stage stage--fade-br"><div class="at-corner">
+                <div class="d-card" aria-hidden="true">
+                  <div class="d-card__row"><h5>审核策略</h5><span>5 篇</span></div>
+                  <div class="d-note__line"><i>✓</i><span>判定链路与灰区案例</span></div>
+                  <div class="d-note__line"><i>✓</i><span>知识系统 · Agentic 审核</span></div>
+                </div>
+              </div></div></div>
+              <span class="t-card">审核策略</span>
+              <span>怎么判定，口径怎么立</span>
+            </a>
+            <a class="menu-card span-4" href="{{ '/research/' | relative_url }}">
+              <div class="panel"><div class="stage stage--fade-br"><div class="at-corner">
+                <div class="d-card" aria-hidden="true">
+                  <div class="d-card__row"><h5>研究笔记</h5><span>8 篇</span></div>
+                  <div class="d-note__line"><i>✓</i><span>噪声与 MCMC，逐条复核</span></div>
+                  <div class="d-note__line"><i>✓</i><span>配一个可拖的实验台</span></div>
+                </div>
+              </div></div></div>
+              <span class="t-card">研究笔记</span>
+              <span>六年前的论文，重算重跑</span>
+            </a>
+            <a class="menu-card span-4" href="{{ '/series/ai-harness/' | relative_url }}">
+              <div class="panel"><div class="stage stage--fade-br"><div class="at-corner">
+                <div class="d-card" aria-hidden="true">
+                  <div class="d-card__row"><h5>AI 工程</h5><span>1 篇</span></div>
+                  <div class="d-note__line"><i>✓</i><span>上下文、工具、评测</span></div>
+                  <div class="d-note__line"><i>✓</i><span>失败形态，自己踩坑</span></div>
+                </div>
+              </div></div></div>
+              <span class="t-card">AI 工程</span>
+              <span>模型之外的那一层</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="nav__item"><a class="nav__link" href="{% if page.url == '/' %}#projects{% else %}{{ '/#projects' | relative_url }}{% endif %}"{% if page.url contains '/projects' %} aria-current="page"{% endif %}>项目</a></div>
+      <div class="nav__item"><a class="nav__link" href="{{ '/about/' | relative_url }}"{% if page.url contains '/about' %} aria-current="page"{% endif %}>关于</a></div>
+      <div class="nav__item"><a class="nav__link" href="{{ '/archive/' | relative_url }}"{% if page.url contains '/archive' %} aria-current="page"{% endif %}>归档</a></div>
     </nav>
+    <div class="nav__actions">
+      <a class="btn btn--primary" href="{{ '/governance/ai-agent-audit/' | relative_url }}">读最新一篇</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-label="菜单"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
   </div>
 </header>

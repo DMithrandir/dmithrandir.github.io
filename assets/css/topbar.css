@@ -1,0 +1,236 @@
+/* ==========================================================================
+   灰度 · 统一顶栏（子页面侧）
+   --------------------------------------------------------------------------
+   结构与首页完全一致：标记在 _includes/header.html（首页 index.html 也 include 它）。
+   本文件是首页顶栏样式的「作用域抽取」，来源三处，改顶栏样式时须同步：
+     1) assets/b/system.css 的 navigation 段（含 tokens 与响应式）
+     2) assets/b/ui/cards.css 的 .panel / .stage / .at-corner
+     3) index.html 页内 <style> 的 menu-card / d-card 覆盖
+   所有规则以 header.nav 前缀作用域化，变量只定义在 header.nav 上，不泄漏进正文；
+   加载顺序在 style.css 与 theme-b.css 之后（见 _includes/head.html）。
+   正文偏移：固定顶栏 72px（手机 56px），由 main#main 的 padding-top 补偿。
+   ========================================================================== */
+
+/* ── tokens：与首页 :root 同值（lunar-grey-bronze，data-radius=soft） ── */
+header.nav {
+  --tb-nav: 72px;
+  --container: 1280px;
+  --gut: 80px;
+  --gutter: 24px;
+  --card-gap: 24px;
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px;
+  --s-6: 32px; --s-7: 48px; --s-8: 64px;
+  --t-label: 13px; --t-small: 14px; --t-body: 16px; --t-card: 20px;
+  --r-sm: 8px; --r-md: 12px; --r-btn: 8px;
+  --btn-h: 44px;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+  --dur: 180ms;
+  --font-display: "Manrope", "Noto Sans SC", system-ui, sans-serif;
+  --font-text: "Manrope", "Noto Sans SC", system-ui, sans-serif;
+  --bg: #111111; --surface: #1c1c1c; --card: #1c1c1c;
+  --ink: #f2f2f2; --muted: #8f8f8f;
+  --accent: #a08672; --action: #a08672; --action-ink: #111111;
+  --line: color-mix(in oklab, #f2f2f2 11%, transparent);
+  --line-strong: color-mix(in oklab, #f2f2f2 20%, transparent);
+
+  position: fixed; inset: 0 0 auto 0; z-index: 50; height: var(--tb-nav);
+  display: block; background: var(--bg); color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  font: 400 var(--t-body)/1.55 var(--font-text);
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+@media (max-width: 639px) {
+  header.nav { --tb-nav: 56px; --gut: 24px; --gutter: 12px; --card-gap: 12px; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  header.nav { --gut: 48px; --card-gap: 16px; --t-card: 18px; }
+}
+@media (max-width: 1023px) {
+  header.nav { --t-card: 18px; }
+}
+
+/* 固定顶栏的正文补偿（旧 sticky 页眉在流内，新顶栏固定，需要让位） */
+main#main { padding-top: 72px; scroll-margin-top: 72px; }
+@media (max-width: 639px) { main#main { padding-top: 56px; scroll-margin-top: 56px; } }
+
+/* ── 基础重置：压过 style.css / theme-b.css 的旧 .nav a 规则 ── */
+header.nav *, header.nav *::before, header.nav *::after { box-sizing: border-box; }
+header.nav a { color: inherit; text-decoration: none; border-bottom: 0; padding-bottom: 0; letter-spacing: 0; }
+header.nav a:hover { color: inherit; }
+header.nav button { font: inherit; color: inherit; }
+header.nav svg { display: block; max-width: 100%; }
+header.nav :focus-visible { outline: 2px solid var(--action); outline-offset: 2px; border-radius: 2px; }
+
+/* ── 骨架：与首页同一个 .wrap（1280 列，两侧 --gut） ── */
+header.nav .wrap { width: min(100% - 2 * var(--gut), var(--container)); max-width: none; margin-inline: auto; padding-inline: 0; }
+header.nav .nav__bar { height: 100%; display: flex; align-items: center; gap: var(--s-8); }
+
+/* 文字 logo：display 面 500 22px ＋ 青铜 arc 印记 */
+header.nav .nav__logo { display: inline-flex; align-items: center; gap: var(--s-2); font: 500 22px/1 var(--font-display); letter-spacing: -0.02em; flex: none; }
+header.nav .mark { display: inline-block; flex: none; width: 22px; height: 22px; background: var(--accent);
+  -webkit-mask: var(--mark) center / contain no-repeat; mask: var(--mark) center / contain no-repeat; }
+header.nav .mark[data-mark="arc"] { --mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2.5 21.5V12a9.5 9.5 0 0 1 19 0v9.5h-6V12a3.5 3.5 0 0 0-7 0v9.5z'/%3E%3C/svg%3E"); }
+
+/* 导航词：15px 500，hover/focus 从左画 2px 底线，当前页常驻底线 */
+header.nav .nav__links { display: flex; align-self: stretch; gap: var(--s-1); flex: 1; min-width: 0; }
+header.nav .nav__item { display: flex; align-items: center; height: 100%; }
+header.nav .nav__link {
+  position: relative; display: inline-flex; align-items: center; gap: var(--s-1); height: 36px; padding: 0 var(--s-3); border-radius: var(--r-sm);
+  font-size: 15px; font-weight: 500; color: var(--ink); white-space: nowrap;
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+header.nav .nav__link::before { content: ""; position: absolute; left: var(--s-3); right: var(--s-3); bottom: -2px; height: 2px; border-radius: 2px; background: currentColor;
+  transform: scaleX(0); transform-origin: right; transition: transform var(--dur) var(--ease); pointer-events: none; }
+header.nav .nav__link:hover::before, header.nav .nav__link:focus-visible::before,
+header.nav .nav__item:hover > .nav__link::before, header.nav .nav__item:focus-within > .nav__link::before { transform: scaleX(1); transform-origin: left; }
+header.nav .nav__link .chev { width: 12px; height: 12px; opacity: .6; transition: transform var(--dur) var(--ease); }
+header.nav .nav__link[aria-current="page"]::after { content: ""; position: absolute; left: var(--s-3); right: var(--s-3); bottom: -2px; height: 2px; border-radius: 2px; background: currentColor; }
+header.nav .nav__expand { display: none; }
+
+/* 小笔记本（1024-1279）：词距收紧，四个词不折行不顶 logo */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  header.nav .nav__bar { gap: var(--s-6); }
+  header.nav .nav__link { padding: 0 var(--s-2); }
+  header.nav .nav__link::before, header.nav .nav__link[aria-current="page"]::after { left: var(--s-2); right: var(--s-2); }
+  header.nav .nav__links { gap: 0; }
+}
+
+/* 右侧主行动：一枚实心按钮 */
+header.nav .nav__actions { display: flex; align-items: center; gap: var(--s-4); flex: none; }
+header.nav .btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
+  height: var(--btn-h); padding: 0 var(--s-5); border-radius: var(--r-btn); border: 1px solid transparent;
+  font: 500 var(--t-body)/1 var(--font-text); letter-spacing: 0; white-space: nowrap; cursor: pointer;
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+header.nav .nav__actions .btn { height: var(--btn-h); padding-inline: var(--s-5); font-size: 15px; }
+header.nav .btn--primary { background: var(--action); color: var(--action-ink); }
+header.nav .btn--primary:hover { background: color-mix(in oklab, var(--action) 86%, var(--ink)); color: var(--action-ink); }
+header.nav .btn:active { transform: translateY(1px) scale(.985); }
+header.nav .nav__toggle { display: none; }
+
+/* ── 「文章」下拉：全宽面板，hover 150ms 意图后展开 ── */
+header.nav .nav__menu {
+  position: absolute; left: 0; right: 0; top: 100%; background: var(--bg); color: var(--ink);
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  padding: var(--s-7) 0 var(--s-8); opacity: 0; visibility: hidden; transform: translateY(-6px);
+  transition: opacity 120ms var(--ease), transform 120ms var(--ease), visibility 0s linear 120ms;
+}
+@media (min-width: 1024px) {
+  header.nav .nav__item:hover > .nav__menu, header.nav .nav__item:focus-within > .nav__menu {
+    opacity: 1; visibility: visible; transform: none; transition-duration: 200ms, 200ms, 0s; transition-delay: 150ms, 150ms, 150ms;
+  }
+  header.nav .nav__item:hover > .nav__link .chev, header.nav .nav__item:focus-within > .nav__link .chev { transform: rotate(180deg); }
+}
+header.nav .nav__menu .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: var(--card-gap); }
+header.nav .nav__menu .grid > * { min-width: 0; grid-column: 1 / -1; }
+@media (min-width: 1024px) {
+  header.nav .nav__menu .span-4 { grid-column: auto / span 4; }
+}
+
+/* 三张线卡：标题 ＋ 一句说明 ＋ 画框面板 */
+header.nav .menu-card { display: grid; gap: var(--s-3); font: 400 var(--t-body)/1.55 var(--font-text); color: var(--ink); }
+header.nav .menu-card .t-card { font-family: var(--font-text); font-weight: 500; font-size: var(--t-card); line-height: 1.3; letter-spacing: -0.01em; }
+
+/* 面板：首页 painting ground 的网纹（cards.css 对 software 页的 .panel 规则，
+   优先级高于页内覆盖，故此处按其实际渲染结果抽取）＋ 暗角 ＋ 1px 内描边 */
+header.nav .menu-card .panel {
+  --p-h: 200px;
+  display: block; padding: 0; position: relative; isolation: isolate; overflow: clip;
+  min-height: var(--p-h); flex: 1 0 auto; border-radius: var(--r-md);
+  background-color: #79a8d6;
+  background-image:
+    radial-gradient(70% 90% at 12% 0%, color-mix(in oklab, #a6c4e2 92%, white), transparent 70%),
+    radial-gradient(60% 80% at 100% 100%, color-mix(in oklab, #9c9b3c 34%, #79a8d6), transparent 72%),
+    radial-gradient(50% 60% at 85% 10%, color-mix(in oklab, #a6c4e2 60%, transparent), transparent 70%);
+}
+header.nav .menu-card .panel::after {
+  content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none; border-radius: inherit;
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ink) 7%, transparent), inset 0 1px 0 color-mix(in oklab, var(--ink) 4%, transparent);
+}
+header.nav .menu-card .panel::before {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; width: auto; padding: 0;
+  background: radial-gradient(ellipse 70% 62% at var(--vx, 50%) var(--vy, 62%),
+    color-mix(in oklab, var(--calm, var(--card)) var(--calm-k, 34%), transparent), transparent 72%);
+}
+/* 舞台与角落锚点：fragment 向右下淡出（edge-fade-dissolve） */
+header.nav .menu-card .stage { position: absolute; inset: 0; z-index: 1; max-width: none; --fade-h: 64px; }
+header.nav .menu-card .stage > * { position: absolute; max-width: none; }
+header.nav .menu-card .stage--fade-br {
+  -webkit-mask: linear-gradient(to bottom, #000 calc(100% - var(--fade-h)), transparent calc(100% - 4px)), linear-gradient(to right, #000 calc(100% - 72px), transparent calc(100% - 4px));
+  -webkit-mask-composite: source-in;
+  mask: linear-gradient(to bottom, #000 calc(100% - var(--fade-h)), transparent calc(100% - 4px)), linear-gradient(to right, #000 calc(100% - 72px), transparent calc(100% - 4px));
+  mask-composite: intersect;
+}
+header.nav .menu-card .at-corner { left: var(--ax, 32px); top: var(--ay, 32px); }
+
+/* 手绘深色卡（与 index.html 页内 .menu-card .d-card 覆盖同源） */
+header.nav .menu-card .d-card { background: #1c1c1c; color: #eceef0; border-radius: 12px; padding: 14px 16px; font: 400 14px/1.4 var(--font-text); text-align: left;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / .08), 0 18px 44px -20px rgb(0 0 0 / .8); }
+header.nav .menu-card .d-card h5 { margin: 0 0 4px; font: 600 14px/1.3 var(--font-text); color: inherit; }
+header.nav .menu-card .d-card__row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+header.nav .menu-card .d-note__line { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 13px; color: #aeb3b8; border-top: 1px solid rgb(255 255 255 / .07); }
+header.nav .menu-card .d-note__line:first-of-type { border-top: 0; }
+header.nav .menu-card .d-note__line i { width: 18px; height: 18px; border-radius: 50%; flex: none; display: grid; place-items: center; background: rgb(255 255 255 / .08); color: #d8cfc6; font-style: normal; font-size: 13px; font-weight: 700; }
+header.nav .menu-card .d-note__line b { font-weight: 500; color: #eceef0; }
+
+/* ── 平板/手机（≤1023）：词进抽屉，主按钮留在栏上 ── */
+@media (max-width: 1023px) {
+  header.nav .nav__links, header.nav .nav__actions { display: none; }
+  header.nav .nav__toggle {
+    display: inline-grid; place-items: center; margin-left: auto; width: 44px; height: 44px; border-radius: var(--r-btn);
+    border: 1px solid var(--line-strong); background: transparent; color: var(--ink); cursor: pointer; flex: none;
+  }
+  header.nav.is-open .nav__links {
+    display: flex; flex-direction: column; position: fixed; top: var(--tb-nav); left: 0; right: 0; bottom: 0;
+    padding: var(--s-4) var(--gut) calc(var(--btn-h) * 2 + 56px); background: var(--bg); overflow-y: auto; gap: 0;
+  }
+  header.nav.is-open .nav__item { display: grid; grid-template-columns: 1fr auto; height: auto; border-bottom: 1px solid var(--line); }
+  header.nav.is-open .nav__link { height: 56px; padding: 0; font-size: 20px; background: none; }
+  header.nav.is-open .nav__link[aria-current="page"]::after { left: 0; right: auto; width: 24px; bottom: 10px; }
+  header.nav.is-open .nav__link::before { display: none; }
+  header.nav.is-open .nav__link .chev { display: none; }
+  header.nav.is-open .nav__expand {
+    display: inline-grid; place-items: center; width: 44px; height: 56px; border: 0; background: none; color: var(--ink); cursor: pointer;
+  }
+  header.nav .nav__expand svg { width: 16px; height: 16px; transition: transform var(--dur) var(--ease); }
+  header.nav .nav__item.is-expanded .nav__expand svg { transform: rotate(180deg); }
+  header.nav.is-open .nav__menu {
+    position: static; grid-column: 1 / -1; display: none; opacity: 1; visibility: visible; transform: none;
+    box-shadow: none; border: 0; padding: 0 0 var(--s-4);
+  }
+  header.nav.is-open .nav__item.is-expanded .nav__menu { display: block; }
+  header.nav.is-open .nav__menu .wrap { width: 100%; }
+  header.nav.is-open .nav__menu .grid { row-gap: var(--s-4); }
+  header.nav.is-open .menu-card { display: grid; gap: var(--s-1); padding: var(--s-2) 0; }
+  header.nav.is-open .menu-card .panel { display: none; }
+  header.nav.is-open .nav__actions {
+    display: grid; gap: var(--s-2); position: fixed; left: 0; right: 0; bottom: 0; z-index: 51;
+    padding: var(--s-4) var(--gut) calc(var(--s-4) + env(safe-area-inset-bottom)); background: var(--bg); border-top: 1px solid var(--line);
+  }
+  header.nav.is-open .nav__actions .btn { width: 100%; height: 48px; font-size: var(--t-body); }
+  body.nav-locked { overflow: hidden; }
+
+  header.nav .nav__bar { gap: var(--s-3); }
+  header.nav:not(.is-open) .nav__actions { display: flex; margin-left: auto; }
+  header.nav:not(.is-open) .nav__actions > :not(.btn--primary) { display: none; }
+  header.nav:not(.is-open) .nav__actions + .nav__toggle { margin-left: 0; }
+}
+@media (max-width: 639px) {
+  header.nav .nav__bar { gap: var(--s-2); }
+  header.nav .nav__logo { font-size: clamp(16px, 4.6vw, 20px); gap: 6px; white-space: nowrap; }
+  header.nav .nav__logo .mark { width: 20px; height: 20px; }
+  header.nav:not(.is-open) .nav__actions .btn { height: 44px; padding-inline: var(--s-3); font-size: var(--t-small); }
+}
+/* 无脚本：抽屉打不开，词留在栏上横向滚动，死菜单按钮去掉 */
+@media (scripting: none) and (max-width: 1023px) {
+  header.nav .nav__links { display: flex; overflow-x: auto; scrollbar-width: none; margin-right: var(--s-3); padding-right: var(--s-2); border-right: 1px solid var(--line); }
+  header.nav .nav__toggle { display: none; }
+}
+
+/* ── 跳转正文（focus 时出现在 logo 左侧线上） ── */
+header.nav .skip-link { position: absolute; left: max(var(--gut), (100% - var(--container)) / 2); top: 50%; z-index: 2; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; }
+header.nav .skip-link:focus { width: auto; height: var(--btn-h); padding: 0 var(--s-5); clip-path: none; transform: translateY(-50%);
+  display: inline-flex; align-items: center; background: var(--bg); color: var(--ink); border: 1px solid var(--line-strong);
+  border-radius: var(--r-btn); font: 500 var(--t-body)/1 var(--font-text); }
