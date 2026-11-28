@@ -125,6 +125,7 @@ header.nav .nav__menu {
 header.nav .nav__menu .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: var(--card-gap); }
 header.nav .nav__menu .grid > * { min-width: 0; grid-column: 1 / -1; }
 @media (min-width: 1024px) {
+  header.nav .nav__menu .span-3 { grid-column: auto / span 3; }
   header.nav .nav__menu .span-4 { grid-column: auto / span 4; }
 }
 
